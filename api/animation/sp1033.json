@@ -1,0 +1,2005 @@
+{
+  "script_name": "sp1033",
+  "script_type": "attack sp",
+  "relative_script_path": "attack_sp/sp1033.lua",
+  "script_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/lua/ab_script/attack_sp/sp1033.lua",
+  "max_frame_hint": 0,
+  "lua_source": "print (\"[lua]sp0034\");\r\n\r\nfcolor_r = 245;\r\nfcolor_g = 245;\r\nfcolor_b = 245;\r\n\r\n\r\nSP_01 = 150052;--溜め\r\nSP_02 = 150053;--発射\r\nSP_03 = 150054;--迫る\r\nSP_04 = 150048;--17号出現\r\nSP_05 = 150050;--17号連続攻撃\r\nSP_06 = 150061;--17号手前突進\r\nSP_07 = 150062;--18号手前突進\r\n\r\nSP_04e = 150055;--17号出現\r\nSP_05e = 150057;--17号連続攻撃\r\nSP_06e = 150061;--17号手前突進\r\nSP_07e = 150062;--18号手前突進\r\n\r\nSE_01 = 1035; --気を貯める\r\nSE_02 = 1036; --気が広がる\r\nSE_03 = 1036; --かめはめ\r\nSE_04 = 1018; --カットイン\r\nSE_05 = 1035; --カットイン攻撃\r\nSE_06 = 1021; --発射\r\nSE_07 = 1022; --のびる発射\r\n--SE_08 = 1042; --カットイン\r\nSE_09 = 1023; --HIT\r\nSE_10 = 1024; --爆破\r\nSE_11 = 1054; --割れる音\r\nSE_12 = 09;\r\n\r\n\r\nmulti_frm = 2;\r\n\r\nchangeAnime( 0, 0, 0);                       -- 立ち\r\nsetDisp( 0, 1, 0);\r\n\r\nsetMoveKey(   0,   0, -30, 0,   0);\r\nsetMoveKey(   1,   0, -30, 0,   0);\r\nsetScaleKey(   0,   0, 1.5, 1.5);\r\nsetScaleKey(   1,   0, 1.5, 1.5);\r\n\r\n------------------------------------------------------\r\n-- 気溜め(40F)\r\n------------------------------------------------------\r\nkame_flag = 0x00;\r\nif (_IS_PLAYER_SIDE_ == 1) then\r\n\r\n--気を貯める\r\nchangeAnime(  46, 0, 17);                       -- 溜め!\r\n\r\nentryEffect(  46,   1503,   0x80,    -1,  0,  0,  0);    -- eff_001\r\nentryEffect(  46,   1502,   0x80, -1,  0,  0,  0);    -- eff_002\r\nsyutsugen=entryEffect(  47,   SP_04,   0x80, -1,  0,  30,  10);    --17号出現\r\nsetEffScaleKey( 47, syutsugen ,  1.4,  1.4);\r\n\r\nplaySe( 46, SE_01);\r\nsetVisibleUI(0, 0);\r\n\r\n--entryEffect(  30,   1503,   0x80,  -1,  0,  0,  0);   -- eff_004 (気)\r\n--entryEffect(  30,   1502,   0,     -1,  0,  0,  0);   -- eff_003 (気)\r\nspeff = entryEffect(  46,   1504,   0,     -1,  0,  0,  0);   -- eff_005 (カットイン)\r\nsetEffReplaceTexture( speff, 3, 2);                           -- カットイン差し替え\r\nspeff = entryEffect(  46,   1505,   0,     -1,  0,  0, 0);   -- eff_006 (セリフ)\r\nsetEffReplaceTexture( speff, 4, 5);                           -- セリフ差し替え\r\n\r\nplaySe( 46, SE_04);\r\n\r\nentryFade( 122, 5, 5, 3, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\n\r\n-- ** エフェクト等 ** --\r\n--aura = entryEffectLife(  30,   311, 39, 0x40,  0,  1,  0,  0); -- オーラ\r\n--setEffScaleKey( 30, aura, 1.5, 1.5);\r\n--setShakeChara( 30, 0, 19, 5);\r\n\r\n-- 書き文字エントリー\r\nct = entryEffectLife( 46, 10013, 76, 0, -1, 0, 0, 200); -- ズズンッ\r\nsetEffShake(46, ct, 40, 7);\r\nsetEffAlphaKey(46, ct, 255);\r\nsetEffAlphaKey(66, ct, 255);\r\nsetEffAlphaKey(125, ct, 0);\r\nsetEffScaleKey( 66, ct, 0.1, 0.1);\r\nsetEffScaleKey( 125, ct, 2.0, 2.0);\r\nplaySe( 46, SE_02);\r\n\r\nsetMoveKey(   130,   0, -30, 0,   0);\r\n\r\n--------------------------------------\r\n--カードカットイン(94F)\r\n--------------------------------------\r\nspep_2=130;\r\nsetScaleKey( 130,   0, 1.5, 1.5);\r\nsetScaleKey( 131,   0, 1.5, 1.5);\r\n-- ** カードカットイン ** --\r\n--[[speff2 = entryEffect( spep_2 + 0, 1507, 0x100, -1, 0, 0, 0 );   -- カード\r\nsetEffReplaceTexture( speff2, 1, 1 );\r\nsetEffReplaceTexture( speff2, 2, 0 );-- カード差し替え\r\nsetEffReplaceTexture( speff2, 5, 4 );-- 技名テクスチャ差し替え]]\r\n\r\n-- ** 極限用に調整 ** --\r\nif (_SPECIAL_SKILL_LEVEL_ == 0) then\r\nprint (\"_SPECIAL_SKILL_LEVEL_ == 0\");\r\nplaySe( spep_2, SE_05);\r\nspeff = entryEffect( spep_2, 1507, 0, -1, 0, 0, 0); -- カード\r\nsetEffReplaceTexture( speff, 1, 1);\r\nsetEffReplaceTexture( speff, 2, 0); -- カード差し替え\r\nsetEffReplaceTexture( speff, 5, 4); -- 技名テクスチャ差し替え\r\n\r\n\r\nelseif(_SPECIAL_SKILL_LEVEL_ == 1) then\r\nprint (\"_SPECIAL_SKILL_LEVEL_ == 1\");\r\nplaySe( spep_2, SE_05);\r\nspeff = entryEffect( spep_2, 1120, 0, -1, 0, 0, 0); -- カード\r\nsetEffReplaceTexture( speff, 1, 1);\r\nsetEffReplaceTexture( speff, 2, 0); -- カード差し替え\r\nsetEffReplaceTexture( speff, 5, 4); -- 技名テクスチャ差し替え\r\n\r\n\r\nelseif(_SPECIAL_SKILL_LEVEL_ == 2) then\r\nprint (\"_SPECIAL_SKILL_LEVEL_ == 2\");\r\nplaySe( spep_2, SE_05);\r\nspeff = entryEffect( spep_2, 1121, 0, -1, 0, 0, 0); -- カード\r\nsetEffReplaceTexture( speff, 1, 1);\r\nsetEffReplaceTexture( speff, 2, 0); -- カード差し替え\r\nsetEffReplaceTexture( speff, 5, 4); -- 技名テクスチャ差し替え\r\nend\r\n\r\n-- ** 集中線 ** --\r\nshuchusen = entryEffectLife( spep_2 + 0, 906, 90, 0x100, -1, 0, 0, 0 );  --集中線\r\nsetEffShake( spep_2 + 0, shuchusen, 90, 20 );\r\n\r\nsetEffMoveKey( spep_2 + 0, shuchusen, 0, 0 , 0 );\r\nsetEffMoveKey( spep_2 + 90, shuchusen, 0, 0 , 0 );\r\n\r\nsetEffScaleKey( spep_2 + 0, shuchusen, 1.6, 1.6 );\r\nsetEffScaleKey( spep_2 + 90, shuchusen, 1.6, 1.6 );\r\n\r\nsetEffRotateKey( spep_2 + 0, shuchusen, 0 );\r\nsetEffRotateKey( spep_2 + 90, shuchusen, 0 );\r\n\r\nsetEffAlphaKey( spep_2 + 0, shuchusen, 255 );\r\nsetEffAlphaKey( spep_2 + 90, shuchusen, 255 );\r\n\r\n-- ** 音 ** --\r\n--playSe( spep_2 + 0, SE_05 );\r\n\r\n-- ** 次の準備 ** --\r\nentryFade( spep_2 + 0, 0, 2, 4, fcolor_r, fcolor_g, fcolor_b, 255 );  --white fade\r\nentryFade( spep_2 + 80, 6, 10, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  --white fade\r\n\r\nATK_01=228;\r\n\r\n-----------------------------------------どっかんいくぜーーーい（ダッシュ）\r\n-- 気合いタメ\r\n--changeAnime( ATK_01, 0, 16);  -- タックル開始\r\nsetDisp( ATK_01-2, 0, 0);--味方キャラ消す\r\nsashikae =entryEffectLife( ATK_01-2,  SP_07,  60,  0x100, -1,  0,  0,  0); \r\n\r\nsetEffMoveKey( ATK_01-2,   sashikae,  -30, 0, 0);--最初の位置\r\nsetEffScaleKey( ATK_01-2,   sashikae,  0, 0);--最初のサイズ\r\n\r\nsetMoveKey(  ATK_01,   1,  700,  0,  0);--敵\r\nsetDisp( ATK_01, 1, 0);--敵非表示\r\n\r\nentryEffectLife( ATK_01,  911,  52,  0x100, -1,  0,  0,  0);--黒集中線\r\n\r\ndash = entryEffectLife( ATK_01+1,  SP_06,  50,  0x80, -1,  0,  30,  0); \r\nsetEffRotateKey(ATK_01,   dash, 35);\r\n\r\nsetEffMoveKey( 1+ATK_01,   sashikae,  -30, 0, 0);--表示開始する位置\r\nsetEffScaleKey( 1+ATK_01,   sashikae,  0, 0);\r\n\r\nsetEffMoveKey( 1+ATK_01,   dash,  30, 0, 0);\r\nsetEffScaleKey( 1+ATK_01,   dash,  0, 0);\r\n\r\nsetEffMoveKey( 15+ATK_01,   sashikae,  -30, 0, 0);--表示開始する位置\r\nsetEffScaleKey( 15+ATK_01,   sashikae,  0, 0);--最初のサイズ\r\n\r\nsetEffMoveKey( 15+ATK_01,   dash,  30,0, 0);\r\nsetEffScaleKey( 15+ATK_01,   dash,  0, 0);\r\n\r\n\r\nsetEffMoveKey( 25+ATK_01,   sashikae,  -50, 0, 20);\r\nsetEffMoveKey( 25+ATK_01,   dash,  50,0, 20);\r\n\r\nsetEffMoveKey( 30+ATK_01,   sashikae,  -70, 0, -100);\r\nsetEffMoveKey( 30+ATK_01,   dash,  70, 0,   -100);\r\n\r\nsetEffMoveKey( 35+ATK_01,   sashikae,  -80, 0, -100);\r\nsetEffScaleKey( 35+ATK_01,   sashikae,  1.3, 1.3);--大きくなるとこ最初\r\n\r\nsetEffMoveKey( 35+ATK_01,   dash,  80, 0,   -100);\r\nsetEffScaleKey( 35+ATK_01,   dash,  1.2, 1.2);\r\n\r\n--setScaleKey( 40+ATK_01,   0, 1.3, 1.3);\r\n--setEffScaleKey( 40+ATK_01,   sashikae,  1.3, 1.3);\r\nsetEffMoveKey( 40+ATK_01,   sashikae,  -90, 0, -128);\r\nsetEffScaleKey( 40+ATK_01,   sashikae,  2, 2);--大きくなるとこ次\r\n\r\nsetEffMoveKey( 40+ATK_01,   dash,  90, 0,   -100);\r\nsetEffScaleKey( 40+ATK_01,   dash,  1.5, 1.5);\r\n\r\n--setScaleKey( 45+ATK_01,   0, 2, 2);\r\n--setEffScaleKey( 45+ATK_01,   sashikae,  2, 2);\r\nsetEffScaleKey( 45+ATK_01,   sashikae,  4, 4);\r\n\r\n--setMoveKey( 45+ATK_01,   0,  -100, 0,  -128);\r\nsetEffMoveKey( 45+ATK_01,   sashikae,  -100, 0,   -128);\r\n\r\nsetEffMoveKey( 45+ATK_01,   dash,  100, 0,   -100);\r\nsetEffScaleKey( 45+ATK_01,   dash,  1.8, 1.8);\r\n\r\n--setScaleKey( 50+ATK_01,   0, 2.5, 2.5);\r\n--setEffScaleKey( 50+ATK_01,   sashikae,  2.5, 2.5);\r\nsetEffScaleKey( 50+ATK_01,   sashikae,  4.9, 4.9);--大きくなるとこ最後\r\n\r\n--setMoveKey( 50+ATK_01,   0,  -110, 0,  -128);\r\nsetEffMoveKey( 50+ATK_01,   sashikae,  -110, 0,   -128);\r\n\r\nsetEffMoveKey( 50+ATK_01,   dash,  110, 0,   -100);\r\nsetEffScaleKey( 50+ATK_01,   dash,  2.2, 2.2);\r\n\r\nsetEffRotateKey(50+ATK_01,   dash, 45);\r\n\r\n--entryEffectLife( ATK_01+45, 707,  18,  0x40+0x80, 0,  0,  0,  0);    -- eff_002\r\n\r\nentryEffect( ATK_01,  11,  0x80,  -1,  0,  0,  -20);--爆破\r\nsetShake(ATK_01+1, 13, 17);\r\nentryEffect( 2+ATK_01,  908,  0x80,  -1,  0,  0,  0);--集中線\r\n\r\n--playSe( 51+ATK_01,1054);\r\n\r\nsetShake(30+ATK_01, 11, 20);\r\n\r\nremoveAllEffect(ATK_01+55);\r\n\r\nentryFade( 50+ATK_01, 3, 7, 3, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\n\r\nSP_Start_1 = ATK_01+60;\r\nsetDisp( SP_Start_1-2, 0, 1);\r\nsetDisp( SP_Start_1-2, 1, 1);\r\n\r\nplaySe(228,  9);\r\n\r\n\r\n-----------------------------------------------------\r\n\r\n-- 攻撃\r\n\r\n--entryFadeBg( SP_Start_1+37, 5, 10, 5, 0,  0,  0, 100);\r\n--setBgScroll( SP_Start_1, -100);\r\nsetDisp( SP_Start_1, 1, 1);\r\nsetScaleKey(   SP_Start_1,   0, 1.1, 1.1);\r\nsetMoveKey(  SP_Start_1, 0, -600,  0,   0);-- 中央位置から\r\nsetMoveKey(  SP_Start_1, 1, -500,  0,   0);-- 中央位置から\r\n\r\nryusen_1=entryEffectLife( SP_Start_1, 920, 155, 0x80,  -1,  0,  0,  0); -- 流線\r\nsetEffRotateKey(SP_Start_1,ryusen_1,-10);\r\nsetEffScaleKey( SP_Start_1, ryusen_1, 1.3, 1.3);\r\n\r\nsetShake( SP_Start_1, 98, 30);\r\nplaySe( SP_Start_1,1003);--SE\r\nsetSeVolume(SP_Start_1,1003,85);\r\nplaySe( SP_Start_1,1001);--SE\r\nsetSeVolume( SP_Start_1,1001,85);\r\n\r\nentryEffect(  SP_Start_1,   22,   0,  1,   0,  -100,  0);\r\nchangeAnime( SP_Start_1,  1,   106);-- 敵モーション\r\nsetDrawFront( SP_Start_1, 0, 1);\r\n\r\n\r\nRbattle=entryEffectLife( SP_Start_1,  SP_05,  152,  0x80, -1,  0,  0,  0); \r\n\r\n--setScaleKey( SP_Start_1-1,   0, 1.5, 1.5);\r\n--setScaleKey( SP_Start_1,   0, 1.5, 1.5);\r\n--setScaleKey( SP_Start_1,   1, 1.5, 1.5);\r\n--setEnvZoomEnable(SP_Start_1,1);\r\n\r\nsetMoveKey( SP_Start_1, 0, -600,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1, 1, -480,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1,   0, 13);-- キック2\r\nplaySe( SP_Start_1,1009);--SE\r\nsetSeVolume( SP_Start_1,1009,85);\r\nentryEffect(  SP_Start_1,   2,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1,   Rbattle,  -550,50, 0);\r\nsetEffScaleKey( SP_Start_1,   Rbattle,  0.9, 0.9);\r\n\r\n--\r\nsetMoveKey( SP_Start_1+8, 0, -500,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+8, 1, -380,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+7,   0, 11);-- パンチ3\r\nplaySe( SP_Start_1+8,1009);--SE\r\nsetSeVolume( SP_Start_1+8,1009,85);\r\nentryEffect(  SP_Start_1+7,   3,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+8, 1, 0);  -- ダメージ振動等\r\nsetBgScroll( SP_Start_1+8, -10);\r\n\r\nsetEffMoveKey( SP_Start_1+8,   Rbattle,  -450,50, 0);\r\nsetEffScaleKey( SP_Start_1+8,   Rbattle,  0.9, 0.9);\r\n\r\nsetMoveKey( SP_Start_1+16, 0, -400,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+16, 1, -280,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+15,   0, 9);--パンチ1\r\nplaySe( SP_Start_1+16,1006);--SE\r\nsetSeVolume( SP_Start_1+16,1006,85);\r\nentryEffect(  SP_Start_1+15,   1,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+16, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+16, -20);\r\n\r\nsetEffMoveKey( SP_Start_1+16,   Rbattle,  -350,50, 0);\r\nsetEffScaleKey( SP_Start_1+16,   Rbattle,  0.9, 0.9);\r\n\r\n--\r\nsetMoveKey( SP_Start_1+24, 0, -300,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+24, 1, -180,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+23,   0, 13);--キック2\r\nplaySe( SP_Start_1+24,1010);--SE\r\nsetSeVolume( SP_Start_1+24,1010,85);\r\nentryEffect(  SP_Start_1+23,   2,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+24, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+24, -30);\r\n\r\nchangeAnime( SP_Start_1+24, 1, 108);  --敵モーション\r\nsetEffMoveKey( SP_Start_1+24,   Rbattle,  -250,50, 0);\r\nsetEffScaleKey( SP_Start_1+24,   Rbattle,  0.9, 0.9);\r\n\r\nsetMoveKey( SP_Start_1+32, 0, -200,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+32, 1, -80,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+31,   0, 11);--パンチ3\r\nplaySe( SP_Start_1+32,1009);--SE\r\nsetSeVolume( SP_Start_1+32,1009,85);\r\nentryEffect(  SP_Start_1+31,   3,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+32, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+32, -40);\r\n\r\nchangeAnime( SP_Start_1+32,  1,   106);-- 敵モーション\r\nsetEffMoveKey( SP_Start_1+32,   Rbattle,  -150,50, 0);\r\nsetEffScaleKey( SP_Start_1+32,   Rbattle,  0.9, 0.9);\r\n\r\n--\r\nsetEnvZoomEnable(SP_Start_1+40,1);\r\n\r\nsetMoveKey( SP_Start_1+40, 0, -100,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+40, 1, 20,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+39,   0, 12);--キック1\r\nplaySe( SP_Start_1+40,1001);--SE\r\nsetSeVolume( SP_Start_1+40,1001,85);\r\nentryEffect(  SP_Start_1+39,   1,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+40, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+40, -50);\r\n\r\nsetEffMoveKey( SP_Start_1+40,   Rbattle,  -50,50, 0);\r\nsetEffScaleKey( SP_Start_1+40,   Rbattle,  0.9, 0.9);\r\n\r\nsetMoveKey( SP_Start_1+48, 0, -100,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+48, 1, 20,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+47,   0, 14);--キック3\r\nplaySe( SP_Start_1+48,1010);--SE\r\nsetSeVolume( SP_Start_1+48,1010,85);\r\nentryEffect(  SP_Start_1+47,   6,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+48, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+48, -60);\r\n\r\nchangeAnime( SP_Start_1+48, 1, 108);  --敵モーション\r\n\r\n--\r\nsetMoveKey( SP_Start_1+56, 0, -100,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+56, 1, 20,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+55,   0, 11);--パンチ3\r\nplaySe( SP_Start_1+56,1009);--SE\r\nsetSeVolume( SP_Start_1+56,1009,85);\r\nentryEffect(  SP_Start_1+55,   3,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+56, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+56, -70);\r\n\r\nsetMoveKey( SP_Start_1+64, 0, -50,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+64, 1, 70,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+63,   0, 9);--パンチ1  392\r\nplaySe( SP_Start_1+64,1012);--SE\r\nsetSeVolume( SP_Start_1+64,1012,85);\r\nentryEffect(  SP_Start_1+63,   1,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+64, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+64, -80);\r\n--\r\n\r\nsetEffMoveKey( SP_Start_1+64,   Rbattle,  0,50, 0);\r\nsetEffScaleKey( SP_Start_1+64,   Rbattle,  0.9, 0.9);\r\n\r\n\r\nsetMoveKey( SP_Start_1+72, 0, 0,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+72, 1, 120,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+71,   0, 11);--キック3 \r\nplaySe( SP_Start_1+72,1013);--SE\r\nsetSeVolume( SP_Start_1+72,1013,85);\r\nentryEffect(  SP_Start_1+71,   6,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+72, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+72, -90);\r\n\r\nsetEffMoveKey( SP_Start_1+72,   Rbattle,  50,50, 0);\r\nsetEffScaleKey( SP_Start_1+72,   Rbattle,  0.9, 0.9);\r\n\r\nchangeAnime( SP_Start_1+72,  1,   106);-- 敵モーション\r\n\r\n\r\nsetMoveKey( SP_Start_1+80, 0, 50,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+80, 1, 170,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+79,   0, 13);--キック2\r\nplaySe( SP_Start_1+80,1001);--SE\r\nsetSeVolume( SP_Start_1+80,1001,85);\r\nentryEffect(  SP_Start_1+79,   2,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+80, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+80, -100);\r\n\r\nsetEffMoveKey( SP_Start_1+80,   Rbattle,  100,50, 0);\r\nsetEffScaleKey( SP_Start_1+80,   Rbattle,  0.9, 0.9);\r\n\r\nchangeAnime( SP_Start_1+80, 1, 108);  --敵モーション\r\n\r\n--\r\nsetMoveKey( SP_Start_1+88, 0, 100,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+88, 1, 220,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+87,   0, 9);--パンチ1\r\nplaySe( SP_Start_1+88,1000);--SE\r\nsetSeVolume( SP_Start_1+88,1000,85);\r\nentryEffect(  SP_Start_1+87,   1,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+88, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1+88,   Rbattle,  150,50, 0);\r\nsetEffScaleKey( SP_Start_1+88,   Rbattle,  0.9, 0.9);\r\n\r\nsetMoveKey( SP_Start_1+96, 0, 150,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+96, 1, 270,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+95,   0, 11);--パンチ3\r\nplaySe( SP_Start_1+96,1009);--SE\r\nsetSeVolume( SP_Start_1+96,1009,85);\r\nentryEffect(  SP_Start_1+95,   3,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+96, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1+96,   Rbattle,  200,50, 0);\r\nsetEffScaleKey( SP_Start_1+96,   Rbattle,  0.9, 0.9);\r\n\r\n--\r\nsetMoveKey( SP_Start_1+104, 0, 150,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+104, 1, 270,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+103,   0, 10);--パンチ2\r\nplaySe( SP_Start_1+104,1006);--SE\r\nsetSeVolume( SP_Start_1+104,1006,85);\r\nentryEffect(  SP_Start_1+103,   2,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+104, 1, 0);  -- ダメージ振動等\r\n\r\nchangeAnime( SP_Start_1+104, 1, 106);  --敵モーション\r\n\r\nsetMoveKey( SP_Start_1+112, 0, 150,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+112, 1, 270,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+111,   0, 12);--キック1\r\nplaySe( SP_Start_1+112,1001);--SE\r\nsetSeVolume( SP_Start_1+112,1001,85);\r\nentryEffect(  SP_Start_1+111,   1,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+112, 1, 0);  -- ダメージ振動等\r\n--\r\nsetMoveKey( SP_Start_1+120, 0, 100,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+120, 1, 220,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+119,   0, 11);--パンチ3\r\nplaySe( SP_Start_1+120,1009);--SE\r\nsetSeVolume( SP_Start_1+120,1009,85);\r\nentryEffect(  SP_Start_1+119,   3,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+120, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1+120,   Rbattle,  150,50, 0);\r\nsetEffScaleKey( SP_Start_1+120,   Rbattle,  0.9, 0.9);\r\n\r\nchangeAnime( SP_Start_1+120, 1, 108);  --敵モーション\r\n\r\nsetMoveKey( SP_Start_1+128, 0, 50,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+128, 1, 170,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+127,   0, 14);--キック3\r\nplaySe( SP_Start_1+128,1010);--SE\r\nsetSeVolume( SP_Start_1+128,1010,85);\r\nentryEffect(  SP_Start_1+127,   6,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+128, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1+128,   Rbattle,  100,50, 0);\r\nsetEffScaleKey( SP_Start_1+128,   Rbattle,  0.9, 0.9);\r\n--\r\nsetMoveKey( SP_Start_1+136, 0, 0,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+136, 1, 120,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+135,   0, 12);--キック1\r\nplaySe( SP_Start_1+136,1001);--SE\r\nsetSeVolume( SP_Start_1+136,1001,85);\r\nentryEffect(  SP_Start_1+135,   1,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+136, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1+136,   Rbattle,  50,50, 0);\r\nsetEffScaleKey( SP_Start_1+136,   Rbattle,  0.9, 0.9);\r\n\r\nchangeAnime( SP_Start_1+136, 1, 106);  --敵モーション\r\n\r\nsetMoveKey( SP_Start_1+144, 0, -100,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+144, 1, 20,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+143,   0, 9);--パンチ1\r\nplaySe( SP_Start_1+144,1000);--SE\r\nsetSeVolume( SP_Start_1+144,1000,85);\r\nentryEffect(  SP_Start_1+143,   1,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+144, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1+144,   Rbattle,  -50,50, 0);\r\nsetEffScaleKey( SP_Start_1+144,   Rbattle,  0.9, 0.9);\r\n\r\nsetDrawFront( SP_Start_1+149, 0, 0);\r\nchangeAnime( SP_Start_1+149,   0, 0);--移動\r\nsetRotateKey( SP_Start_1+93, 0,10);\r\nsetEnvZoomEnable(SP_Start_1+94,1);\r\n\r\nsetMoveKey( SP_Start_1+154, 0, 30,  150,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+154, 1, 150,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+153,   0, 15);--撃ち落とし\r\nplaySe( SP_Start_1+154,1009);--SE\r\nsetSeVolume( SP_Start_1+154,1009,85);\r\nentryEffect(  SP_Start_1+153,   905,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+153, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1+154,   Rbattle,  80,50, 0);\r\nsetEffScaleKey( SP_Start_1+154,   Rbattle,  0.9, 0.9);\r\n\r\n\r\n-- 受け------------------------------------------\r\n-- 味方移動（画面外へ)\r\n--setMoveKey(  SP_Start_1+150, 0, 30,  150,   0);      -- 画面外へ\r\nsetMoveKey( SP_Start_1+154, 1, 130,  0,   0);      -- 敵を若干後退\r\n\r\nsetMoveKey(  SP_Start_1+164, 1, 600,  0,   0);      -- 吹っ飛び中\r\nchangeAnime( SP_Start_1+154, 1, 108);    \t\t\t-- モーション(立ち)\r\n\r\nendPhase(SP_Start_1+164);\r\n--setBgScroll( SP_Start_1+154, 0);\r\n\r\nsetDisp( SP_Start_1+164, 1, 0);\r\n\r\n-- ** エフェクト等 ** ------------------------------------\r\nentryFadeBg( SP_Start_1, 0, 155, 0, 10, 10, 10, 180);       -- ベース暗め　背景\r\n\r\nshuchusen = entryEffectLife( SP_Start_1, 906, 154, 0x00,  -1, 0,  0,  0);   -- 集中線\r\nsetEffScaleKey( SP_Start_1, shuchusen, 1.0, 1.0);\r\nsetEffScaleKey( SP_Start_1, shuchusen, 1.0, 1.0);\r\nsetEffScaleKey( SP_Start_1+154, shuchusen, 2.0, 2.0);\r\n\r\n-----------------------------------------------------------\r\n\r\nentryFade( SP_Start_1+155, 3, 5, 3, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\n\r\nSP_Start_2 = SP_Start_1+163; --367\r\n\r\n\r\n--吹っ飛びからの爆発--------------------------\r\n\r\nsetDisp( SP_Start_1+160, 0, 0);\r\nsetDisp( SP_Start_2, 1, 1);\r\nsetRotateKey( SP_Start_1+160, 0,0);\r\nsetMoveKey(  SP_Start_1+160, 0, -30,  -10,  0); \r\nsetScaleKey(  SP_Start_1+159,  0, 1.1, 1.1);\r\nsetScaleKey( SP_Start_1+160, 0, 1.5, 1.5);\r\n\r\nsetRotateKey(  SP_Start_2+1,1,20);\r\nsetMoveKey(  SP_Start_2+3, 1, -500,  250,   30); \r\nsetMoveKey(  SP_Start_2+6, 1, 50,  -100,   0); \r\nsetMoveKey(  SP_Start_2+10, 1, 350,  -350,   -100); \r\n\r\nsetDisp( SP_Start_2+11, 1, 0);\r\n--setRotateKey(SP_Start_2+11,1,0);\r\n\r\n\r\n--爆破演出1\r\n  Bmeff = entryEffect(SP_Start_2+10,    1509,  0,  -1,  0,  300,  -200);   -- HIT\r\n  playSe(SP_Start_2+10,1023);\r\n  setEffMoveKey(SP_Start_2+20, Bmeff,  -1500,-250);\r\n  setEffScaleKey(SP_Start_2,Bmeff,2,2);\r\n--シェイク\r\n  setShake(SP_Start_2+5,10,15);\r\n\r\n  entryFadeBg(SP_Start_2,0,5,5,255,255,255,255);\r\n  entryFlashBg(SP_Start_2+5,3,255,255,255);\r\n\r\n\r\n--爆破演出2\r\nsetBgScroll(SP_Start_2+25,60);\r\n  Bmeff2 = entryEffect(SP_Start_2+25,    1509,  0,  -1,  0,  250,  -250);   -- HIT\r\n  playSe(SP_Start_2+25,1023);\r\n  setEffScaleKey(SP_Start_2+25,Bmeff2,1.2,1.2);\r\n  setEffMoveKey(SP_Start_2+59, Bmeff2,  -1400,-280);\r\n  --シェイク\r\n  setShake(SP_Start_2+26,10,15);\r\n\r\n  entryFadeBg(SP_Start_2+25,2,5,5,0,0,0,255);\r\n  entryFlashBg(SP_Start_2+32,3,0,0,0);\r\n  \r\n  \r\n--吹っ飛び2--------------------------  \r\n\r\n--setDisp( SP_Start_2+58, 1, 1);\r\n--setDisp( SP_Start_2+59, 1, 1);\r\n\r\n--changeAnime( SP_Start_2+58,  1, 5);--eダメージ奥\r\n\r\n--setRotateKey(SP_Start_2+57,1,0);\r\n--setRotateKey(SP_Start_2+58,1,30);  \r\n\r\n--setMoveKey(  SP_Start_2+59, 1, -100,  -200,   -50); \r\n--setMoveKey(  SP_Start_2+65, 1, 150,  60,   0); \r\n--setMoveKey(  SP_Start_2+70, 1, 350,  180,   50); \r\n--setMoveKey(  SP_Start_2+73, 1, 550,  540,   50); \r\n\r\n--------------------------------------\r\n\r\nentryFade( SP_Start_2+59, 3, 5, 3, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\n\r\nsetDisp( SP_Start_2+63, 1, 0);\r\nsetRotateKey(SP_Start_2,1,0); \r\nsetEnvZoomEnable(SP_Start_2+63,0);\r\n\r\nSP_Start_3 = SP_Start_2+67; --443\r\n\r\nremoveAllEffect(SP_Start_3-1);\r\n\r\n------------------------------------------------------\r\n-- 回避\r\n------------------------------------------------------\r\n\r\nif(_IS_DODGE_ == 1) then\r\n\r\nSP_dodge = 275; --エンドフェイズのフレーム数を置き換える\r\n\r\nplaySe( SP_dodge-12, 1042);\r\n\r\nsetRotateKey( SP_dodge,  0,  0);\r\nsetRotateKey( SP_dodge+10,  0,  0);\r\n\r\nsetDisp( SP_dodge+9, 1, 0);\r\nsetMoveKey(  SP_dodge, 1, 9000,  9000,   30);\r\nsetMoveKey(  SP_dodge+9, 1, 9000,  9000,   30);\r\n\r\nspeff = entryEffectUnpausable(  SP_dodge-12,   1504,   0x100,     -1,  0,  0,  -350);   -- eff_005 (カットイン)\r\nsetEffReplaceTexture( speff, 3, 6);                           -- カットイン差し替え\r\n\r\nkaihi = entryEffectUnpausable(  SP_dodge,   1575,  0x100,     -1,  0,  0,  350);   -- 回避の文字表示\r\nsetEffScaleKey( SP_dodge, kaihi, 1.0, 1.0);\r\nsetEffAlphaKey( SP_dodge, kaihi, 255);\r\n\r\npauseAll( SP_dodge, 67);\r\n\r\nentryFade( SP_dodge+5, 4,  7, 4, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\nsetMoveKey(  SP_dodge+5, 0, -30,  -10,  0); \r\nsetMoveKey(  SP_dodge+9, 0, -1100,  -10,  0); \r\n\r\nendPhase(SP_dodge+10);\r\ndo return end\r\nelse end\r\n\r\n------------------------------------------------------\r\n-- かめはめ波溜め！(100F)\r\n------------------------------------------------------\r\nsetMoveKey(  SP_Start_3, 0, -150,  -10,  0); \r\nentryEffect( SP_Start_3+2, 700, 0x00,  0, 0,  0,  -20); --瞬間移動\r\nsetDisp( SP_Start_3+5, 0, 1);\r\nsetVisibleUI(SP_Start_3, 0);\r\nchangeAnime( SP_Start_3, 0, 30);                       -- 溜め!\r\nsetScaleKey(  SP_Start_3,   0, 1.5, 1.5);\r\nplaySe( SP_Start_3, 43);\r\n\r\n--changeAnime( SP_Start_3+35, 0, 30);     \r\n\r\nkame_hand = entryEffect( SP_Start_3+30, SP_01, 0x40,      0,  300,  0,  0);   -- 手のカメハメ波部\r\nsetEffScaleKey( SP_Start_3+30, kame_hand, 0.5, 0.5);\r\n\r\nsetShakeChara( SP_Start_3+30, 0,100,10);\r\n\r\n--[[\r\nplaySe( SP_Start_3+30, SE_03);\r\nplaySe( SP_Start_3+55, SE_03);\r\nplaySe( SP_Start_3+80, SE_03);\r\nplaySe( SP_Start_3+105, SE_03);\r\nplaySe( SP_Start_3+130, SE_03);\r\n]]\r\n--v4.11調整\r\nSE001 = playSe( SP_Start_3+30, SE_03);\r\nstopSe(SP_Start_3+60,SE001,5);\r\nSE002 = playSe( SP_Start_3+55, SE_03);\r\nstopSe(SP_Start_3+85,SE002,5);\r\nSE003 = playSe( SP_Start_3+80, SE_03);\r\nstopSe(SP_Start_3+110,SE003,5);\r\nSE004 = playSe( SP_Start_3+105, SE_03);\r\nstopSe(SP_Start_3+135,SE004,5);\r\nSE005 = playSe( SP_Start_3+130, SE_03);\r\n\r\nsetMoveKey(  SP_Start_3+130, 0, -120,  -10,  0); \r\n\r\nentryFade( SP_Start_3+130, 3, 5, 3, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\n\r\n-- ** エフェクト等 ** --\r\n--aura = entryEffectLife(  SP_Start_3+70,   311, 99, 0x40,  0,  1,  0,  0); -- オーラ\r\n--setEffScaleKey( SP_Start_3+30, aura, 1.5, 1.5);\r\n--setShakeChara( SP_Start_3+70, 0, 49, 5);\r\n\r\n-- 書き文字エントリー\r\nct = entryEffectLife( SP_Start_3+30, 10008, 100, 0x100, -1, 0, -190, 300);    -- ゴゴゴ・・・\r\nsetEffShake(SP_Start_3+30, ct, 40, 8);\r\nsetEffScaleKey(SP_Start_3+30, ct, 1.4, 1.4);\r\n\r\n--setMoveKey(  SP_Start_3+134, 0, -100,  -30,  0); \r\n\r\nsetScaleKey(  SP_Start_3+133,   0, 1.5, 1.5);\r\nsetMoveKey(  SP_Start_3+133, 0, -10,  -10,  0); \r\nsetScaleKey(  SP_Start_3+134,   0, 1, 1);\r\n\r\nSP_Start_4 = SP_Start_3+138;--599\r\n\r\n\r\n------------------------------------------------------\r\n-- カメハメハ発射(110F)\r\n------------------------------------------------------\r\nchangeAnime( SP_Start_4, 0, 31);                                    -- かめはめ発射ポーズ\r\n\r\nsetMoveKey(  SP_Start_4-1,    0,      0,  -80,   0);\r\nsetMoveKey(  SP_Start_4,    0,   -600,  -80,   0);\r\nsetMoveKey(  SP_Start_4+1,    0,   -600,  -80,   0);\r\nsetMoveKey(  SP_Start_4+10,    0,   -100,  -80,   0);\r\n\r\nkamehame_beam = entryEffectLife( SP_Start_4, SP_02, 109, 0x40,  0,  300,  0,  0);   -- 伸びるかめはめ波\r\n\r\nplaySe( SP_Start_4, SE_07);\r\n\r\n--spname = entryEffect( SP_Start_4, 1508,  0,  -1,  0,  0,  0);               -- かめはめ波文字\r\n--setEffReplaceTexture(spname, 7, 4);                                  -- 技名テクスチャ差し替え\r\n\r\n-- 途中からカメハメハが伸びる\r\nsetMoveKey(  SP_Start_4+39,    0,   -100,  -80,   0);\r\nsetMoveKey(  SP_Start_4+40,    0,   -100,  -80,   0);\r\nsetMoveKey(  SP_Start_4+48,    0,   -1100,  -80,   0);\r\n\r\nentryFade( SP_Start_4+105, 3, 2, 5, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\n\r\n-- ** エフェクト等 ** --\r\nentryFadeBg( SP_Start_4, 0, 109, 0, 10, 10, 10, 180);       -- ベース暗め　背景\r\nentryFadeBg( SP_Start_4, 0, 40, 0, 230, 230, 230, 255);    -- 最初だけ明るい　背景\r\nentryFadeBg( SP_Start_4+40, 0, 2, 8, 100, 140, 250, 250);     -- 青い　背景\r\n\r\nentryEffectLife( SP_Start_4, 920, 109, 0x80,  -1,  0,  0,  0); -- 流線\r\n\r\n--setShakeChara( SP_Start_4+45, 0, 54, 50);\r\n\r\nshuchusen = entryEffectLife( SP_Start_4, 906, 49, 0x00,  -1, 0,  0,  0);   -- 集中線\r\nsetEffScaleKey( SP_Start_4, shuchusen, 1.0, 1.0);\r\nsetEffScaleKey( SP_Start_4+40, shuchusen, 1.0, 1.0);\r\nsetEffScaleKey( SP_Start_4+49, shuchusen, 2.0, 2.0);\r\n\r\n--entryFlash( (SP_Start_4+10), 1,  fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+22), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+36), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+50), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+64), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+80), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+92), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n\r\n-- 書き文字エントリー\r\nct = entryEffectLife( SP_Start_4+8, 10012, 32, 0, -1, 0, 200, 300); -- ズオッ\r\nsetEffShake(SP_Start_4+8, ct, 32, 5);\r\n\r\nsetEffAlphaKey(SP_Start_4+8, ct, 255);\r\nsetEffAlphaKey(SP_Start_4+30, ct, 255);\r\nsetEffAlphaKey(SP_Start_4+40, ct, 0);\r\n\r\nsetEffScaleKey(SP_Start_4+8, ct, 0.0, 0.0);\r\nsetEffScaleKey(SP_Start_4+12, ct, 1.3, 1.3);\r\nsetEffScaleKey(SP_Start_4+32, ct, 1.3, 1.3);\r\nsetEffScaleKey(SP_Start_4+40, ct, 6.0, 6.0);\r\nplaySe( SP_Start_4+40, SE_07);\r\n\r\n--704\r\n\r\n------------------------------------------------------\r\n-- かめはめは迫る(100F)\r\n------------------------------------------------------\r\nsetDisp( SP_Start_4+110, 0, 0);\r\nsetDisp( SP_Start_4+110, 1, 1);\r\nsetRotateKey(SP_Start_4+111,1,0);  \r\n\r\nchangeAnime( SP_Start_4+110, 1, 104);                        -- ガード\r\nsetMoveKey(  SP_Start_4+109,    1,  235,  0,   0);\r\nsetMoveKey(  SP_Start_4+110,    1,  235,  0,   0);\r\nsetMoveKey(  SP_Start_4+111,    1,  235,  0,   0);\r\nsetScaleKey( SP_Start_4+109,    1,  0.7, 0.7);\r\nsetScaleKey( SP_Start_4+110,    1,  0.7, 0.7);\r\n\r\nsetMoveKey(  SP_Start_4+140,    1,   120,  0,   0);\r\nsetScaleKey(  SP_Start_4+140,   1,   1.6,  1.6);\r\nsetRotateKey(SP_Start_4+140,1,0);  \r\nsetRotateKey(SP_Start_4+202,1,0);  \r\n\r\nplaySe( SP_Start_4+130, SE_06);\r\n\r\nkamehame_beam2 = entryEffect( SP_Start_4+110, SP_03,   0, -1,  0,  0,  0);   -- 迫るかめはめ波\r\nsetEffScaleKey(SP_Start_4+110, kamehame_beam2, 1, 1);\r\nsetEffScaleKey(SP_Start_4+192, kamehame_beam2, 1, 1);\r\nsetEffScaleKey(SP_Start_4+194, kamehame_beam2, 2.5, 2.5);\r\nsetDamage( SP_Start_4+192, 1, 0);  -- ダメージ振動等\r\n\r\n--speff = entryEffect( SP_Start_4+110, 1506,   0,  -1,  0,  0,  0);    -- カットイン\r\n--setEffReplaceTexture( speff, 6, 3);                       -- カットイン差し替え\r\n--playSe( SP_Start_4+110, SE_08);\r\n\r\nplaySe( SP_Start_4+195, SE_09);\r\n\r\n-- 敵吹っ飛ぶモーション\r\nchangeAnime( SP_Start_4+195, 1, 108);\r\nsetMoveKey(  SP_Start_4+195, 1,  120,    0,  0);\r\nsetMoveKey(  SP_Start_4+209, 1,  400,    0,  0);\r\nsetScaleKey( SP_Start_4+195, 1,  1.6, 1.6);\r\nsetScaleKey( SP_Start_4+198, 1,  1.5, 1.5);\r\nsetScaleKey( SP_Start_4+208, 1,  0.2, 0.2);\r\n\r\n-- ** エフェクト等 ** --\r\nsetShakeChara( SP_Start_4+110, 1, 99, 20);\r\n\r\nentryFadeBg( SP_Start_4+110, 0, 99, 0, 10, 10, 10, 150);          -- ベース暗め　背景\r\n\r\nentryEffectLife( SP_Start_4+110, 921, 99, 0x80,  -1,  0,  0,  0); -- 流線斜め\r\n\r\n--entryFlash( (SP_Start_4+110+10), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+110+22), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+110+36), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+110+50), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+110+64), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+110+80), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n\r\n-- 書き文字エントリー\r\nct = entryEffectLife( SP_Start_4+110, 10014, 99, 0, -1, 0, -100, 255); -- ズドドッ\r\nsetEffShake(SP_Start_4+110, ct, 99, 20);\r\nsetEffScaleKey( SP_Start_4+110, ct, 2.4, 2.4);\r\nsetEffRotateKey(SP_Start_4+110, ct, 70);\r\nsetEffAlphaKey(SP_Start_4+110, ct, 255);\r\nsetEffAlphaKey(SP_Start_4+170, ct, 255);\r\nsetEffAlphaKey(SP_Start_4+190, ct, 0);\r\n\r\nentryFade( SP_Start_4+202, 6,  7, 4, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\n\r\n------------------------------------------------------\r\n-- 爆発 (110F)\r\n------------------------------------------------------\r\nsetDisp( SP_Start_4+209, 1, 1);\r\nsetMoveKey(  SP_Start_4+209,    1,  100,  0,   0);\r\nsetScaleKey( SP_Start_4+209,    1,  1.0, 1.0);\r\nsetMoveKey(  SP_Start_4+210,    1,    0,   0,   128);\r\nsetScaleKey( SP_Start_4+210,    1,  0.1, 0.1);\r\n\r\nchangeAnime( SP_Start_4+210, 1, 107);                         -- 手前ダメージ\r\nentryEffect( SP_Start_4+218, 1509,  0x80,  -1,  0,  0,  0);   -- 爆発\r\nplaySe( SP_Start_4+218, SE_10);\r\n\r\nsetMoveKey(  SP_Start_4+218,   1,    0,   0,   128);\r\nsetMoveKey(  SP_Start_4+225,   1,  -60,  -200,  -100);\r\n--setMoveKey(  SP_Start_4+226,   1,  -60,  -200,  -100);\r\nsetDamage( SP_Start_4+226, 1, 0);  -- ダメージ振動等\r\nsetShake(SP_Start_4+217,6,15);\r\nsetShake(SP_Start_4+223,15,10);\r\n\r\nsetRotateKey( SP_Start_4+210,  1,  30 );\r\nsetRotateKey( SP_Start_4+212,  1,  80 );\r\nsetRotateKey( SP_Start_4+214,  1, 120 );\r\nsetRotateKey( SP_Start_4+216,  1, 160 );\r\nsetRotateKey( SP_Start_4+218,  1, 200 );\r\nsetRotateKey( SP_Start_4+220,  1, 260 );\r\nsetRotateKey( SP_Start_4+222,  1, 320 );\r\nsetRotateKey( SP_Start_4+224,  1,   0 );\r\n\r\nsetShakeChara( SP_Start_4+225, 1, 5,  10);\r\nsetShakeChara( SP_Start_4+230, 1, 10, 20);\r\n\r\n-- 書き文字エントリー\r\nct = entryEffectLife( SP_Start_4+225, 10005, 100, 0, -1, 0, -50, 230); -- ガッ\r\nsetEffShake(SP_Start_4+225, ct, 30, 10);\r\nsetEffRotateKey( SP_Start_4+225, ct, -40);\r\nsetEffScaleKey( SP_Start_4+225, ct, 4.0, 4.0);\r\nsetEffScaleKey( SP_Start_4+226, ct, 2.0, 2.0);\r\nsetEffScaleKey( SP_Start_4+227, ct, 2.6, 2.6);\r\nsetEffScaleKey( SP_Start_4+228, ct, 4.0, 4.0);\r\nsetEffScaleKey( SP_Start_4+229, ct, 2.6, 2.6);\r\nsetEffScaleKey( SP_Start_4+230, ct, 3.8, 3.8);\r\nsetEffScaleKey( SP_Start_4+310, ct, 3.8, 3.8);\r\nsetEffAlphaKey( SP_Start_4+225, ct, 255);\r\nsetEffAlphaKey( SP_Start_4+310, ct, 255);\r\nsetEffAlphaKey( SP_Start_4+310, ct, 0);\r\n\r\nplaySe( SP_Start_4+213, SE_11);\r\nshuchusen = entryEffectLife( SP_Start_4+213, 906, 120, 0x00,  -1, 0,  0,  0);   -- 集中線\r\nentryEffect( SP_Start_4+213, 1600,  0x00,  -1,  0,30, -130);   -- ひび割れ\r\n\r\n-- ダメージ表示\r\ndealDamage(SP_Start_4+226);\r\n\r\n--entryFade( SP_Start_4+310, 9,  10, 1, 8, 8, 8, 255);             -- black fade\r\n\r\nendPhase(SP_Start_4+310);\r\n\r\nelse\r\n\r\n\r\n-----------------------------------------\r\n--敵側の攻撃\r\n-----------------------------------------\r\nchangeAnime( 0, 0, 0);                       -- 立ち\r\nsetDisp( 0, 1, 0);\r\n\r\nsetMoveKey(   0,   0, -80, 0,   0);\r\nsetMoveKey(   1,   0, -80, 0,   0);\r\nsetScaleKey(   0,   0, 1.5, 1.5);\r\nsetScaleKey(   1,   0, 1.5, 1.5);\r\n\r\n------------------------------------------------------\r\n-- 気溜め(40F)\r\n------------------------------------------------------\r\n\r\n--気を貯める\r\nchangeAnime(  46, 0, 17);                       -- 溜め!\r\n\r\nentryEffect(  46,   1503,   0x80,    -1,  0,  0,  0);    -- eff_001\r\nentryEffect(  46,   1502,   0x80, -1,  0,  0,  0);    -- eff_002\r\nsyutsugen=entryEffect(  47,   SP_04e,   0x80, -1,  0,  30,  10);    --17号出現\r\nsetEffScaleKey( 47, syutsugen ,  -1.4,  1.4);\r\n\r\nplaySe( 46, SE_01);\r\nsetVisibleUI(0, 0);\r\n\r\n--entryEffect(  30,   1503,   0x80,  -1,  0,  0,  0);   -- eff_004 (気)\r\n--entryEffect(  30,   1502,   0,     -1,  0,  0,  0);   -- eff_003 (気)\r\n--speff = entryEffect(  46,   1504,   0,     -1,  0,  0,  0);   -- eff_005 (カットイン)\r\n--setEffReplaceTexture( speff, 3, 2);                           -- カットイン差し替え\r\n--speff = entryEffect(  46,   1505,   0,     -1,  0,  0, 0);   -- eff_006 (セリフ)\r\n--setEffReplaceTexture( speff, 4, 5);                           -- セリフ差し替え\r\n\r\nplaySe( 46, SE_04);\r\n\r\nentryFade( 122, 5, 5, 3, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\n\r\n-- ** エフェクト等 ** --\r\n--aura = entryEffectLife(  30,   311, 39, 0x40,  0,  1,  0,  0); -- オーラ\r\n--setEffScaleKey( 30, aura, 1.5, 1.5);\r\n--setShakeChara( 30, 0, 19, 5);\r\n\r\n-- 書き文字エントリー\r\nct = entryEffectLife( 46, 10013, 76, 0, -1, 0, 0, 200); -- ズズンッ\r\nsetEffShake(46, ct, 40, 7);\r\nsetEffAlphaKey(46, ct, 255);\r\nsetEffAlphaKey(66, ct, 255);\r\nsetEffAlphaKey(125, ct, 0);\r\nsetEffScaleKey( 66, ct, 0.1, 0.1);\r\nsetEffScaleKey( 125, ct, 2.0, 2.0);\r\nplaySe( 46, SE_02);\r\n\r\nsetMoveKey(   130,   0, -30, 0,   0);\r\n\r\n--------------------------------------\r\n--カードカットイン(94F)\r\n--------------------------------------\r\nspep_2=130;\r\nsetScaleKey( 130,   0, 1.5, 1.5);\r\nsetScaleKey( 131,   0, 1.5, 1.5);\r\n-- ** カードカットイン ** --\r\n--[[speff2 = entryEffect( spep_2 + 0, 1507, 0x100, -1, 0, 0, 0 );   -- カード\r\nsetEffReplaceTexture( speff2, 1, 1 );\r\nsetEffReplaceTexture( speff2, 2, 0 );-- カード差し替え\r\nsetEffReplaceTexture( speff2, 5, 4 );-- 技名テクスチャ差し替え]]\r\n\r\n-- ** 極限用に調整 ** --\r\nif (_SPECIAL_SKILL_LEVEL_ == 0) then\r\nprint (\"_SPECIAL_SKILL_LEVEL_ == 0\");\r\nplaySe( spep_2, SE_05);\r\nspeff = entryEffect( spep_2, 1507, 0, -1, 0, 0, 0); -- カード\r\nsetEffReplaceTexture( speff, 1, 1);\r\nsetEffReplaceTexture( speff, 2, 0); -- カード差し替え\r\nsetEffReplaceTexture( speff, 5, 4); -- 技名テクスチャ差し替え\r\n\r\n\r\nelseif(_SPECIAL_SKILL_LEVEL_ == 1) then\r\nprint (\"_SPECIAL_SKILL_LEVEL_ == 1\");\r\nplaySe( spep_2, SE_05);\r\nspeff = entryEffect( spep_2, 1120, 0, -1, 0, 0, 0); -- カード\r\nsetEffReplaceTexture( speff, 1, 1);\r\nsetEffReplaceTexture( speff, 2, 0); -- カード差し替え\r\nsetEffReplaceTexture( speff, 5, 4); -- 技名テクスチャ差し替え\r\n\r\n\r\nelseif(_SPECIAL_SKILL_LEVEL_ == 2) then\r\nprint (\"_SPECIAL_SKILL_LEVEL_ == 2\");\r\nplaySe( spep_2, SE_05);\r\nspeff = entryEffect( spep_2, 1121, 0, -1, 0, 0, 0); -- カード\r\nsetEffReplaceTexture( speff, 1, 1);\r\nsetEffReplaceTexture( speff, 2, 0); -- カード差し替え\r\nsetEffReplaceTexture( speff, 5, 4); -- 技名テクスチャ差し替え\r\nend\r\n\r\n-- ** 集中線 ** --\r\nshuchusen = entryEffectLife( spep_2 + 0, 906, 90, 0x100, -1, 0, 0, 0 );  --集中線\r\nsetEffShake( spep_2 + 0, shuchusen, 90, 20 );\r\n\r\nsetEffMoveKey( spep_2 + 0, shuchusen, 0, 0 , 0 );\r\nsetEffMoveKey( spep_2 + 90, shuchusen, 0, 0 , 0 );\r\n\r\nsetEffScaleKey( spep_2 + 0, shuchusen, 1.6, 1.6 );\r\nsetEffScaleKey( spep_2 + 90, shuchusen, 1.6, 1.6 );\r\n\r\nsetEffRotateKey( spep_2 + 0, shuchusen, 0 );\r\nsetEffRotateKey( spep_2 + 90, shuchusen, 0 );\r\n\r\nsetEffAlphaKey( spep_2 + 0, shuchusen, 255 );\r\nsetEffAlphaKey( spep_2 + 90, shuchusen, 255 );\r\n\r\n-- ** 音 ** --\r\n--playSe( spep_2 + 0, SE_05 );\r\n\r\n-- ** 次の準備 ** --\r\nentryFade( spep_2 + 0, 0, 2, 4, fcolor_r, fcolor_g, fcolor_b, 255 );  --white fade\r\nentryFade( spep_2 + 80, 6, 10, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  --white fade\r\n\r\nATK_01=228;\r\n\r\n\r\n\r\n-----------------------------------------どっかんいくぜーーーい（ダッシュ）\r\n-- 気合いタメ\r\n--changeAnime( ATK_01, 0, 16);  -- タックル開始\r\nsetDisp( ATK_01-2, 0, 0);--味方キャラ消す\r\nsashikae =entryEffectLife( ATK_01-2,  SP_07,  60,  0x100, -1,  0,  0,  0); \r\n\r\nsetEffMoveKey( ATK_01-2,   sashikae,  -30, 0, 0);--最初の位置\r\nsetEffScaleKey( ATK_01-2,   sashikae,  0, 0);--最初のサイズ\r\n\r\nsetMoveKey(  ATK_01,   1,  700,  0,  0);--敵\r\nsetDisp( ATK_01, 1, 0);--敵非表示\r\n\r\nentryEffectLife( ATK_01,  911,  52,  0x100, -1,  0,  0,  0);--黒集中線\r\n\r\ndash = entryEffectLife( ATK_01+1,  SP_06,  50,  0x80, -1,  0,  30,  0); \r\nsetEffRotateKey(ATK_01,   dash, 35);\r\n\r\nsetEffMoveKey( 1+ATK_01,   sashikae,  -30, 0, 0);--表示開始する位置\r\nsetEffScaleKey( 1+ATK_01,   sashikae,  0, 0);\r\n\r\nsetEffMoveKey( 1+ATK_01,   dash,  30, 0, 0);\r\nsetEffScaleKey( 1+ATK_01,   dash,  0, 0);\r\n\r\nsetEffMoveKey( 15+ATK_01,   sashikae,  -30, 0, 0);--表示開始する位置\r\nsetEffScaleKey( 15+ATK_01,   sashikae,  0, 0);--最初のサイズ\r\n\r\nsetEffMoveKey( 15+ATK_01,   dash,  30,0, 0);\r\nsetEffScaleKey( 15+ATK_01,   dash,  0, 0);\r\n\r\n\r\nsetEffMoveKey( 25+ATK_01,   sashikae,  -50, 0, 20);\r\nsetEffMoveKey( 25+ATK_01,   dash,  50,0, 20);\r\n\r\nsetEffMoveKey( 30+ATK_01,   sashikae,  -70, 0, -100);\r\nsetEffMoveKey( 30+ATK_01,   dash,  70, 0,   -100);\r\n\r\nsetEffMoveKey( 35+ATK_01,   sashikae,  -80, 0, -100);\r\nsetEffScaleKey( 35+ATK_01,   sashikae,  1.3, 1.3);--大きくなるとこ最初\r\n\r\nsetEffMoveKey( 35+ATK_01,   dash,  80, 0,   -100);\r\nsetEffScaleKey( 35+ATK_01,   dash,  1.2, 1.2);\r\n\r\n--setScaleKey( 40+ATK_01,   0, 1.3, 1.3);\r\n--setEffScaleKey( 40+ATK_01,   sashikae,  1.3, 1.3);\r\nsetEffMoveKey( 40+ATK_01,   sashikae,  -90, 0, -128);\r\nsetEffScaleKey( 40+ATK_01,   sashikae,  2, 2);--大きくなるとこ次\r\n\r\nsetEffMoveKey( 40+ATK_01,   dash,  90, 0,   -100);\r\nsetEffScaleKey( 40+ATK_01,   dash,  1.5, 1.5);\r\n\r\n--setScaleKey( 45+ATK_01,   0, 2, 2);\r\n--setEffScaleKey( 45+ATK_01,   sashikae,  2, 2);\r\nsetEffScaleKey( 45+ATK_01,   sashikae,  4, 4);\r\n\r\n--setMoveKey( 45+ATK_01,   0,  -100, 0,  -128);\r\nsetEffMoveKey( 45+ATK_01,   sashikae,  -100, 0,   -128);\r\n\r\nsetEffMoveKey( 45+ATK_01,   dash,  100, 0,   -100);\r\nsetEffScaleKey( 45+ATK_01,   dash,  1.8, 1.8);\r\n\r\n--setScaleKey( 50+ATK_01,   0, 2.5, 2.5);\r\n--setEffScaleKey( 50+ATK_01,   sashikae,  2.5, 2.5);\r\nsetEffScaleKey( 50+ATK_01,   sashikae,  4.9, 4.9);--大きくなるとこ最後\r\n\r\n--setMoveKey( 50+ATK_01,   0,  -110, 0,  -128);\r\nsetEffMoveKey( 50+ATK_01,   sashikae,  -110, 0,   -128);\r\n\r\nsetEffMoveKey( 50+ATK_01,   dash,  110, 0,   -100);\r\nsetEffScaleKey( 50+ATK_01,   dash,  2.2, 2.2);\r\n\r\nsetEffRotateKey(50+ATK_01,   dash, 45);\r\n\r\n--entryEffectLife( ATK_01+45, 707,  18,  0x40+0x80, 0,  0,  0,  0);    -- eff_002\r\n\r\nentryEffect( ATK_01,  11,  0x80,  -1,  0,  0,  -20);--爆破\r\nsetShake(ATK_01+1, 13, 17);\r\nentryEffect( 2+ATK_01,  908,  0x80,  -1,  0,  0,  0);--集中線\r\n\r\n--playSe( 51+ATK_01,1054);\r\n\r\nsetShake(30+ATK_01, 11, 20);\r\n\r\nremoveAllEffect(ATK_01+55);\r\n\r\nentryFade( 50+ATK_01, 3, 7, 3, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\n\r\nSP_Start_1 = ATK_01+60;\r\nsetDisp( SP_Start_1-2, 0, 1);\r\nsetDisp( SP_Start_1-2, 1, 1);\r\n\r\nplaySe(228,  9);\r\n\r\n-----------------------------------------------------\r\n\r\n-- 攻撃\r\n\r\n--entryFadeBg( SP_Start_1+37, 5, 10, 5, 0,  0,  0, 100);\r\n--setBgScroll( SP_Start_1, -100);\r\nsetDisp( SP_Start_1, 1, 1);\r\nsetScaleKey(   SP_Start_1,   0, 1.1, 1.1);\r\nsetMoveKey(  SP_Start_1, 0, -600,  0,   0);-- 中央位置から\r\nsetMoveKey(  SP_Start_1, 1, -500,  0,   0);-- 中央位置から\r\n\r\nryusen_1=entryEffectLife( SP_Start_1, 920, 155, 0x80,  -1,  0,  0,  0); -- 流線\r\nsetEffRotateKey(SP_Start_1,ryusen_1,-10);\r\nsetEffScaleKey( SP_Start_1, ryusen_1, 1.3, 1.3);\r\n\r\nsetShake( SP_Start_1, 98, 30);\r\nplaySe( SP_Start_1,1003);--SE\r\nsetSeVolume(SP_Start_1,1003,85);\r\nplaySe( SP_Start_1,1001);--SE\r\nsetSeVolume( SP_Start_1,1001,85);\r\n\r\nentryEffect(  SP_Start_1,   22,   0,  1,   0,  -100,  0);\r\nchangeAnime( SP_Start_1,  1,   106);-- 敵モーション\r\nsetDrawFront( SP_Start_1, 0, 1);\r\n\r\n\r\nRbattle=entryEffectLife( SP_Start_1,  SP_05e,  152,  0x80, -1,  0,  0,  0); \r\n\r\n--setScaleKey( SP_Start_1-1,   0, 1.5, 1.5);\r\n--setScaleKey( SP_Start_1,   0, 1.5, 1.5);\r\n--setScaleKey( SP_Start_1,   1, 1.5, 1.5);\r\n--setEnvZoomEnable(SP_Start_1,1);\r\n\r\nsetMoveKey( SP_Start_1, 0, -600,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1, 1, -480,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1,   0, 13);-- キック2\r\nplaySe( SP_Start_1,1009);--SE\r\nsetSeVolume( SP_Start_1,1009,85);\r\nentryEffect(  SP_Start_1,   2,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1,   Rbattle,  -550,50, 0);\r\nsetEffScaleKey( SP_Start_1,   Rbattle,  0.9, 0.9);\r\n\r\n--\r\nsetMoveKey( SP_Start_1+8, 0, -500,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+8, 1, -380,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+7,   0, 11);-- パンチ3\r\nplaySe( SP_Start_1+8,1009);--SE\r\nsetSeVolume( SP_Start_1+8,1009,85);\r\nentryEffect(  SP_Start_1+7,   3,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+8, 1, 0);  -- ダメージ振動等\r\nsetBgScroll( SP_Start_1+8, 10);\r\n\r\nsetEffMoveKey( SP_Start_1+8,   Rbattle,  -450,50, 0);\r\nsetEffScaleKey( SP_Start_1+8,   Rbattle,  0.9, 0.9);\r\n\r\nsetMoveKey( SP_Start_1+16, 0, -400,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+16, 1, -280,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+15,   0, 9);--パンチ1\r\nplaySe( SP_Start_1+16,1006);--SE\r\nsetSeVolume( SP_Start_1+16,1006,85);\r\nentryEffect(  SP_Start_1+15,   1,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+16, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+16, 20);\r\n\r\nsetEffMoveKey( SP_Start_1+16,   Rbattle,  -350,50, 0);\r\nsetEffScaleKey( SP_Start_1+16,   Rbattle,  0.9, 0.9);\r\n\r\n--\r\nsetMoveKey( SP_Start_1+24, 0, -300,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+24, 1, -180,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+23,   0, 13);--キック2\r\nplaySe( SP_Start_1+24,1010);--SE\r\nsetSeVolume( SP_Start_1+24,1010,85);\r\nentryEffect(  SP_Start_1+23,   2,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+24, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+24, 30);\r\n\r\nchangeAnime( SP_Start_1+24, 1, 108);  --敵モーション\r\nsetEffMoveKey( SP_Start_1+24,   Rbattle,  -250,50, 0);\r\nsetEffScaleKey( SP_Start_1+24,   Rbattle,  0.9, 0.9);\r\n\r\nsetMoveKey( SP_Start_1+32, 0, -200,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+32, 1, -80,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+31,   0, 11);--パンチ3\r\nplaySe( SP_Start_1+32,1009);--SE\r\nsetSeVolume( SP_Start_1+32,1009,85);\r\nentryEffect(  SP_Start_1+31,   3,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+32, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+32, 40);\r\n\r\nchangeAnime( SP_Start_1+32,  1,   106);-- 敵モーション\r\nsetEffMoveKey( SP_Start_1+32,   Rbattle,  -150,50, 0);\r\nsetEffScaleKey( SP_Start_1+32,   Rbattle,  0.9, 0.9);\r\n\r\n--\r\nsetEnvZoomEnable(SP_Start_1+40,1);\r\n\r\nsetMoveKey( SP_Start_1+40, 0, -100,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+40, 1, 20,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+39,   0, 12);--キック1\r\nplaySe( SP_Start_1+40,1001);--SE\r\nsetSeVolume( SP_Start_1+40,1001,85);\r\nentryEffect(  SP_Start_1+39,   1,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+40, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+40, 50);\r\n\r\nsetEffMoveKey( SP_Start_1+40,   Rbattle,  -50,50, 0);\r\nsetEffScaleKey( SP_Start_1+40,   Rbattle,  0.9, 0.9);\r\n\r\nsetMoveKey( SP_Start_1+48, 0, -100,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+48, 1, 20,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+47,   0, 14);--キック3\r\nplaySe( SP_Start_1+48,1010);--SE\r\nsetSeVolume( SP_Start_1+48,1010,85);\r\nentryEffect(  SP_Start_1+47,   6,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+48, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+48, 60);\r\n\r\nchangeAnime( SP_Start_1+48, 1, 108);  --敵モーション\r\n\r\n--\r\nsetMoveKey( SP_Start_1+56, 0, -100,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+56, 1, 20,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+55,   0, 11);--パンチ3\r\nplaySe( SP_Start_1+56,1009);--SE\r\nsetSeVolume( SP_Start_1+56,1009,85);\r\nentryEffect(  SP_Start_1+55,   3,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+56, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+56, 70);\r\n\r\nsetMoveKey( SP_Start_1+64, 0, -50,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+64, 1, 70,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+63,   0, 9);--パンチ1  392\r\nplaySe( SP_Start_1+64,1012);--SE\r\nsetSeVolume( SP_Start_1+64,1012,85);\r\nentryEffect(  SP_Start_1+63,   1,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+64, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+64, 80);\r\n--\r\n\r\nsetEffMoveKey( SP_Start_1+64,   Rbattle,  0,50, 0);\r\nsetEffScaleKey( SP_Start_1+64,   Rbattle,  0.9, 0.9);\r\n\r\n\r\nsetMoveKey( SP_Start_1+72, 0, 0,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+72, 1, 120,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+71,   0, 11);--キック3 \r\nplaySe( SP_Start_1+72,1013);--SE\r\nsetSeVolume( SP_Start_1+72,1013,85);\r\nentryEffect(  SP_Start_1+71,   6,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+72, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+72, 90);\r\n\r\nsetEffMoveKey( SP_Start_1+72,   Rbattle,  50,50, 0);\r\nsetEffScaleKey( SP_Start_1+72,   Rbattle,  0.9, 0.9);\r\n\r\nchangeAnime( SP_Start_1+72,  1,   106);-- 敵モーション\r\n\r\n\r\nsetMoveKey( SP_Start_1+80, 0, 50,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+80, 1, 170,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+79,   0, 13);--キック2\r\nplaySe( SP_Start_1+80,1001);--SE\r\nsetSeVolume( SP_Start_1+80,1001,85);\r\nentryEffect(  SP_Start_1+79,   2,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+80, 1, 0);  -- ダメージ振動等\r\n--setBgScroll( SP_Start_1+80, 100);\r\n\r\nsetEffMoveKey( SP_Start_1+80,   Rbattle,  100,50, 0);\r\nsetEffScaleKey( SP_Start_1+80,   Rbattle,  0.9, 0.9);\r\n\r\nchangeAnime( SP_Start_1+80, 1, 108);  --敵モーション\r\n\r\n--\r\nsetMoveKey( SP_Start_1+88, 0, 100,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+88, 1, 220,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+87,   0, 9);--パンチ1\r\nplaySe( SP_Start_1+88,1000);--SE\r\nsetSeVolume( SP_Start_1+88,1000,85);\r\nentryEffect(  SP_Start_1+87,   1,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+88, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1+88,   Rbattle,  150,50, 0);\r\nsetEffScaleKey( SP_Start_1+88,   Rbattle,  0.9, 0.9);\r\n\r\nsetMoveKey( SP_Start_1+96, 0, 150,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+96, 1, 270,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+95,   0, 11);--パンチ3\r\nplaySe( SP_Start_1+96,1009);--SE\r\nsetSeVolume( SP_Start_1+96,1009,85);\r\nentryEffect(  SP_Start_1+95,   3,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+96, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1+96,   Rbattle,  200,50, 0);\r\nsetEffScaleKey( SP_Start_1+96,   Rbattle,  0.9, 0.9);\r\n\r\n--\r\nsetMoveKey( SP_Start_1+104, 0, 150,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+104, 1, 270,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+103,   0, 10);--パンチ2\r\nplaySe( SP_Start_1+104,1006);--SE\r\nsetSeVolume( SP_Start_1+104,1006,85);\r\nentryEffect(  SP_Start_1+103,   2,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+104, 1, 0);  -- ダメージ振動等\r\n\r\nchangeAnime( SP_Start_1+104, 1, 106);  --敵モーション\r\n\r\nsetMoveKey( SP_Start_1+112, 0, 150,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+112, 1, 270,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+111,   0, 12);--キック1\r\nplaySe( SP_Start_1+112,1001);--SE\r\nsetSeVolume( SP_Start_1+112,1001,85);\r\nentryEffect(  SP_Start_1+111,   1,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+112, 1, 0);  -- ダメージ振動等\r\n--\r\nsetMoveKey( SP_Start_1+120, 0, 100,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+120, 1, 220,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+119,   0, 11);--パンチ3\r\nplaySe( SP_Start_1+120,1009);--SE\r\nsetSeVolume( SP_Start_1+120,1009,85);\r\nentryEffect(  SP_Start_1+119,   3,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+120, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1+120,   Rbattle,  150,50, 0);\r\nsetEffScaleKey( SP_Start_1+120,   Rbattle,  0.9, 0.9);\r\n\r\nchangeAnime( SP_Start_1+120, 1, 108);  --敵モーション\r\n\r\nsetMoveKey( SP_Start_1+128, 0, 50,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+128, 1, 170,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+127,   0, 14);--キック3\r\nplaySe( SP_Start_1+128,1010);--SE\r\nsetSeVolume( SP_Start_1+128,1010,85);\r\nentryEffect(  SP_Start_1+127,   6,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+128, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1+128,   Rbattle,  100,50, 0);\r\nsetEffScaleKey( SP_Start_1+128,   Rbattle,  0.9, 0.9);\r\n--\r\nsetMoveKey( SP_Start_1+136, 0, 0,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+136, 1, 120,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+135,   0, 12);--キック1\r\nplaySe( SP_Start_1+136,1001);--SE\r\nsetSeVolume( SP_Start_1+136,1001,85);\r\nentryEffect(  SP_Start_1+135,   1,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+136, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1+136,   Rbattle,  50,50, 0);\r\nsetEffScaleKey( SP_Start_1+136,   Rbattle,  0.9, 0.9);\r\n\r\nchangeAnime( SP_Start_1+136, 1, 106);  --敵モーション\r\n\r\nsetMoveKey( SP_Start_1+144, 0, -100,  0,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+144, 1, 20,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+143,   0, 9);--パンチ1\r\nplaySe( SP_Start_1+144,1000);--SE\r\nsetSeVolume( SP_Start_1+144,1000,85);\r\nentryEffect(  SP_Start_1+143,   1,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+144, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1+144,   Rbattle,  -50,50, 0);\r\nsetEffScaleKey( SP_Start_1+144,   Rbattle,  0.9, 0.9);\r\n\r\nsetDrawFront( SP_Start_1+149, 0, 0);\r\nchangeAnime( SP_Start_1+149,   0, 0);--移動\r\nsetRotateKey( SP_Start_1+93, 0,10);\r\nsetEnvZoomEnable(SP_Start_1+94,1);\r\n\r\nsetMoveKey( SP_Start_1+154, 0, 30,  150,   0);-- 中央位置から\r\nsetMoveKey( SP_Start_1+154, 1, 150,  0,   0);-- 中央位置から\r\nchangeAnime( SP_Start_1+153,   0, 15);--撃ち落とし\r\nplaySe( SP_Start_1+154,1009);--SE\r\nsetSeVolume( SP_Start_1+154,1009,85);\r\nentryEffect(  SP_Start_1+153,   905,   0,  1,   0,  0,  0);\r\nsetDamage( SP_Start_1+153, 1, 0);  -- ダメージ振動等\r\n\r\nsetEffMoveKey( SP_Start_1+154,   Rbattle,  80,50, 0);\r\nsetEffScaleKey( SP_Start_1+154,   Rbattle,  0.9, 0.9);\r\n\r\n-- 受け------------------------------------------\r\n-- 味方移動（画面外へ)\r\n--setMoveKey(  SP_Start_1+150, 0, 30,  150,   0);      -- 画面外へ\r\nsetMoveKey( SP_Start_1+154, 1, 130,  0,   0);      -- 敵を若干後退\r\n\r\nsetMoveKey(  SP_Start_1+164, 1, 600,  0,   0);      -- 吹っ飛び中\r\nchangeAnime( SP_Start_1+154, 1, 108);    \t\t\t-- モーション(立ち)\r\n\r\nendPhase(SP_Start_1+164);\r\n--setBgScroll( SP_Start_1+154, 0);\r\n\r\nsetDisp( SP_Start_1+164, 1, 0);\r\n\r\n-- ** エフェクト等 ** ------------------------------------\r\nentryFadeBg( SP_Start_1, 0, 155, 0, 10, 10, 10, 180);       -- ベース暗め　背景\r\n\r\nshuchusen = entryEffectLife( SP_Start_1, 906, 154, 0x00,  -1, 0,  0,  0);   -- 集中線\r\nsetEffScaleKey( SP_Start_1, shuchusen, 1.0, 1.0);\r\nsetEffScaleKey( SP_Start_1, shuchusen, 1.0, 1.0);\r\nsetEffScaleKey( SP_Start_1+154, shuchusen, 2.0, 2.0);\r\n\r\n-----------------------------------------------------------\r\n\r\nentryFade( SP_Start_1+155, 3, 5, 3, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\n\r\nSP_Start_2 = SP_Start_1+163; --367\r\n\r\n\r\n--吹っ飛びからの爆発--------------------------\r\n\r\nsetDisp( SP_Start_1+160, 0, 0);\r\nsetDisp( SP_Start_2, 1, 1);\r\nsetRotateKey( SP_Start_1+160, 0,0);\r\nsetMoveKey(  SP_Start_1+160, 0, -30,  -10,  0); \r\nsetScaleKey(  SP_Start_1+159,  0, 1.1, 1.1);\r\nsetScaleKey( SP_Start_1+160, 0, 1.5, 1.5);\r\n\r\nsetRotateKey(  SP_Start_2+1,1,20);\r\nsetMoveKey(  SP_Start_2+3, 1, -500,  250,   30); \r\nsetMoveKey(  SP_Start_2+6, 1, 50,  -100,   0); \r\nsetMoveKey(  SP_Start_2+10, 1, 350,  -350,   -100); \r\n\r\nsetDisp( SP_Start_2+11, 1, 0);\r\n--setRotateKey(SP_Start_2+11,1,0);\r\n\r\n\r\n--爆破演出1\r\n  Bmeff = entryEffect(SP_Start_2+10,    1509,  0,  -1,  0,  300,  -200);   -- HIT\r\n  playSe(SP_Start_2+10,1023);\r\n  setEffMoveKey(SP_Start_2+20, Bmeff,  -1500,-250);\r\n  setEffScaleKey(SP_Start_2,Bmeff,2,2);\r\n--シェイク\r\n  setShake(SP_Start_2+5,10,15);\r\n\r\n  entryFadeBg(SP_Start_2,0,5,5,255,255,255,255);\r\n  entryFlashBg(SP_Start_2+5,3,255,255,255);\r\n\r\n\r\n--爆破演出2\r\nsetBgScroll(SP_Start_2+25,60);\r\n  Bmeff2 = entryEffect(SP_Start_2+25,    1509,  0,  -1,  0,  250,  -250);   -- HIT\r\n  playSe(SP_Start_2+25,1023);\r\n  setEffScaleKey(SP_Start_2+25,Bmeff2,1.2,1.2);\r\n  setEffMoveKey(SP_Start_2+59, Bmeff2,  -1400,-280);\r\n  --シェイク\r\n  setShake(SP_Start_2+26,10,15);\r\n\r\n  entryFadeBg(SP_Start_2+25,2,5,5,0,0,0,255);\r\n  entryFlashBg(SP_Start_2+32,3,0,0,0);\r\n  \r\n  \r\n--吹っ飛び2--------------------------  \r\n\r\n--setDisp( SP_Start_2+58, 1, 1);\r\n--setDisp( SP_Start_2+59, 1, 1);\r\n\r\n--changeAnime( SP_Start_2+58,  1, 5);--eダメージ奥\r\n\r\n--setRotateKey(SP_Start_2+57,1,0);\r\n--setRotateKey(SP_Start_2+58,1,30);  \r\n\r\n--setMoveKey(  SP_Start_2+59, 1, -100,  -200,   -50); \r\n--setMoveKey(  SP_Start_2+65, 1, 150,  60,   0); \r\n--setMoveKey(  SP_Start_2+70, 1, 350,  180,   50); \r\n--setMoveKey(  SP_Start_2+73, 1, 550,  540,   50); \r\n\r\n--------------------------------------\r\n\r\nentryFade( SP_Start_2+59, 3, 5, 3, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\n\r\nsetDisp( SP_Start_2+63, 1, 0);\r\nsetRotateKey(SP_Start_2,1,0); \r\nsetEnvZoomEnable(SP_Start_2+63,0);\r\n\r\nSP_Start_3 = SP_Start_2+67; --443\r\n\r\nremoveAllEffect(SP_Start_3-1);\r\n\r\n------------------------------------------------------\r\n-- 回避\r\n------------------------------------------------------\r\n\r\nif(_IS_DODGE_ == 1) then\r\n\r\nSP_dodge = 275; --エンドフェイズのフレーム数を置き換える\r\n\r\nplaySe( SP_dodge-12, 1042);\r\n\r\nsetRotateKey( SP_dodge,  0,  0);\r\nsetRotateKey( SP_dodge+10,  0,  0);\r\n\r\nsetDisp( SP_dodge+9, 1, 0);\r\nsetMoveKey(  SP_dodge, 1, 9000,  9000,   30);\r\nsetMoveKey(  SP_dodge+9, 1, 9000,  9000,   30);\r\n\r\nspeff = entryEffectUnpausable(  SP_dodge-12,   1504,   0x100,     -1,  0,  0,  -350);   -- eff_005 (カットイン)\r\nsetEffReplaceTexture( speff, 3, 6);                           -- カットイン差し替え\r\n\r\nkaihi = entryEffectUnpausable(  SP_dodge,   1575,  0x100,     -1,  0,  0,  350);   -- 回避の文字表示\r\nsetEffScaleKey( SP_dodge, kaihi, -1.0, 1.0);\r\nsetEffAlphaKey( SP_dodge, kaihi, 255);\r\n\r\npauseAll( SP_dodge, 67);\r\n\r\nentryFade( SP_dodge+5, 4,  7, 4, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\nsetMoveKey(  SP_dodge+5, 0, -30,  -10,  0); \r\nsetMoveKey(  SP_dodge+9, 0, -1100,  -10,  0); \r\n\r\nendPhase(SP_dodge+10);\r\ndo return end\r\nelse end\r\n\r\n------------------------------------------------------\r\n-- かめはめ波溜め！(100F)\r\n------------------------------------------------------\r\nsetMoveKey(  SP_Start_3, 0, -150,  -10,  0); \r\nentryEffect( SP_Start_3+2, 700, 0x00,  0, 0,  0,  -20); --瞬間移動\r\nsetDisp( SP_Start_3+5, 0, 1);\r\nsetVisibleUI(SP_Start_3, 0);\r\nchangeAnime( SP_Start_3, 0, 30);                       -- 溜め!\r\nsetScaleKey(  SP_Start_3,   0, 1.5, 1.5);\r\nplaySe( SP_Start_3, 43);\r\n\r\n--changeAnime( SP_Start_3+35, 0, 30);     \r\n\r\nkame_hand = entryEffect( SP_Start_3+30, SP_01, 0x40,      0,  300,  0,  0);   -- 手のカメハメ波部\r\nsetEffScaleKey( SP_Start_3+30, kame_hand, 0.5, 0.5);\r\n\r\nsetShakeChara( SP_Start_3+30, 0,100,10);\r\n\r\n--[[\r\nplaySe( SP_Start_3+30, SE_03);\r\nplaySe( SP_Start_3+55, SE_03);\r\nplaySe( SP_Start_3+80, SE_03);\r\nplaySe( SP_Start_3+105, SE_03);\r\nplaySe( SP_Start_3+130, SE_03);\r\n]]\r\n--v4.11調整\r\nSE001 = playSe( SP_Start_3+30, SE_03);\r\nstopSe(SP_Start_3+60,SE001,5);\r\nSE002 = playSe( SP_Start_3+55, SE_03);\r\nstopSe(SP_Start_3+85,SE002,5);\r\nSE003 = playSe( SP_Start_3+80, SE_03);\r\nstopSe(SP_Start_3+110,SE003,5);\r\nSE004 = playSe( SP_Start_3+105, SE_03);\r\nstopSe(SP_Start_3+135,SE004,5);\r\nSE005 = playSe( SP_Start_3+130, SE_03);\r\n\r\nsetMoveKey(  SP_Start_3+130, 0, -120,  -10,  0); \r\n\r\nentryFade( SP_Start_3+130, 3, 5, 3, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\n\r\n-- ** エフェクト等 ** --\r\n--aura = entryEffectLife(  SP_Start_3+70,   311, 99, 0x40,  0,  1,  0,  0); -- オーラ\r\n--setEffScaleKey( SP_Start_3+30, aura, 1.5, 1.5);\r\n--setShakeChara( SP_Start_3+70, 0, 49, 5);\r\n\r\n-- 書き文字エントリー\r\nct = entryEffectLife( SP_Start_3+30, 10008, 100, 0x100, -1, 0, -190, 300);    -- ゴゴゴ・・・\r\nsetEffShake(SP_Start_3+30, ct, 40, 8);\r\nsetEffScaleKey(SP_Start_3+30, ct, 1.4, 1.4);\r\n\r\n--setMoveKey(  SP_Start_3+134, 0, -100,  -30,  0); \r\n\r\nsetScaleKey(  SP_Start_3+133,   0, 1.5, 1.5);\r\nsetMoveKey(  SP_Start_3+133, 0, -10,  -10,  0); \r\nsetScaleKey(  SP_Start_3+134,   0, 1, 1);\r\n\r\nSP_Start_4 = SP_Start_3+138;--599\r\n\r\n\r\n\r\n------------------------------------------------------\r\n-- カメハメハ発射(110F)\r\n------------------------------------------------------\r\nchangeAnime( SP_Start_4, 0, 31);                                    -- かめはめ発射ポーズ\r\n\r\nsetMoveKey(  SP_Start_4-1,    0,      0,  -80,   0);\r\nsetMoveKey(  SP_Start_4,    0,   -600,  -80,   0);\r\nsetMoveKey(  SP_Start_4+1,    0,   -600,  -80,   0);\r\nsetMoveKey(  SP_Start_4+10,    0,   -100,  -80,   0);\r\n\r\nkamehame_beam = entryEffectLife( SP_Start_4, SP_02, 109, 0x40,  0,  300,  0,  0);   -- 伸びるかめはめ波\r\n\r\nplaySe( SP_Start_4, SE_07);\r\n\r\n--spname = entryEffect( SP_Start_4, 1508,  0,  -1,  0,  0,  0);               -- かめはめ波文字\r\n--setEffReplaceTexture(spname, 7, 4);                                  -- 技名テクスチャ差し替え\r\n\r\n-- 途中からカメハメハが伸びる\r\nsetMoveKey(  SP_Start_4+39,    0,   -100,  -80,   0);\r\nsetMoveKey(  SP_Start_4+40,    0,   -100,  -80,   0);\r\nsetMoveKey(  SP_Start_4+48,    0,   -1100,  -80,   0);\r\n\r\nentryFade( SP_Start_4+105, 3, 2, 5, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\n\r\n-- ** エフェクト等 ** --\r\nentryFadeBg( SP_Start_4, 0, 109, 0, 10, 10, 10, 180);       -- ベース暗め　背景\r\nentryFadeBg( SP_Start_4, 0, 40, 0, 230, 230, 230, 255);    -- 最初だけ明るい　背景\r\nentryFadeBg( SP_Start_4+40, 0, 2, 8, 100, 140, 250, 250);     -- 青い　背景\r\n\r\nentryEffectLife( SP_Start_4, 920, 109, 0x80,  -1,  0,  0,  0); -- 流線\r\n\r\n--setShakeChara( SP_Start_4+45, 0, 54, 50);\r\n\r\nshuchusen = entryEffectLife( SP_Start_4, 906, 49, 0x00,  -1, 0,  0,  0);   -- 集中線\r\nsetEffScaleKey( SP_Start_4, shuchusen, 1.0, 1.0);\r\nsetEffScaleKey( SP_Start_4+40, shuchusen, 1.0, 1.0);\r\nsetEffScaleKey( SP_Start_4+49, shuchusen, 2.0, 2.0);\r\n\r\n--entryFlash( (SP_Start_4+10), 1,  fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+22), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+36), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+50), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+64), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+80), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+92), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n\r\n-- 書き文字エントリー\r\nct = entryEffectLife( SP_Start_4+8, 10012, 32, 0, -1, 0, 200, 300); -- ズオッ\r\nsetEffShake(SP_Start_4+8, ct, 32, 5);\r\n\r\nsetEffAlphaKey(SP_Start_4+8, ct, 255);\r\nsetEffAlphaKey(SP_Start_4+30, ct, 255);\r\nsetEffAlphaKey(SP_Start_4+40, ct, 0);\r\n\r\nsetEffScaleKey(SP_Start_4+8, ct, 0.0, 0.0);\r\nsetEffScaleKey(SP_Start_4+12, ct, 1.3, 1.3);\r\nsetEffScaleKey(SP_Start_4+32, ct, 1.3, 1.3);\r\nsetEffScaleKey(SP_Start_4+40, ct, 6.0, 6.0);\r\nplaySe( SP_Start_4+40, SE_07);\r\n\r\n--704\r\n\r\n------------------------------------------------------\r\n-- かめはめは迫る(100F)\r\n------------------------------------------------------\r\nsetDisp( SP_Start_4+110, 0, 0);\r\nsetDisp( SP_Start_4+110, 1, 1);\r\nsetRotateKey(SP_Start_4+111,1,0);  \r\n\r\nchangeAnime( SP_Start_4+110, 1, 104);                        -- ガード\r\nsetMoveKey(  SP_Start_4+109,    1,  235,  0,   0);\r\nsetMoveKey(  SP_Start_4+110,    1,  235,  0,   0);\r\nsetMoveKey(  SP_Start_4+111,    1,  235,  0,   0);\r\nsetScaleKey( SP_Start_4+109,    1,  0.7, 0.7);\r\nsetScaleKey( SP_Start_4+110,    1,  0.7, 0.7);\r\n\r\nsetMoveKey(  SP_Start_4+140,    1,   120,  0,   0);\r\nsetScaleKey(  SP_Start_4+140,   1,   1.6,  1.6);\r\nsetRotateKey(SP_Start_4+140,1,0);  \r\nsetRotateKey(SP_Start_4+202,1,0);  \r\n\r\nplaySe( SP_Start_4+130, SE_06);\r\n\r\nkamehame_beam2 = entryEffect( SP_Start_4+110, SP_03,   0, -1,  0,  0,  0);   -- 迫るかめはめ波\r\nsetEffScaleKey(SP_Start_4+110, kamehame_beam2, 1, 1);\r\nsetEffScaleKey(SP_Start_4+192, kamehame_beam2, 1, 1);\r\nsetEffScaleKey(SP_Start_4+194, kamehame_beam2, 2.5, 2.5);\r\nsetDamage( SP_Start_4+192, 1, 0);  -- ダメージ振動等\r\n\r\n--speff = entryEffect( SP_Start_4+110, 1506,   0,  -1,  0,  0,  0);    -- カットイン\r\n--setEffReplaceTexture( speff, 6, 3);                       -- カットイン差し替え\r\n--playSe( SP_Start_4+110, SE_08);\r\n\r\nplaySe( SP_Start_4+195, SE_09);\r\n\r\n-- 敵吹っ飛ぶモーション\r\nchangeAnime( SP_Start_4+195, 1, 108);\r\nsetMoveKey(  SP_Start_4+195, 1,  120,    0,  0);\r\nsetMoveKey(  SP_Start_4+209, 1,  400,    0,  0);\r\nsetScaleKey( SP_Start_4+195, 1,  1.6, 1.6);\r\nsetScaleKey( SP_Start_4+198, 1,  1.5, 1.5);\r\nsetScaleKey( SP_Start_4+208, 1,  0.2, 0.2);\r\n\r\n-- ** エフェクト等 ** --\r\nsetShakeChara( SP_Start_4+110, 1, 99, 20);\r\n\r\nentryFadeBg( SP_Start_4+110, 0, 99, 0, 10, 10, 10, 150);          -- ベース暗め　背景\r\n\r\nentryEffectLife( SP_Start_4+110, 921, 99, 0x80,  -1,  0,  0,  0); -- 流線斜め\r\n\r\n--entryFlash( (SP_Start_4+110+10), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+110+22), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+110+36), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+110+50), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+110+64), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n--entryFlash( (SP_Start_4+110+80), 1, fcolor_r, fcolor_g, fcolor_b, 200);\r\n\r\n-- 書き文字エントリー\r\nct = entryEffectLife( SP_Start_4+110, 10014, 99, 0, -1, 0, -100, 255); -- ズドドッ\r\nsetEffShake(SP_Start_4+110, ct, 99, 20);\r\nsetEffScaleKey( SP_Start_4+110, ct, 2.4, 2.4);\r\nsetEffRotateKey(SP_Start_4+110, ct, -70);\r\nsetEffAlphaKey(SP_Start_4+110, ct, 255);\r\nsetEffAlphaKey(SP_Start_4+170, ct, 255);\r\nsetEffAlphaKey(SP_Start_4+190, ct, 0);\r\n\r\nentryFade( SP_Start_4+202, 6,  7, 4, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\n\r\n------------------------------------------------------\r\n-- 爆発 (110F)\r\n------------------------------------------------------\r\nsetDisp( SP_Start_4+209, 1, 1);\r\nsetMoveKey(  SP_Start_4+209,    1,  100,  0,   0);\r\nsetScaleKey( SP_Start_4+209,    1,  1.0, 1.0);\r\nsetMoveKey(  SP_Start_4+210,    1,    0,   0,   128);\r\nsetScaleKey( SP_Start_4+210,    1,  0.1, 0.1);\r\n\r\nchangeAnime( SP_Start_4+210, 1, 107);                         -- 手前ダメージ\r\nentryEffect( SP_Start_4+218, 1509,  0x80,  -1,  0,  0,  0);   -- 爆発\r\nplaySe( SP_Start_4+218, SE_10);\r\n\r\nsetMoveKey(  SP_Start_4+218,   1,    0,   0,   128);\r\nsetMoveKey(  SP_Start_4+225,   1,  -60,  -200,  -100);\r\n--setMoveKey(  SP_Start_4+226,   1,  -60,  -200,  -100);\r\nsetDamage( SP_Start_4+226, 1, 0);  -- ダメージ振動等\r\nsetShake(SP_Start_4+217,6,15);\r\nsetShake(SP_Start_4+223,15,10);\r\n\r\nsetRotateKey( SP_Start_4+210,  1,  30 );\r\nsetRotateKey( SP_Start_4+212,  1,  80 );\r\nsetRotateKey( SP_Start_4+214,  1, 120 );\r\nsetRotateKey( SP_Start_4+216,  1, 160 );\r\nsetRotateKey( SP_Start_4+218,  1, 200 );\r\nsetRotateKey( SP_Start_4+220,  1, 260 );\r\nsetRotateKey( SP_Start_4+222,  1, 320 );\r\nsetRotateKey( SP_Start_4+224,  1,   0 );\r\n\r\nsetShakeChara( SP_Start_4+225, 1, 5,  10);\r\nsetShakeChara( SP_Start_4+230, 1, 10, 20);\r\n\r\n-- 書き文字エントリー\r\nct = entryEffectLife( SP_Start_4+225, 10005, 100, 0, -1, 0, -50, 230); -- ガッ\r\nsetEffShake(SP_Start_4+225, ct, 30, 10);\r\nsetEffRotateKey( SP_Start_4+225, ct, -40);\r\nsetEffScaleKey( SP_Start_4+225, ct, 4.0, 4.0);\r\nsetEffScaleKey( SP_Start_4+226, ct, 2.0, 2.0);\r\nsetEffScaleKey( SP_Start_4+227, ct, 2.6, 2.6);\r\nsetEffScaleKey( SP_Start_4+228, ct, 4.0, 4.0);\r\nsetEffScaleKey( SP_Start_4+229, ct, 2.6, 2.6);\r\nsetEffScaleKey( SP_Start_4+230, ct, 3.8, 3.8);\r\nsetEffScaleKey( SP_Start_4+310, ct, 3.8, 3.8);\r\nsetEffAlphaKey( SP_Start_4+225, ct, 255);\r\nsetEffAlphaKey( SP_Start_4+310, ct, 255);\r\nsetEffAlphaKey( SP_Start_4+310, ct, 0);\r\n\r\nplaySe( SP_Start_4+213, SE_11);\r\nshuchusen = entryEffectLife( SP_Start_4+213, 906, 120, 0x00,  -1, 0,  0,  0);   -- 集中線\r\nentryEffect( SP_Start_4+213, 1600,  0x00,  -1,  0,30, -130);   -- ひび割れ\r\n\r\n-- ダメージ表示\r\ndealDamage(SP_Start_4+226);\r\n\r\n--entryFade( SP_Start_4+310, 9,  10, 1, 8, 8, 8, 255);             -- black fade\r\n\r\nendPhase(SP_Start_4+310);\r\n\r\nend\r\n",
+  "common_source": "-- common.lua\r\n\r\nfunction showCardCutin(startFrame, isDynamicBg)\r\n    -- ** カードカットイン ** --\r\n    local cutinEffectId = 1507;\r\n\r\n    if (_SPECIAL_SKILL_LEVEL_ == 1) then\r\n        cutinEffectId = 1120;\r\n    elseif (_SPECIAL_SKILL_LEVEL_ == 2) then\r\n        cutinEffectId = 1121;\r\n    end\r\n\r\n    local speff = entryEffectLife( startFrame, cutinEffectId, 90, 0x100, -1, 0, 0, 0 );  -- カード\r\n    setEffReplaceTexture( speff, 1, 1 );\r\n    setEffReplaceTexture( speff, 2, 0 );  -- カード差し替え\r\n    setEffReplaceTexture( speff, 5, 4 );  -- 技名テクスチャ差し替え\r\n\r\n    -- ** 集中線 ** --\r\n    local shuchusen = entryEffectLife( startFrame + 0, 906, 90, 0x100, -1, 0, 0, 0 );  -- 集中線\r\n    setEffShake( startFrame + 0, shuchusen, 90, 20 );\r\n    setEffMoveKey( startFrame + 0, shuchusen, 0, 0 , 0 );\r\n    setEffMoveKey( startFrame + 90, shuchusen, 0, 0 , 0 );\r\n    setEffScaleKey( startFrame + 0, shuchusen, 1.6, 1.6 );\r\n    setEffScaleKey( startFrame + 90, shuchusen, 1.6, 1.6 );\r\n    setEffRotateKey( startFrame + 0, shuchusen, 0 );\r\n    setEffRotateKey( startFrame + 90, shuchusen, 0 );\r\n    setEffAlphaKey( startFrame + 0, shuchusen, 255 );\r\n    setEffAlphaKey( startFrame + 90, shuchusen, 255 );\r\n\r\n    -- ** 音 ** --\r\n    SE_CUTIN = playSe( startFrame + 0, 1035 );\r\n\r\n    -- ** 白背景 ** --\r\n    local fadeBgFrame = 96;\r\n    if (isDynamicBg == 1) then\r\n        fadeBgFrame = 94;\r\n    else end\r\n    entryFadeBg( startFrame + 0, 0, fadeBgFrame, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- 白　背景\r\n\r\n    -- ** 白フェード ** --\r\n    entryFade( startFrame + 0, 0, 2, 4, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n    entryFade( startFrame + 80, 6, 8, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n\r\n    -- ** 次の準備 ** --\r\n    return startFrame + 94;\r\nend\r\n\r\nfunction showCardCutinEx(startFrame, isDynamicBg)\r\n    -- ** カードカットイン ** --\r\n    local cutinEffectId = 1514;\r\n\r\n    if (_SPECIAL_SKILL_LEVEL_ == 1) then\r\n        cutinEffectId = 1127;\r\n    elseif (_SPECIAL_SKILL_LEVEL_ == 2) then\r\n        cutinEffectId = 1128;\r\n    end\r\n\r\n    local speff = entryEffectLife( startFrame, cutinEffectId, 90, 0x100, -1, 0, 0, 0 );  -- カード\r\n    setEffReplaceTexture( speff, 1, 1 );\r\n    setEffReplaceTexture( speff, 2, 0 );  -- カード差し替え\r\n    setEffReplaceTexture( speff, 5, 4 );  -- 技名テクスチャ差し替え\r\n\r\n    -- ** 集中線 ** --\r\n    local shuchusen = entryEffectLife( startFrame + 0, 906, 90, 0x100, -1, 0, 0, 0 );  -- 集中線\r\n    setEffShake( startFrame + 0, shuchusen, 90, 20 );\r\n    setEffMoveKey( startFrame + 0, shuchusen, 0, 0 , 0 );\r\n    setEffMoveKey( startFrame + 90, shuchusen, 0, 0 , 0 );\r\n    setEffScaleKey( startFrame + 0, shuchusen, 1.6, 1.6 );\r\n    setEffScaleKey( startFrame + 90, shuchusen, 1.6, 1.6 );\r\n    setEffRotateKey( startFrame + 0, shuchusen, 0 );\r\n    setEffRotateKey( startFrame + 90, shuchusen, 0 );\r\n    setEffAlphaKey( startFrame + 0, shuchusen, 255 );\r\n    setEffAlphaKey( startFrame + 90, shuchusen, 255 );\r\n\r\n    -- ** 音 ** --\r\n    SE_CUTIN = playSe( startFrame + 0, 1035 );\r\n\r\n    -- ** 白背景 ** --\r\n    local fadeBgFrame = 96;\r\n    if (isDynamicBg == 1) then\r\n        fadeBgFrame = 94;\r\n    else end\r\n    entryFadeBg( startFrame + 0, 0, fadeBgFrame, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- 白　背景\r\n\r\n    -- ** 白フェード ** --\r\n    entryFade( startFrame + 0, 0, 2, 4, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n    entryFade( startFrame + 80, 6, 8, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n\r\n    -- ** 次の準備 ** --\r\n    return startFrame + 94;\r\nend\r\n\r\nfunction showCardCutinOffset(startFrame, isDynamicBg,offset_Y)\r\n    -- ** カードカットイン ** --\r\n    local cutinEffectId = 1513;\r\n    local offsetId = 1512;\r\n\r\n    if (_SPECIAL_SKILL_LEVEL_ == 1) then\r\n        cutinEffectId = 3248;\r\n        offsetId = 3246;\r\n    elseif (_SPECIAL_SKILL_LEVEL_ == 2) then\r\n        cutinEffectId = 3252;\r\n        offsetId = 3250;\r\n    end\r\n\r\n    speff2 = entryEffectLife( startFrame + 0, cutinEffectId, 90, 0x100, -1, 0, 0, 0 );   -- カード\r\n\r\n    if (_IS_PLAYER_SIDE_ == 0) then\r\n\r\n        setEffScaleKey( startFrame + 0, speff2, -1.0, 1.0); -- 敵側のみ  \r\n        setEffScaleKey( startFrame + 90, speff2, -1.0, 1.0); -- 敵側のみ \r\n        \r\n    end\r\n    setEffReplaceTexture( speff2, 1, 1 );\r\n    setEffReplaceTexture( speff2, 2, 0 );-- カード差し替え\r\n    setEffReplaceTexture( speff2, 5, 4 );-- 技名テクスチャ差し替え\r\n\r\n    -- ** 放射線(黄) ** --\r\n    housha = entryEffectLife( startFrame + 0, 1511, 90, 0x100, -1, 0, 0, 0 );  --黄色放射\r\n    setEffMoveKey( startFrame + 0, housha, 0, 0 , 0 );\r\n    setEffMoveKey( startFrame + 90, housha, 0, 0 , 0 );\r\n    setEffScaleKey( startFrame + 0, housha, 1.0, 1.0 );\r\n    setEffScaleKey( startFrame + 90, housha, 1.0, 1.0 );\r\n    setEffRotateKey( startFrame + 0, housha, 0 );\r\n    setEffRotateKey( startFrame + 90, housha, 0 );\r\n    setEffAlphaKey( startFrame + 0, housha, 255 );\r\n    setEffAlphaKey( startFrame + 90, housha, 255 );\r\n\r\n    -- ** 集中線 ** --\r\n    shuchusen = entryEffectLife( startFrame + 0, 906, 90, 0x100, -1, 0, 0, 0 );  --集中線\r\n    setEffShake( startFrame + 0, shuchusen, 90, 20 );\r\n    setEffMoveKey( startFrame + 0, shuchusen, 0, 0 , 0 );\r\n    setEffMoveKey( startFrame + 90, shuchusen, 0, 0 , 0 );\r\n    setEffScaleKey( startFrame + 0, shuchusen, 1.6, 1.6 );\r\n    setEffScaleKey( startFrame + 90, shuchusen, 1.6, 1.6 );\r\n    setEffRotateKey( startFrame + 0, shuchusen, 0 );\r\n    setEffRotateKey( startFrame + 90, shuchusen, 0 );\r\n    setEffAlphaKey( startFrame + 0, shuchusen, 255 );\r\n    setEffAlphaKey( startFrame + 90, shuchusen, 255 );\r\n\r\n    if (_SPECIAL_SKILL_LEVEL_ > 0) then-- 極限時判定\r\n\r\n    local kaminariEff = 3247;-- 雷エフェクト\r\n    local haikeiEff = 3249;-- 極限背景\r\n    if (_SPECIAL_SKILL_LEVEL_ == 2) then\r\n        kaminariEff = 3251;\r\n        haikeiEff = 3253;\r\n    end\r\n        -- ** 雷エフェクト ** --\r\n        kaminari = entryEffectLife( startFrame + 0, kaminariEff, 90, 0x100, -1, 0, 0, 0 );  -- 雷エフェクト\r\n        setEffMoveKey( startFrame + 0, kaminari, 0, 0 , 0 );\r\n        setEffMoveKey( startFrame + 90, kaminari, 0, 0 , 0 );\r\n        setEffScaleKey( startFrame + 0, kaminari, 1.0, 1.0 );\r\n        setEffScaleKey( startFrame + 90, kaminari, 1.0, 1.0 );\r\n        setEffRotateKey( startFrame + 0, kaminari, 0 );\r\n        setEffRotateKey( startFrame + 90, kaminari, 0 );\r\n        setEffAlphaKey( startFrame + 0, kaminari, 255 );\r\n        setEffAlphaKey( startFrame + 90, kaminari, 255 );\r\n\r\n            -- ** 極限背景 ** --\r\n        haikei = entryEffectLife( startFrame + 0, haikeiEff, 90, 0x80, -1, 0, 0, 0 );  -- 極限背景\r\n        setEffMoveKey( startFrame + 0, haikei, 0, 0 , 0 );\r\n        setEffMoveKey( startFrame + 90, haikei, 0, 0 , 0 );\r\n        setEffScaleKey( startFrame + 0, haikei, 1.0, 1.0 );\r\n        setEffScaleKey( startFrame + 90, haikei, 1.0, 1.0 );\r\n        setEffRotateKey( startFrame + 0, haikei, 0 );\r\n        setEffRotateKey( startFrame + 90, haikei, 0 );\r\n        setEffAlphaKey( startFrame + 0, haikei, 255 );\r\n        setEffAlphaKey( startFrame + 90, haikei, 255 );\r\n    end\r\n    spname = entryEffectLife( startFrame + 0, offsetId, 90, 0x100, -1, 0, 0, offset_Y );-- 技名呼び出し・位置変更offset_Y\r\n    if (_IS_PLAYER_SIDE_ == 0) then\r\n\r\n        setEffScaleKey( startFrame + 0, spname, -1.0, 1.0); -- 敵側のみ\r\n        setEffScaleKey( startFrame + 90, spname, -1.0, 1.0); -- 敵側のみ\r\n\r\n    end\r\n    setEffReplaceTexture( spname, 5, 4 );-- 技名テクスチャ差し替え\r\n    \r\n    SE_CUTIN = playSe( startFrame + 0, 1035 );\r\n\r\n    -- ** 白背景 ** --\r\n    local fadeBgFrame = 96;\r\n    if (isDynamicBg == 1) then\r\n        fadeBgFrame = 94;\r\n    else end\r\n    entryFadeBg( startFrame + 0, 0, fadeBgFrame, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- 白　背景\r\n\r\n    -- ** 白フェード ** --\r\n    entryFade( startFrame + 0, 0, 2, 4, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n    entryFade( startFrame + 80, 6, 8, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n\r\n    -- ** 次の準備 ** --\r\n    return startFrame + 94;\r\nend\r\n\r\nfunction changeAnimeBySide(timing, battleChara, animeNo)\r\n    local fixedAnimeNo = animeNo\r\n\r\n    -- 敵側の場合のみアニメ番号を反転\r\n    if _IS_PLAYER_SIDE_ == 0 then\r\n        if animeNo >= 100 then\r\n            fixedAnimeNo = animeNo - 100;\r\n        else\r\n            fixedAnimeNo = animeNo + 100;\r\n        end\r\n    end\r\n\r\n    changeAnime(timing, battleChara, fixedAnimeNo)\r\nend",
+  "effects": [
+    {
+      "id": 1,
+      "category": 1,
+      "name": "打撃（小）",
+      "pack_name": "battle_00000",
+      "scene_name": "ef_001",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": true,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00000/battle_00000.lwf"
+        },
+        {
+          "name": "battle_00000_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00000/battle_00000_0.png"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "category": 1,
+      "name": "打撃（大）",
+      "pack_name": "battle_00000",
+      "scene_name": "ef_003",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00000/battle_00000.lwf"
+        },
+        {
+          "name": "battle_00000_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00000/battle_00000_0.png"
+        }
+      ]
+    },
+    {
+      "id": 906,
+      "category": 1,
+      "name": "集中線",
+      "pack_name": "battle_90000",
+      "scene_name": "ef_007",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_90000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_90000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_90000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/battle_90000.lwf"
+        },
+        {
+          "name": "battle_90000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/battle_90000-1.png"
+        },
+        {
+          "name": "Images_ef_ryusen_angle_wh_01.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_angle_wh_01.png"
+        },
+        {
+          "name": "Images_ef_ryusen_angle_wh_02.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_angle_wh_02.png"
+        },
+        {
+          "name": "Images_ef_ryusen_wh.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_wh.png"
+        },
+        {
+          "name": "Images_ef_shuchu_wh.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_shuchu_wh.png"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "category": 1,
+      "name": "打撃（中）",
+      "pack_name": "battle_00000",
+      "scene_name": "ef_002",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00000/battle_00000.lwf"
+        },
+        {
+          "name": "battle_00000_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00000/battle_00000_0.png"
+        }
+      ]
+    },
+    {
+      "id": 150062,
+      "category": 5,
+      "name": "人造人間17号・18号_サディスティックダンス",
+      "pack_name": "sp_effect_b4_00002",
+      "scene_name": "ef_015",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_07"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00002.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002.lwf"
+        },
+        {
+          "name": "sp_effect_b4_00002_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00002_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_1.png"
+        }
+      ]
+    },
+    {
+      "id": 150061,
+      "category": 5,
+      "name": "人造人間17号・18号_サディスティックダンス",
+      "pack_name": "sp_effect_b4_00002",
+      "scene_name": "ef_014",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_06"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00002.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002.lwf"
+        },
+        {
+          "name": "sp_effect_b4_00002_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00002_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_1.png"
+        }
+      ]
+    },
+    {
+      "id": 150053,
+      "category": 5,
+      "name": "人造人間17号・18号_サディスティックダンス",
+      "pack_name": "sp_effect_b4_00002",
+      "scene_name": "ef_006",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_02"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00002.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002.lwf"
+        },
+        {
+          "name": "sp_effect_b4_00002_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00002_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_1.png"
+        }
+      ]
+    },
+    {
+      "id": 150054,
+      "category": 5,
+      "name": "人造人間17号・18号_サディスティックダンス",
+      "pack_name": "sp_effect_b4_00002",
+      "scene_name": "ef_007",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_03"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00002.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002.lwf"
+        },
+        {
+          "name": "sp_effect_b4_00002_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00002_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_1.png"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "category": 1,
+      "name": "蹴りHIT(大）",
+      "pack_name": "battle_00000",
+      "scene_name": "ef_006",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00000/battle_00000.lwf"
+        },
+        {
+          "name": "battle_00000_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00000/battle_00000_0.png"
+        }
+      ]
+    },
+    {
+      "id": 1509,
+      "category": 1,
+      "name": "必殺技共通",
+      "pack_name": "battle_150000",
+      "scene_name": "ef_010",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_150000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000.lwf"
+        },
+        {
+          "name": "battle_150000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-1.png"
+        },
+        {
+          "name": "battle_150000-2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-2.png"
+        },
+        {
+          "name": "card_1000010_character.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_character.png"
+        },
+        {
+          "name": "card_1000010_effect.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_effect.png"
+        },
+        {
+          "name": "card_1000010_sp_cutin_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_cutin_1.png"
+        },
+        {
+          "name": "card_1000010_sp_name.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_name.png"
+        },
+        {
+          "name": "card_1000010_sp_phrase.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_phrase.png"
+        },
+        {
+          "name": "Images_ef_sp_phrase_bar.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/Images_ef_sp_phrase_bar.png"
+        }
+      ]
+    },
+    {
+      "id": 150048,
+      "category": 5,
+      "name": "人造人間17号・18号_サディスティックダンス",
+      "pack_name": "sp_effect_b4_00002",
+      "scene_name": "ef_001",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_04"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00002.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002.lwf"
+        },
+        {
+          "name": "sp_effect_b4_00002_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00002_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_1.png"
+        }
+      ]
+    },
+    {
+      "id": 150050,
+      "category": 5,
+      "name": "人造人間17号・18号_サディスティックダンス",
+      "pack_name": "sp_effect_b4_00002",
+      "scene_name": "ef_003",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_05"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00002.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002.lwf"
+        },
+        {
+          "name": "sp_effect_b4_00002_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00002_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_1.png"
+        }
+      ]
+    },
+    {
+      "id": 150055,
+      "category": 5,
+      "name": "人造人間17号・18号_サディスティックダンス",
+      "pack_name": "sp_effect_b4_00002",
+      "scene_name": "ef_008",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_04e"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00002.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002.lwf"
+        },
+        {
+          "name": "sp_effect_b4_00002_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00002_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_1.png"
+        }
+      ]
+    },
+    {
+      "id": 150057,
+      "category": 5,
+      "name": "人造人間17号・18号_サディスティックダンス",
+      "pack_name": "sp_effect_b4_00002",
+      "scene_name": "ef_010",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_05e"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00002.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00002.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002.lwf"
+        },
+        {
+          "name": "sp_effect_b4_00002_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00002_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00002/sp_effect_b4_00002_1.png"
+        }
+      ]
+    },
+    {
+      "id": 1503,
+      "category": 1,
+      "name": "必殺技共通",
+      "pack_name": "battle_150000",
+      "scene_name": "ef_004",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_150000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000.lwf"
+        },
+        {
+          "name": "battle_150000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-1.png"
+        },
+        {
+          "name": "battle_150000-2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-2.png"
+        },
+        {
+          "name": "card_1000010_character.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_character.png"
+        },
+        {
+          "name": "card_1000010_effect.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_effect.png"
+        },
+        {
+          "name": "card_1000010_sp_cutin_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_cutin_1.png"
+        },
+        {
+          "name": "card_1000010_sp_name.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_name.png"
+        },
+        {
+          "name": "card_1000010_sp_phrase.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_phrase.png"
+        },
+        {
+          "name": "Images_ef_sp_phrase_bar.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/Images_ef_sp_phrase_bar.png"
+        }
+      ]
+    },
+    {
+      "id": 1502,
+      "category": 1,
+      "name": "必殺技共通",
+      "pack_name": "battle_150000",
+      "scene_name": "ef_003",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_150000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000.lwf"
+        },
+        {
+          "name": "battle_150000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-1.png"
+        },
+        {
+          "name": "battle_150000-2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-2.png"
+        },
+        {
+          "name": "card_1000010_character.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_character.png"
+        },
+        {
+          "name": "card_1000010_effect.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_effect.png"
+        },
+        {
+          "name": "card_1000010_sp_cutin_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_cutin_1.png"
+        },
+        {
+          "name": "card_1000010_sp_name.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_name.png"
+        },
+        {
+          "name": "card_1000010_sp_phrase.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_phrase.png"
+        },
+        {
+          "name": "Images_ef_sp_phrase_bar.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/Images_ef_sp_phrase_bar.png"
+        }
+      ]
+    },
+    {
+      "id": 1504,
+      "category": 1,
+      "name": "必殺技共通",
+      "pack_name": "battle_150000",
+      "scene_name": "ef_005",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_150000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000.lwf"
+        },
+        {
+          "name": "battle_150000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-1.png"
+        },
+        {
+          "name": "battle_150000-2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-2.png"
+        },
+        {
+          "name": "card_1000010_character.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_character.png"
+        },
+        {
+          "name": "card_1000010_effect.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_effect.png"
+        },
+        {
+          "name": "card_1000010_sp_cutin_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_cutin_1.png"
+        },
+        {
+          "name": "card_1000010_sp_name.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_name.png"
+        },
+        {
+          "name": "card_1000010_sp_phrase.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_phrase.png"
+        },
+        {
+          "name": "Images_ef_sp_phrase_bar.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/Images_ef_sp_phrase_bar.png"
+        }
+      ]
+    },
+    {
+      "id": 311,
+      "category": 1,
+      "name": "気力ループ",
+      "pack_name": "battle_30100",
+      "scene_name": "ef_002",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_30100.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_30100.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_30100.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_30100/battle_30100.lwf"
+        },
+        {
+          "name": "battle_30100.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_30100/battle_30100.png"
+        }
+      ]
+    },
+    {
+      "id": 1507,
+      "category": 1,
+      "name": "必殺技共通",
+      "pack_name": "battle_150000",
+      "scene_name": "ef_008",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_150000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000.lwf"
+        },
+        {
+          "name": "battle_150000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-1.png"
+        },
+        {
+          "name": "battle_150000-2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-2.png"
+        },
+        {
+          "name": "card_1000010_character.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_character.png"
+        },
+        {
+          "name": "card_1000010_effect.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_effect.png"
+        },
+        {
+          "name": "card_1000010_sp_cutin_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_cutin_1.png"
+        },
+        {
+          "name": "card_1000010_sp_name.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_name.png"
+        },
+        {
+          "name": "card_1000010_sp_phrase.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_phrase.png"
+        },
+        {
+          "name": "Images_ef_sp_phrase_bar.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/Images_ef_sp_phrase_bar.png"
+        }
+      ]
+    },
+    {
+      "id": 920,
+      "category": 1,
+      "name": "流線　必殺技用",
+      "pack_name": "battle_90001",
+      "scene_name": "ef_001",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_90001.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_90001.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_90001.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90001/battle_90001.lwf"
+        },
+        {
+          "name": "Image_ef_line_angle.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90001/Image_ef_line_angle.png"
+        },
+        {
+          "name": "Image_ef_ryusen.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90001/Image_ef_ryusen.png"
+        }
+      ]
+    },
+    {
+      "id": 1505,
+      "category": 1,
+      "name": "必殺技共通",
+      "pack_name": "battle_150000",
+      "scene_name": "ef_006",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_150000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000.lwf"
+        },
+        {
+          "name": "battle_150000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-1.png"
+        },
+        {
+          "name": "battle_150000-2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-2.png"
+        },
+        {
+          "name": "card_1000010_character.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_character.png"
+        },
+        {
+          "name": "card_1000010_effect.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_effect.png"
+        },
+        {
+          "name": "card_1000010_sp_cutin_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_cutin_1.png"
+        },
+        {
+          "name": "card_1000010_sp_name.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_name.png"
+        },
+        {
+          "name": "card_1000010_sp_phrase.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_phrase.png"
+        },
+        {
+          "name": "Images_ef_sp_phrase_bar.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/Images_ef_sp_phrase_bar.png"
+        }
+      ]
+    },
+    {
+      "id": 10013,
+      "category": 0,
+      "name": "ズズズンッ",
+      "pack_name": "comic_text_10000",
+      "scene_name": "ef_014",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/comic_text_10000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/comic_text_10000.usm",
+      "has_movie": false,
+      "available": false,
+      "files": []
+    },
+    {
+      "id": 1120,
+      "category": 1,
+      "name": "必殺技上限解放",
+      "pack_name": "battle_116000",
+      "scene_name": "ef_001",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_116000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_116000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_116000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/battle_116000.lwf"
+        },
+        {
+          "name": "battle_116000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/battle_116000-1.png"
+        },
+        {
+          "name": "battle_116000-2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/battle_116000-2.png"
+        },
+        {
+          "name": "card_00001_sp_name.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/card_00001_sp_name.png"
+        },
+        {
+          "name": "card_1000010_character.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/card_1000010_character.png"
+        },
+        {
+          "name": "card_1000010_effect.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/card_1000010_effect.png"
+        },
+        {
+          "name": "Images_ef_sp_phrase_bar.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/Images_ef_sp_phrase_bar.png"
+        },
+        {
+          "name": "num_critical_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_0.png"
+        },
+        {
+          "name": "num_critical_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_1.png"
+        },
+        {
+          "name": "num_critical_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_2.png"
+        },
+        {
+          "name": "num_critical_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_3.png"
+        },
+        {
+          "name": "num_critical_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_4.png"
+        },
+        {
+          "name": "num_critical_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_5.png"
+        },
+        {
+          "name": "num_critical_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_6.png"
+        },
+        {
+          "name": "num_critical_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_7.png"
+        },
+        {
+          "name": "num_critical_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_8.png"
+        },
+        {
+          "name": "num_critical_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_9.png"
+        },
+        {
+          "name": "num_critical_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_0.png"
+        },
+        {
+          "name": "num_critical_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_1.png"
+        },
+        {
+          "name": "num_critical_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_2.png"
+        },
+        {
+          "name": "num_critical_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_3.png"
+        },
+        {
+          "name": "num_critical_a_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_4.png"
+        },
+        {
+          "name": "num_critical_a_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_5.png"
+        },
+        {
+          "name": "num_critical_a_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_6.png"
+        },
+        {
+          "name": "num_critical_a_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_7.png"
+        },
+        {
+          "name": "num_critical_a_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_8.png"
+        },
+        {
+          "name": "num_critical_a_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_9.png"
+        },
+        {
+          "name": "num_critical_b_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_0.png"
+        },
+        {
+          "name": "num_critical_b_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_1.png"
+        },
+        {
+          "name": "num_critical_b_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_2.png"
+        },
+        {
+          "name": "num_critical_b_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_3.png"
+        },
+        {
+          "name": "num_critical_b_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_4.png"
+        },
+        {
+          "name": "num_critical_b_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_5.png"
+        },
+        {
+          "name": "num_critical_b_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_6.png"
+        },
+        {
+          "name": "num_critical_b_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_7.png"
+        },
+        {
+          "name": "num_critical_b_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_8.png"
+        },
+        {
+          "name": "num_critical_b_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_9.png"
+        },
+        {
+          "name": "num_normal_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_0.png"
+        },
+        {
+          "name": "num_normal_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_1.png"
+        },
+        {
+          "name": "num_normal_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_2.png"
+        },
+        {
+          "name": "num_normal_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_3.png"
+        },
+        {
+          "name": "num_normal_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_4.png"
+        },
+        {
+          "name": "num_normal_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_5.png"
+        },
+        {
+          "name": "num_normal_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_6.png"
+        },
+        {
+          "name": "num_normal_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_7.png"
+        },
+        {
+          "name": "num_normal_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_8.png"
+        },
+        {
+          "name": "num_normal_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_9.png"
+        },
+        {
+          "name": "num_normal_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_0.png"
+        },
+        {
+          "name": "num_normal_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_1.png"
+        },
+        {
+          "name": "num_normal_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_2.png"
+        },
+        {
+          "name": "num_normal_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_3.png"
+        },
+        {
+          "name": "num_normal_a_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_4.png"
+        },
+        {
+          "name": "num_normal_a_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_5.png"
+        },
+        {
+          "name": "num_normal_a_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_6.png"
+        },
+        {
+          "name": "num_normal_a_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_7.png"
+        },
+        {
+          "name": "num_normal_a_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_8.png"
+        },
+        {
+          "name": "num_normal_a_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_9.png"
+        }
+      ]
+    },
+    {
+      "id": 1121,
+      "category": 1,
+      "name": "必殺技上限解放",
+      "pack_name": "battle_116000",
+      "scene_name": "ef_002",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_116000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_116000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_116000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/battle_116000.lwf"
+        },
+        {
+          "name": "battle_116000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/battle_116000-1.png"
+        },
+        {
+          "name": "battle_116000-2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/battle_116000-2.png"
+        },
+        {
+          "name": "card_00001_sp_name.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/card_00001_sp_name.png"
+        },
+        {
+          "name": "card_1000010_character.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/card_1000010_character.png"
+        },
+        {
+          "name": "card_1000010_effect.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/card_1000010_effect.png"
+        },
+        {
+          "name": "Images_ef_sp_phrase_bar.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/Images_ef_sp_phrase_bar.png"
+        },
+        {
+          "name": "num_critical_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_0.png"
+        },
+        {
+          "name": "num_critical_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_1.png"
+        },
+        {
+          "name": "num_critical_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_2.png"
+        },
+        {
+          "name": "num_critical_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_3.png"
+        },
+        {
+          "name": "num_critical_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_4.png"
+        },
+        {
+          "name": "num_critical_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_5.png"
+        },
+        {
+          "name": "num_critical_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_6.png"
+        },
+        {
+          "name": "num_critical_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_7.png"
+        },
+        {
+          "name": "num_critical_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_8.png"
+        },
+        {
+          "name": "num_critical_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_9.png"
+        },
+        {
+          "name": "num_critical_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_0.png"
+        },
+        {
+          "name": "num_critical_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_1.png"
+        },
+        {
+          "name": "num_critical_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_2.png"
+        },
+        {
+          "name": "num_critical_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_3.png"
+        },
+        {
+          "name": "num_critical_a_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_4.png"
+        },
+        {
+          "name": "num_critical_a_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_5.png"
+        },
+        {
+          "name": "num_critical_a_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_6.png"
+        },
+        {
+          "name": "num_critical_a_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_7.png"
+        },
+        {
+          "name": "num_critical_a_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_8.png"
+        },
+        {
+          "name": "num_critical_a_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_a_9.png"
+        },
+        {
+          "name": "num_critical_b_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_0.png"
+        },
+        {
+          "name": "num_critical_b_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_1.png"
+        },
+        {
+          "name": "num_critical_b_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_2.png"
+        },
+        {
+          "name": "num_critical_b_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_3.png"
+        },
+        {
+          "name": "num_critical_b_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_4.png"
+        },
+        {
+          "name": "num_critical_b_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_5.png"
+        },
+        {
+          "name": "num_critical_b_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_6.png"
+        },
+        {
+          "name": "num_critical_b_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_7.png"
+        },
+        {
+          "name": "num_critical_b_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_8.png"
+        },
+        {
+          "name": "num_critical_b_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_critical_b_9.png"
+        },
+        {
+          "name": "num_normal_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_0.png"
+        },
+        {
+          "name": "num_normal_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_1.png"
+        },
+        {
+          "name": "num_normal_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_2.png"
+        },
+        {
+          "name": "num_normal_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_3.png"
+        },
+        {
+          "name": "num_normal_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_4.png"
+        },
+        {
+          "name": "num_normal_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_5.png"
+        },
+        {
+          "name": "num_normal_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_6.png"
+        },
+        {
+          "name": "num_normal_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_7.png"
+        },
+        {
+          "name": "num_normal_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_8.png"
+        },
+        {
+          "name": "num_normal_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_9.png"
+        },
+        {
+          "name": "num_normal_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_0.png"
+        },
+        {
+          "name": "num_normal_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_1.png"
+        },
+        {
+          "name": "num_normal_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_2.png"
+        },
+        {
+          "name": "num_normal_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_3.png"
+        },
+        {
+          "name": "num_normal_a_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_4.png"
+        },
+        {
+          "name": "num_normal_a_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_5.png"
+        },
+        {
+          "name": "num_normal_a_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_6.png"
+        },
+        {
+          "name": "num_normal_a_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_7.png"
+        },
+        {
+          "name": "num_normal_a_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_8.png"
+        },
+        {
+          "name": "num_normal_a_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_116000/en/num_normal_a_9.png"
+        }
+      ]
+    },
+    {
+      "id": 911,
+      "category": 1,
+      "name": "集中線(黒)",
+      "pack_name": "battle_90000",
+      "scene_name": "ef_007",
+      "color": {
+        "red": 8,
+        "green": 8,
+        "blue": 8,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_90000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_90000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_90000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/battle_90000.lwf"
+        },
+        {
+          "name": "battle_90000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/battle_90000-1.png"
+        },
+        {
+          "name": "Images_ef_ryusen_angle_wh_01.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_angle_wh_01.png"
+        },
+        {
+          "name": "Images_ef_ryusen_angle_wh_02.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_angle_wh_02.png"
+        },
+        {
+          "name": "Images_ef_ryusen_wh.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_wh.png"
+        },
+        {
+          "name": "Images_ef_shuchu_wh.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_shuchu_wh.png"
+        }
+      ]
+    },
+    {
+      "id": 707,
+      "category": 1,
+      "name": "気力移動/敵",
+      "pack_name": "battle_70000",
+      "scene_name": "ef_008",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_70000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_70000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_70000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_70000/battle_70000.lwf"
+        },
+        {
+          "name": "battle_70000_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_70000/battle_70000_0.png"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "category": 1,
+      "name": "気弾HIT色替えも",
+      "pack_name": "battle_00000",
+      "scene_name": "ef_011",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00000/battle_00000.lwf"
+        },
+        {
+          "name": "battle_00000_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00000/battle_00000_0.png"
+        }
+      ]
+    },
+    {
+      "id": 908,
+      "category": 1,
+      "name": "衝撃波",
+      "pack_name": "battle_90000",
+      "scene_name": "ef_009",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_90000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_90000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_90000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/battle_90000.lwf"
+        },
+        {
+          "name": "battle_90000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/battle_90000-1.png"
+        },
+        {
+          "name": "Images_ef_ryusen_angle_wh_01.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_angle_wh_01.png"
+        },
+        {
+          "name": "Images_ef_ryusen_angle_wh_02.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_angle_wh_02.png"
+        },
+        {
+          "name": "Images_ef_ryusen_wh.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_wh.png"
+        },
+        {
+          "name": "Images_ef_shuchu_wh.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_shuchu_wh.png"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "category": 1,
+      "name": "気弾HIT",
+      "pack_name": "battle_00000",
+      "scene_name": "ef_022",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00000/battle_00000.lwf"
+        },
+        {
+          "name": "battle_00000_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00000/battle_00000_0.png"
+        }
+      ]
+    },
+    {
+      "id": 905,
+      "category": 1,
+      "name": "フィニッシュHIT",
+      "pack_name": "battle_90000",
+      "scene_name": "ef_006",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_90000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_90000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_90000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/battle_90000.lwf"
+        },
+        {
+          "name": "battle_90000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/battle_90000-1.png"
+        },
+        {
+          "name": "Images_ef_ryusen_angle_wh_01.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_angle_wh_01.png"
+        },
+        {
+          "name": "Images_ef_ryusen_angle_wh_02.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_angle_wh_02.png"
+        },
+        {
+          "name": "Images_ef_ryusen_wh.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_wh.png"
+        },
+        {
+          "name": "Images_ef_shuchu_wh.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_shuchu_wh.png"
+        }
+      ]
+    },
+    {
+      "id": 1575,
+      "category": 1,
+      "name": "必殺技用（回避）_回避テロップ",
+      "pack_name": "battle_152000",
+      "scene_name": "ef_001",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_152000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_152000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_152000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_152000/battle_152000.lwf"
+        },
+        {
+          "name": "battle_152000_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_152000/battle_152000_0.png"
+        }
+      ]
+    },
+    {
+      "id": 700,
+      "category": 1,
+      "name": "瞬間移動",
+      "pack_name": "battle_70000",
+      "scene_name": "ef_001",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_70000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_70000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_70000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_70000/battle_70000.lwf"
+        },
+        {
+          "name": "battle_70000_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_70000/battle_70000_0.png"
+        }
+      ]
+    },
+    {
+      "id": 10008,
+      "category": 0,
+      "name": "ゴゴゴゴ…",
+      "pack_name": "comic_text_10000",
+      "scene_name": "ef_009",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/comic_text_10000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/comic_text_10000.usm",
+      "has_movie": false,
+      "available": false,
+      "files": []
+    },
+    {
+      "id": 1508,
+      "category": 1,
+      "name": "必殺技共通",
+      "pack_name": "battle_150000",
+      "scene_name": "ef_009",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_150000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000.lwf"
+        },
+        {
+          "name": "battle_150000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-1.png"
+        },
+        {
+          "name": "battle_150000-2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-2.png"
+        },
+        {
+          "name": "card_1000010_character.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_character.png"
+        },
+        {
+          "name": "card_1000010_effect.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_effect.png"
+        },
+        {
+          "name": "card_1000010_sp_cutin_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_cutin_1.png"
+        },
+        {
+          "name": "card_1000010_sp_name.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_name.png"
+        },
+        {
+          "name": "card_1000010_sp_phrase.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_phrase.png"
+        },
+        {
+          "name": "Images_ef_sp_phrase_bar.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/Images_ef_sp_phrase_bar.png"
+        }
+      ]
+    },
+    {
+      "id": 10012,
+      "category": 0,
+      "name": "ズオッ",
+      "pack_name": "comic_text_10000",
+      "scene_name": "ef_013",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/comic_text_10000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/comic_text_10000.usm",
+      "has_movie": false,
+      "available": false,
+      "files": []
+    },
+    {
+      "id": 1506,
+      "category": 1,
+      "name": "必殺技共通",
+      "pack_name": "battle_150000",
+      "scene_name": "ef_007",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_150000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000.lwf"
+        },
+        {
+          "name": "battle_150000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-1.png"
+        },
+        {
+          "name": "battle_150000-2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-2.png"
+        },
+        {
+          "name": "card_1000010_character.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_character.png"
+        },
+        {
+          "name": "card_1000010_effect.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_effect.png"
+        },
+        {
+          "name": "card_1000010_sp_cutin_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_cutin_1.png"
+        },
+        {
+          "name": "card_1000010_sp_name.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_name.png"
+        },
+        {
+          "name": "card_1000010_sp_phrase.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_phrase.png"
+        },
+        {
+          "name": "Images_ef_sp_phrase_bar.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/Images_ef_sp_phrase_bar.png"
+        }
+      ]
+    },
+    {
+      "id": 921,
+      "category": 1,
+      "name": "流線　斜め　奥行きあり",
+      "pack_name": "battle_90001",
+      "scene_name": "ef_002",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_90001.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_90001.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_90001.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90001/battle_90001.lwf"
+        },
+        {
+          "name": "Image_ef_line_angle.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90001/Image_ef_line_angle.png"
+        },
+        {
+          "name": "Image_ef_ryusen.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90001/Image_ef_ryusen.png"
+        }
+      ]
+    },
+    {
+      "id": 10014,
+      "category": 0,
+      "name": "ズドドドッ",
+      "pack_name": "comic_text_10000",
+      "scene_name": "ef_015",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/comic_text_10000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/comic_text_10000.usm",
+      "has_movie": false,
+      "available": false,
+      "files": []
+    },
+    {
+      "id": 10005,
+      "category": 0,
+      "name": "ガッ",
+      "pack_name": "comic_text_10000",
+      "scene_name": "ef_006",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/comic_text_10000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/comic_text_10000.usm",
+      "has_movie": false,
+      "available": false,
+      "files": []
+    },
+    {
+      "id": 1600,
+      "category": 1,
+      "name": "ひび割れエフェクト",
+      "pack_name": "battle_160000",
+      "scene_name": "ef_001",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_160000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_160000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_160000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_160000/battle_160000.lwf"
+        },
+        {
+          "name": "battle_160000.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_160000/battle_160000.png"
+        }
+      ]
+    }
+  ],
+  "audio_urls": {
+    "se:1035": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1035.wav",
+    "se:1036": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1036.wav",
+    "se:1018": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1018.wav",
+    "se:1021": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1021.wav",
+    "se:1022": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1022.wav",
+    "se:1042": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1042.wav",
+    "se:1023": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1023.wav",
+    "se:1024": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1024.wav",
+    "se:1054": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1054.wav",
+    "se:9": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_9.wav",
+    "se:46": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_46.wav",
+    "se:51": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_51.wav",
+    "se:228": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_228.wav"
+  }
+}

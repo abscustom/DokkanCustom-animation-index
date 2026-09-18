@@ -1,0 +1,1363 @@
+{
+  "script_name": "sp2369",
+  "script_type": "attack sp",
+  "relative_script_path": "attack_sp/sp2369.lua",
+  "script_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/lua/ab_script/attack_sp/sp2369.lua",
+  "max_frame_hint": 1108,
+  "lua_source": "--1024240:SSR人造人間16号&18号_デュアルデストロイド_sp2369\r\n--sp_effect_b4_00231\r\n\r\nfcolor_r = 245;\r\nfcolor_g = 245;\r\nfcolor_b = 245;\r\n\r\nSE_01 = 1035; --気を貯める\r\nSE_02 = 1036; --気が広がる\r\nSE_03 = 1036; --かめはめ\r\nSE_04 = 1018; --カットイン\r\nSE_05 = 1035; --カットイン攻撃\r\nSE_06 = 1021; --発射\r\nSE_07 = 1022; --のびる発射\r\nSE_08 = 1042; --カットイン\r\nSE_09 = 1023; --HIT\r\nSE_10 = 1024; --爆破\r\nSE_11 = 1054; --割れる音\r\nSE_12 = 09;\r\n\r\n--味方側\r\nSP_01 = 159765;\t--開幕〜セリフカットインまで\tef_001\r\nSP_02 = 159766;\t--飛び出す16号と18号\tef_002\r\nSP_03 = 159767;\t--敵に迫る18号〜16号カメラに近づく\tef_003\r\nSP_04 = 159769;\t--敵に迫る18号〜16号カメラに近づく\tef_004\r\nSP_05 = 159771;\t--殴る16号〜敵が吹っ飛ぶまで\tef_005\r\nSP_06 = 159773;\t--殴る16号〜敵が吹っ飛ぶまで\tef_006\r\nSP_07 = 159774;\t--フィニッシュ\tef_007\r\n\r\n--敵側\r\nSP_03r = 159768;\t--同上　敵側\tef_003r\r\nSP_04r = 159770;\t--同上　敵側\tef_004r\r\nSP_05r = 159772;\t--同上　敵側\tef_005r\r\n\r\n------------------------------------------------------\r\n-- テンプレ構文\r\n------------------------------------------------------\r\n\r\nmulti_frm = 2;\r\n\r\nsetVisibleUI( 0, 0);\r\n\r\nchangeAnime( 0, 0, 0);\r\nchangeAnime( 0, 1, 100);\r\nsetDisp( 0, 0, 0);\r\nsetDisp( 0, 1, 0);\r\n\r\nsetMoveKey(   0,   0,    0, -5000,   0);\r\nsetMoveKey(   1,   0,    0, -5000,   0);\r\nsetMoveKey(   2,   0,    0, -5000,   0);\r\nsetMoveKey(   3,   0,    0, -5000,   0);\r\nsetMoveKey(   4,   0,    0, -5000,   0);\r\nsetMoveKey(   5,   0,    0, -5000,   0);\r\nsetMoveKey(   6,   0,    0, -5000,   0);\r\nsetScaleKey(  0,   0,  1.6, 1.6 );\r\nsetScaleKey(  1,   0,  1.6, 1.6 );\r\nsetScaleKey(  2,   0,  1.6, 1.6 );\r\nsetScaleKey(  3,   0,  1.6, 1.6 );\r\nsetScaleKey(  4,   0,  1.6, 1.6 );\r\nsetScaleKey(  5,   0,  1.6, 1.6 );\r\nsetScaleKey(  6,   0,  1.6, 1.6 );\r\nsetRotateKey( 0,   0,  0 );\r\nsetRotateKey( 1,   0,  0 );\r\nsetRotateKey( 2,   0,  0 );\r\nsetRotateKey( 3,   0,  0 );\r\nsetRotateKey( 4,   0,  0 );\r\nsetRotateKey( 5,   0,  0 );\r\nsetRotateKey( 6,   0,  0 );\r\n\r\nsetMoveKey(   0,   1,    0, -5000,   0);\r\nsetMoveKey(   1,   1,    0, -5000,   0);\r\nsetMoveKey(   2,   1,    0, -5000,   0);\r\nsetMoveKey(   3,   1,    0, -5000,   0);\r\nsetMoveKey(   4,   1,    0, -5000,   0);\r\nsetMoveKey(   5,   1,    0, -5000,   0);\r\nsetMoveKey(   6,   1,    0, -5000,   0);\r\nsetScaleKey(  0,   1,  1.6, 1.6 );\r\nsetScaleKey(  1,   1,  1.6, 1.6 );\r\nsetScaleKey(  2,   1,  1.6, 1.6 );\r\nsetScaleKey(  3,   1,  1.6, 1.6 );\r\nsetScaleKey(  4,   1,  1.6, 1.6 );\r\nsetScaleKey(  5,   1,  1.6, 1.6 );\r\nsetScaleKey(  6,   1,  1.6, 1.6 );\r\nsetRotateKey( 0,   1,  0 );\r\nsetRotateKey( 1,   1,  0 );\r\nsetRotateKey( 2,   1,  0 );\r\nsetRotateKey( 3,   1,  0 );\r\nsetRotateKey( 4,   1,  0 );\r\nsetRotateKey( 5,   1,  0 );\r\nsetRotateKey( 6,   1,  0 );\r\n\r\nENABLE_AUTO_TIME_STRETCH(0.9);\r\n\r\nkame_flag = 0x00;\r\nif (_IS_PLAYER_SIDE_ == 1) then\r\n\r\n------------------------------------------------------\r\n-- 味方側\r\n------------------------------------------------------\r\n------------------------------------------------------\r\n-- 開幕〜セリフカットイン(91F)\r\n------------------------------------------------------\r\nspep_0 = 0;\r\n\r\n-- ** エフェクト等 ** --\r\nfirst_f = entryEffectLife( spep_0 + 0, SP_01, 98, 0x100, -1, 0, 0, 0 );  --開幕〜セリフカットインまで\tef_001\r\nsetEffMoveKey( spep_0 + 0, first_f, 0, 0 , 0 );\r\nsetEffMoveKey( spep_0 + 98, first_f, 0, 0 , 0 );\r\nsetEffScaleKey( spep_0 + 0, first_f, 1.0, 1.0 );\r\nsetEffScaleKey( spep_0 + 98, first_f, 1.0, 1.0 );\r\nsetEffRotateKey( spep_0 + 0, first_f, 0 );\r\nsetEffRotateKey( spep_0 + 98, first_f, 0 );\r\nsetEffAlphaKey( spep_0 + 0, first_f, 255 );\r\nsetEffAlphaKey( spep_0 + 98 -1, first_f, 255 );\r\nsetEffAlphaKey( spep_0 + 98, first_f, 0 );\r\n\r\nspep_x = spep_0 + 6;\r\n-- ** 顔カットイン ** --\r\nspeff = entryEffect( spep_x + 0, 1504, 0x100, -1, 0, 0, 0 );  --カットイン(顔)\r\nsetEffReplaceTexture( speff, 3, 2 );  --カットイン差し替え\r\nspeff1 = entryEffect( spep_x + 0, 1505, 0x100, -1, 0, 0, 0, 1000 );  --カットイン(セリフ)\r\nsetEffReplaceTexture( speff1, 4, 5 );  --セリフカットイン差し替え\r\n\r\n-- ** 書き文字エントリー ** --\r\nctgogo = entryEffectLife( spep_x + 16,  190006, 68, 0x100, -1, 0, 5, 515.5, 3000 ); --ゴゴゴ\r\nsetEffShake( spep_x + 16, ctgogo, 68, 10 );\r\nsetEffMoveKey( spep_x + 16, ctgogo, 5, 515.5 , 0 );\r\nsetEffMoveKey( spep_x + 84, ctgogo, 5, 515.5 , 0 );\r\nsetEffScaleKey( spep_x + 16, ctgogo, 0.7, 0.7 );\r\nsetEffScaleKey( spep_x + 76, ctgogo, 0.7, 0.7 );\r\nsetEffScaleKey( spep_x + 78, ctgogo, 1.0, 1.0 );\r\nsetEffScaleKey( spep_x + 80, ctgogo, 1.09, 1.09 );\r\nsetEffScaleKey( spep_x + 82, ctgogo, 1.39, 1.39 );\r\nsetEffScaleKey( spep_x + 84, ctgogo, 1.69, 1.69 );\r\nsetEffRotateKey( spep_x + 16, ctgogo, 0 );\r\nsetEffRotateKey( spep_x + 84, ctgogo, 0 );\r\nsetEffAlphaKey( spep_x + 16, ctgogo, 255 );\r\nsetEffAlphaKey( spep_x + 84, ctgogo, 255 );\r\n\r\n-- ** 音 ** --\r\n--入り\r\nSE001 = playSeVer2( spep_0 + 0, 8, \"\", 0, 0, 0, -1);\r\n\r\n--顔カットイン\r\nSE002 = playSeVer2( spep_x + 12, 1018, \"\", 0, 0, 0, -1);\r\n\r\n--構える\r\nSE003 = playSeVer2( spep_0 + 18, 1006, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( spep_0 + 18, SE003, 60 );\r\n\r\n-- ** 黒背景 ** --\r\nentryFadeBg( spep_0 + 0, 0, 98 + 2, 0, 0, 0, 0, 255);       -- ベース暗め　背景\r\n\r\n-- ** 次の準備 ** --\r\nspep_1 = spep_0 + 98;\r\n\r\n\r\n--------------------------------------\r\n--カードカットイン(94F)\r\n--------------------------------------\r\n--spep_1 = 0;\r\n-- ** カードカットイン ** --\r\nspeff2 = entryEffectLife( spep_1 + 0, 1507, 90, 0x100, -1, 0, 0, 0 );   -- カード\r\nsetEffReplaceTexture( speff2, 1, 1 );\r\nsetEffReplaceTexture( speff2, 2, 0 );-- カード差し替え\r\nsetEffReplaceTexture( speff2, 5, 4 );-- 技名テクスチャ差し替え\r\n-- ** 集中線 ** --\r\nshuchusen = entryEffectLife( spep_1 + 0, 906, 90, 0x100, -1, 0, 0, 0 );  --集中線\r\nsetEffShake( spep_1 + 0, shuchusen, 90, 20 );\r\nsetEffMoveKey( spep_1 + 0, shuchusen, 0, 0 , 0 );\r\nsetEffMoveKey( spep_1 + 90, shuchusen, 0, 0 , 0 );\r\nsetEffScaleKey( spep_1 + 0, shuchusen, 1.6, 1.6 );\r\nsetEffScaleKey( spep_1 + 90, shuchusen, 1.6, 1.6 );\r\nsetEffRotateKey( spep_1 + 0, shuchusen, 0 );\r\nsetEffRotateKey( spep_1 + 90, shuchusen, 0 );\r\nsetEffAlphaKey( spep_1 + 0, shuchusen, 255 );\r\nsetEffAlphaKey( spep_1 + 90, shuchusen, 255 );\r\n-- ** 音 ** --\r\nplaySe( spep_1 + 0, SE_05 );\r\n-- ** 白背景 ** --\r\nentryFadeBg( spep_1 + 0, 0, 96, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  --白　背景\r\n-- ** 白フェード ** --\r\nentryFade( spep_1 + 0, 0, 2, 4, fcolor_r, fcolor_g, fcolor_b, 255 );  --white fade\r\nentryFade( spep_1 + 80, 6, 8, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  --white fade\r\n\r\n-- ** 次の準備 ** --\r\nspep_2 = spep_1 + 94;\r\n\r\n\r\n------------------------------------------------------\r\n-- 飛び出す16号と18号(76F)\r\n------------------------------------------------------\r\n--spep_2 = 0;\r\n\r\n-- ** エフェクト等 ** --\r\ndash = entryEffectLife( spep_2 + 0, SP_02, 76, 0x100, -1, 0, 0, 0 );  --飛び出す16号と18号\tef_002\r\nsetEffMoveKey( spep_2 + 0, dash, 0, 0 , 0 );\r\nsetEffMoveKey( spep_2 + 76, dash, 0, 0 , 0 );\r\nsetEffScaleKey( spep_2 + 0, dash, 1.0, 1.0 );\r\nsetEffScaleKey( spep_2 + 76, dash, 1.0, 1.0 );\r\nsetEffRotateKey( spep_2 + 0, dash, 0 );\r\nsetEffRotateKey( spep_2 + 76, dash, 0 );\r\nsetEffAlphaKey( spep_2 + 0, dash, 255 );\r\nsetEffAlphaKey( spep_2 + 76 -1, dash, 255 );\r\nsetEffAlphaKey( spep_2 + 76, dash, 0 );\r\n\r\n--------------------------------------\r\n--回避\r\n--------------------------------------\r\n\r\nif(_IS_DODGE_ == 1) then\r\n\r\n    SP_dodge = spep_2 + 22 ; --エンドフェイズのフレーム数を置き換える\r\n    \r\n    playSe( SP_dodge - 12, 1042);\r\n    --stopSe( SP_dodge - 12, SE001, 0);\r\n    --stopSe( SP_dodge - 12, SE002, 0);\r\n    --stopSe( SP_dodge - 12, SE003, 0);\r\n    --stopSe( SP_dodge - 12, SE004, 0);\r\n    --stopSe( SP_dodge - 12, SE005, 0);\r\n    --stopSe( SP_dodge - 12, SE006, 0);\r\n    --stopSe( SP_dodge - 12, SE007, 0);\r\n   \r\n    pauseAll( SP_dodge, 67);\r\n\r\n    -- ** 敵キャラクター ** --\r\n    --setMoveKey( SP_dodge + 0, 1, 224.5, 55.8 , 0 );\r\n    --setMoveKey( SP_dodge + 2, 1, 195, 63.7 , 0 );\r\n    --setMoveKey( SP_dodge + 4, 1, 165.4, 71.5 , 0 );\r\n    --setMoveKey( SP_dodge + 6, 1, 165.4, 71.5 , 0 );\r\n    --setMoveKey( SP_dodge + 8, 1, 209.7, 23.3 , 0 );\r\n    --setMoveKey( SP_dodge + 10, 1, 186.2, 53.9 , 0 );\r\n\r\n    --setScaleKey( SP_dodge + 0, 1, 1.59 +a2, 1.59 +a2 );\r\n    --setScaleKey( SP_dodge + 2, 1, 1.55 +a2, 1.55 +a2 );\r\n    --setScaleKey( SP_dodge + 4, 1, 1.5 +a2, 1.5 +a2 );\r\n    --setScaleKey( SP_dodge + 6, 1, 1.5 +a2, 1.5 +a2 );\r\n    --setScaleKey( SP_dodge + 8, 1, 2.4 +a2, 2.4 +a2 );\r\n    --setScaleKey( SP_dodge + 10, 1, 2.1 +a2, 2.1 +a2 );\r\n\r\n    --setRotateKey( SP_dodge + 0, 1, 0 );\r\n    --setRotateKey( SP_dodge + 10, 1, 0 );    \r\n    \r\n    speff = entryEffectUnpausable( SP_dodge-12, 1504, 0x100, -1, 0, 0, -350); -- eff_005 (カットイン)\r\n    setEffReplaceTexture( speff, 3, 6); -- カットイン差し替え\r\n    \r\n    kaihi = entryEffectUnpausable( SP_dodge, 1575, 0x100, -1, 0, 0, 350); -- 回避の文字表示\r\n    --entryFadeBg( SP_dodge, 0, 90, 0,0, 0, 0, 180);          -- ベース暗め　背景\r\n    \r\n    entryFade(SP_dodge+5, 4, 7, 4, fcolor_r, fcolor_g, fcolor_b, 255); -- white fade\r\n    endPhase(SP_dodge+10);\r\n    \r\n    do return end\r\n    else end\r\n--------------------------------------\r\n--回避しなかった場合\r\n--------------------------------------\r\n\r\n-- ** 音 ** --\r\n--18号飛び込む\r\nSE005 = playSeVer2( spep_2 + 6, 1108, \"\", 0, 0, 0, -1);\r\nSE006 = playSeVer2( spep_2 + 8, 1182, \"\", 0, 0, 0, -1);\r\nSE007 = playSeVer2( spep_2 + 8, 1117, \"\", 0, 0, 0, -1);\r\nSE008 = playSeVer2( spep_2 + 34, 1182, \"\", 0, 0, 0, -1);\r\nSE009 = playSeVer2( spep_2 + 34, 1314, \"\",spep_2 + 124, 0, 18, -1);\r\n\r\n--18号向かっていく\r\nSE010 = playSeVer2( spep_2 + 74, 1167, \"\", 0, 0, 0, 0.6);\r\nsetSeVolumeByWorkId( spep_2 + 74, SE010, 39 );\r\nsetPitch( spep_2 + 74, SE010, 200 );\r\nsetTimeStretch( SE010, 1.13, 30, 4 );\r\n\r\n-- ** 黒背景 ** --\r\nentryFadeBg( spep_2 + 0, 0, 76 + 2, 0, 0, 0, 0, 255);       -- ベース暗め　背景\r\n\r\n-- ** 次の準備 ** --\r\nspep_3 = spep_2 + 76;\r\n\r\n\r\n------------------------------------------------------\r\n-- 18号敵に迫る〜16号カメラに近づく(312F)\r\n------------------------------------------------------\r\n--spep_3 = 0;\r\n\r\n-- ** エフェクト等 ** --\r\nmove_f = entryEffectLife( spep_3 + 0, SP_03, 312, 0x100, -1, 0, 0, 0 );  --敵に迫る18号〜16号カメラに近づく\tef_003\r\nsetEffMoveKey( spep_3 + 0, move_f, 0, 0 , 0 );\r\nsetEffMoveKey( spep_3 + 312, move_f, 0, 0 , 0 );\r\nsetEffScaleKey( spep_3 + 0, move_f, 1.0, 1.0 );\r\nsetEffScaleKey( spep_3 + 312, move_f, 1.0, 1.0 );\r\nsetEffRotateKey( spep_3 + 0, move_f, 0 );\r\nsetEffRotateKey( spep_3 + 312, move_f, 0 );\r\nsetEffAlphaKey( spep_3 + 0, move_f, 255 );\r\nsetEffAlphaKey( spep_3 + 312 -1, move_f, 255 );\r\nsetEffAlphaKey( spep_3 + 312, move_f, 0 );\r\n\r\nmove_b = entryEffectLife( spep_3 + 0, SP_04, 312, 0x80, -1, 0, 0, 0 );  --敵に迫る18号〜16号カメラに近づく\tef_004\r\nsetEffMoveKey( spep_3 + 0, move_b, 0, 0 , 0 );\r\nsetEffMoveKey( spep_3 + 312, move_b, 0, 0 , 0 );\r\nsetEffScaleKey( spep_3 + 0, move_b, 1.0, 1.0 );\r\nsetEffScaleKey( spep_3 + 312, move_b, 1.0, 1.0 );\r\nsetEffRotateKey( spep_3 + 0, move_b, 0 );\r\nsetEffRotateKey( spep_3 + 312, move_b, 0 );\r\nsetEffAlphaKey( spep_3 + 0, move_b, 255 );\r\nsetEffAlphaKey( spep_3 + 312 -1, move_b, 255 );\r\nsetEffAlphaKey( spep_3 + 312, move_b, 0 );\r\n\r\n-- ** 書き文字エントリー ** --\r\n\r\n-- ** 敵キャラクター ** --\r\nsetDisp( spep_3 + 0, 1, 1 );\r\nsetDisp( spep_3 -3 + 112, 1, 0 );\r\nchangeAnime( spep_3 + 0, 1, 117 );\r\nchangeAnime( spep_3 -3 + 48, 1, 106 );\r\nchangeAnime( spep_3 -3 + 78, 1, 108 );\r\n\r\nsetMoveKey( spep_3+ 0, 1, 8.9, -40.4 , 0 );\r\nsetMoveKey( spep_3+ 21, 1, 8.9, -40.3 , 0 );\r\nsetMoveKey( spep_3 -3 + 22, 1, 8.9, -40.3 , 0 );\r\nsetMoveKey( spep_3 -3 + 24, 1, 8.9, -40.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 26, 1, 8.8, -40.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 28, 1, 8.4, -41.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 30, 1, 7.8, -42.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 32, 1, 7, -43.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 34, 1, 5.9, -45.5 , 0 );\r\nsetMoveKey( spep_3 -3 + 36, 1, 4.5, -47.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 38, 1, 2.9, -50.3 , 0 );\r\nsetMoveKey( spep_3 -3 + 40, 1, 1, -53.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 42, 1, -1.1, -56.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 44, 1, -3.5, -60.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 47, 1, -4.5, -65.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 48, 1, 55.6, 36.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 49, 1, 55.6, 36.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 50, 1, 91, 46.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 51, 1, 91, 46.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 52, 1, 83.9, 36.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 53, 1, 83.9, 36.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 54, 1, 65.2, 26.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 55, 1, 65.2, 26.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 56, 1, 94.4, 39.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 57, 1, 94.4, 39.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 58, 1, 67.5, 26.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 60, 1, 73.1, 30 , 0 );\r\nsetMoveKey( spep_3 -3 + 62, 1, 64, 21.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 64, 1, 76.2, 20.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 66, 1, 64.2, 34.1 , 0 );\r\nsetMoveKey( spep_3 -3 + 68, 1, 69.5, 29 , 0 );\r\nsetMoveKey( spep_3 -3 + 70, 1, 73.3, 25.1 , 0 );\r\nsetMoveKey( spep_3 -3 + 72, 1, 70.2, 25.5 , 0 );\r\nsetMoveKey( spep_3 -3 + 74, 1, 72.1, 26.5 , 0 );\r\nsetMoveKey( spep_3 -3 + 77, 1, 72.8, 27 , 0 );\r\nsetMoveKey( spep_3 -3 + 78, 1, 150.8, 16.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 79, 1, 150.8, 16.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 80, 1, 210.1, 100.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 81, 1, 210.1, 100.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 82, 1, 184.6, 142 , 0 );\r\nsetMoveKey( spep_3 -3 + 83, 1, 184.6, 142 , 0 );\r\nsetMoveKey( spep_3 -3 + 84, 1, 138.6, 105.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 85, 1, 138.6, 105.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 86, 1, 202.1, 159.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 87, 1, 202.1, 159.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 88, 1, 140.4, 109.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 90, 1, 128.7, 100.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 92, 1, 138.5, 98.9 , 0 );\r\nsetMoveKey( spep_3 -3 + 94, 1, 124.4, 111.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 96, 1, 134.2, 107.1 , 0 );\r\nsetMoveKey( spep_3 -3 + 98, 1, 123.1, 98.3 , 0 );\r\nsetMoveKey( spep_3 -3 + 100, 1, 133.4, 96.9 , 0 );\r\nsetMoveKey( spep_3 -3 + 102, 1, 119.9, 109.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 104, 1, 123.9, 104.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 106, 1, 126.7, 100 , 0 );\r\nsetMoveKey( spep_3 -3 + 108, 1, 122.8, 100 , 0 );\r\nsetMoveKey( spep_3 -3 + 111, 1, 124.2, 100.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 112, 1, 124.2, 100.8 , 0 );\r\n\r\nsetScaleKey( spep_3 + 0, 1, 0.768, 0.768 );\r\nsetScaleKey( spep_3 -3 + 24, 1, 0.768, 0.768 );\r\nsetScaleKey( spep_3 -3 + 26, 1, 0.78, 0.78 );\r\nsetScaleKey( spep_3 -3 + 28, 1, 0.804, 0.804 );\r\nsetScaleKey( spep_3 -3 + 30, 1, 0.852, 0.852 );\r\nsetScaleKey( spep_3 -3 + 32, 1, 0.9, 0.9 );\r\nsetScaleKey( spep_3 -3 + 34, 1, 0.972, 0.972 );\r\nsetScaleKey( spep_3 -3 + 36, 1, 1.068, 1.068 );\r\nsetScaleKey( spep_3 -3 + 38, 1, 1.176, 1.176 );\r\nsetScaleKey( spep_3 -3 + 40, 1, 1.296, 1.296 );\r\nsetScaleKey( spep_3 -3 + 42, 1, 1.44, 1.44 );\r\nsetScaleKey( spep_3 -3 + 44, 1, 1.596, 1.596 );\r\nsetScaleKey( spep_3 -3 + 47, 1, 1.764, 1.764 );\r\nsetScaleKey( spep_3 -3 + 48, 1, 2.76, 2.76 );\r\nsetScaleKey( spep_3 -3 + 49, 1, 2.76, 2.76 );\r\nsetScaleKey( spep_3 -3 + 50, 1, 3.504, 3.504 );\r\nsetScaleKey( spep_3 -3 + 51, 1, 3.504, 3.504 );\r\nsetScaleKey( spep_3 -3 + 52, 1, 2.76, 2.76 );\r\nsetScaleKey( spep_3 -3 + 53, 1, 2.76, 2.76 );\r\nsetScaleKey( spep_3 -3 + 54, 1, 2.004, 2.004 );\r\nsetScaleKey( spep_3 -3 + 55, 1, 2.004, 2.004 );\r\nsetScaleKey( spep_3 -3 + 56, 1, 3, 3 );\r\nsetScaleKey( spep_3 -3 + 57, 1, 3, 3 );\r\nsetScaleKey( spep_3 -3 + 58, 1, 2.004, 2.004 );\r\nsetScaleKey( spep_3 -3 + 77, 1, 2.004, 2.004 );\r\nsetScaleKey( spep_3 -3 + 78, 1, 3.025, 3.025 );\r\nsetScaleKey( spep_3 -3 + 79, 1, 3.025, 3.025 );\r\nsetScaleKey( spep_3 -3 + 80, 1, 3.608, 3.608 );\r\nsetScaleKey( spep_3 -3 + 81, 1, 3.608, 3.608 );\r\nsetScaleKey( spep_3 -3 + 82, 1, 2.64, 2.64 );\r\nsetScaleKey( spep_3 -3 + 83, 1, 2.64, 2.64 );\r\nsetScaleKey( spep_3 -3 + 84, 1, 2.236, 2.236 );--\r\nsetScaleKey( spep_3 -3 + 85, 1, 2.236, 2.236 );--\r\nsetScaleKey( spep_3 -3 + 86, 1, 2.794, 2.794 );\r\nsetScaleKey( spep_3 -3 + 87, 1, 2.794, 2.794 );\r\nsetScaleKey( spep_3 -3 + 88, 1, 2.171, 2.171 );\r\nsetScaleKey( spep_3 -3 + 90, 1, 2.119, 2.119 );\r\nsetScaleKey( spep_3 -3 + 92, 1, 2.054, 2.054 );\r\nsetScaleKey( spep_3 -3 + 94, 1, 2.015, 2.015 );\r\nsetScaleKey( spep_3 -3 + 96, 1, 1.963, 1.963 );\r\nsetScaleKey( spep_3 -3 + 98, 1, 1.924, 1.924 );\r\nsetScaleKey( spep_3 -3 + 100, 1, 1.898, 1.898 );\r\nsetScaleKey( spep_3 -3 + 102, 1, 1.872, 1.872 );\r\nsetScaleKey( spep_3 -3 + 104, 1, 1.846, 1.846 );\r\nsetScaleKey( spep_3 -3 + 106, 1, 1.833, 1.833 );\r\nsetScaleKey( spep_3 -3 + 108, 1, 1.82, 1.82 );\r\nsetScaleKey( spep_3 -3 + 111, 1, 1.807, 1.807 );\r\nsetScaleKey( spep_3 -3 + 112, 1, 1.807, 1.807 );\r\n\r\nsetRotateKey( spep_3 + 0, 1, -4.1 );\r\nsetRotateKey( spep_3 -3 + 42, 1, -4.1 );\r\nsetRotateKey( spep_3 -3 + 44, 1, -4 );\r\nsetRotateKey( spep_3 -3 + 47, 1, -4 );\r\nsetRotateKey( spep_3 -3 + 48, 1, -52 );\r\nsetRotateKey( spep_3 -3 + 49, 1, -52 );\r\nsetRotateKey( spep_3 -3 + 50, 1, -50.7 );\r\nsetRotateKey( spep_3 -3 + 51, 1, -50.7 );\r\nsetRotateKey( spep_3 -3 + 52, 1, -50 );\r\nsetRotateKey( spep_3 -3 + 53, 1, -50 );\r\nsetRotateKey( spep_3 -3 + 54, 1, -49.7 );\r\nsetRotateKey( spep_3 -3 + 55, 1, -49.7 );\r\nsetRotateKey( spep_3 -3 + 56, 1, -49.4 );\r\nsetRotateKey( spep_3 -3 + 57, 1, -49.4 );\r\nsetRotateKey( spep_3 -3 + 58, 1, -49.1 );\r\nsetRotateKey( spep_3 -3 + 60, 1, -48.9 );\r\nsetRotateKey( spep_3 -3 + 62, 1, -48.7 );\r\nsetRotateKey( spep_3 -3 + 64, 1, -48.5 );\r\nsetRotateKey( spep_3 -3 + 66, 1, -48.4 );\r\nsetRotateKey( spep_3 -3 + 68, 1, -48.2 );\r\nsetRotateKey( spep_3 -3 + 70, 1, -48.1 );\r\nsetRotateKey( spep_3 -3 + 72, 1, -48.1 );\r\nsetRotateKey( spep_3 -3 + 74, 1, -48 );\r\nsetRotateKey( spep_3 -3 + 77, 1, -48 );\r\nsetRotateKey( spep_3 -3 + 78, 1, -2.5 );\r\nsetRotateKey( spep_3 -3 + 79, 1, -2.5 );\r\nsetRotateKey( spep_3 -3 + 80, 1, -2.6 );\r\nsetRotateKey( spep_3 -3 + 81, 1, -2.6 );\r\nsetRotateKey( spep_3 -3 + 82, 1, -2.7 );\r\nsetRotateKey( spep_3 -3 + 90, 1, -2.7 );\r\nsetRotateKey( spep_3 -3 + 92, 1, -2.6 );\r\nsetRotateKey( spep_3 -3 + 111, 1, -2.6 );\r\nsetRotateKey( spep_3 -3 + 112, 1, -2.6 );\r\n\r\n-- ** 敵キャラクター ** --\r\nsetDisp( spep_3 -3 + 124, 1, 1 );\r\nsetDisp( spep_3 -3 + 180, 1, 0 );\r\nchangeAnime( spep_3 -3 + 124, 1, 108 );\r\nchangeAnime( spep_3 -3 + 146, 1, 107 );\r\n\r\nsetMoveKey( spep_3 -3 + 124, 1, 2035.9, -385.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 126, 1, 1943.5, -375.3 , 0 );\r\nsetMoveKey( spep_3 -3 + 128, 1, 1759.3, -362.5 , 0 );\r\nsetMoveKey( spep_3 -3 + 130, 1, 1492.2, -347 , 0 );\r\nsetMoveKey( spep_3 -3 + 132, 1, 1153.2, -328.9 , 0 );\r\nsetMoveKey( spep_3 -3 + 134, 1, 755.2, -308.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 136, 1, 313.4, -286.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 138, 1, 284.3, -269.9 , 0 );\r\nsetMoveKey( spep_3 -3 + 140, 1, 255.6, -252.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 142, 1, 244.5, -252.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 144, 1, 317, -346.9 , 0 );\r\nsetMoveKey( spep_3 -3 + 145, 1, 317, -346.9 , 0 );--\r\nsetMoveKey( spep_3 -3 + 146, 1, 344.5, -187.5 , 0 );\r\nsetMoveKey( spep_3 -3 + 148, 1, 289.3, -158.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 150, 1, 223.9, -122.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 152, 1, 344.8, -192.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 154, 1, 251.5, -139.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 156, 1, 177.7, -104.1 , 0 );\r\nsetMoveKey( spep_3 -3 + 158, 1, 124.4, -100 , 0 );\r\nsetMoveKey( spep_3 -3 + 160, 1, 143.8, -84.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 162, 1, 145.2, -99.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 164, 1, 123.5, -84.1 , 0 );\r\nsetMoveKey( spep_3 -3 + 166, 1, 122.7, -100.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 168, 1, 436.6, -169.3 , 0 );\r\nsetMoveKey( spep_3 -3 + 170, 1, 686.7, -255.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 172, 1, 878.6, -308.1 , 0 );\r\nsetMoveKey( spep_3 -3 + 174, 1, 1038.1, -354.5 , 0 );\r\nsetMoveKey( spep_3 -3 + 176, 1, 1140.1, -380.5 , 0 );\r\nsetMoveKey( spep_3 -3 + 178, 1, 1203, -403.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 180, 1, 1227, -402.2 , 0 );\r\n\r\nsetScaleKey( spep_3 -3 + 124, 1, 7.28, 7.28 );\r\nsetScaleKey( spep_3 -3 + 126, 1, 7.05, 7.05 );\r\nsetScaleKey( spep_3 -3 + 128, 1, 6.66, 6.66 );\r\nsetScaleKey( spep_3 -3 + 130, 1, 6.14, 6.14 );\r\nsetScaleKey( spep_3 -3 + 132, 1, 5.5, 5.5 );\r\nsetScaleKey( spep_3 -3 + 134, 1, 4.75, 4.75 );\r\nsetScaleKey( spep_3 -3 + 136, 1, 3.93, 3.93 );\r\nsetScaleKey( spep_3 -3 + 138, 1, 3.69, 3.69 );\r\nsetScaleKey( spep_3 -3 + 140, 1, 3.44, 3.44 );\r\nsetScaleKey( spep_3 -3 + 142, 1, 3.42, 3.42 );\r\nsetScaleKey( spep_3 -3 + 144, 1, 4.68, 4.68 );\r\nsetScaleKey( spep_3 -3 + 145, 1, 4.68, 4.68 );--\r\nsetScaleKey( spep_3 -3 + 146, 1, 2.29, 2.29 );\r\nsetScaleKey( spep_3 -3 + 148, 1, 1.84, 1.84 );\r\nsetScaleKey( spep_3 -3 + 150, 1, 1.36, 1.36 );\r\nsetScaleKey( spep_3 -3 + 152, 1, 2.08, 2.08 );\r\nsetScaleKey( spep_3 -3 + 154, 1, 1.41, 1.41 );\r\nsetScaleKey( spep_3 -3 + 156, 1, 1.37, 1.37 );\r\nsetScaleKey( spep_3 -3 + 158, 1, 1.34, 1.34 );\r\nsetScaleKey( spep_3 -3 + 160, 1, 1.34, 1.34 );\r\nsetScaleKey( spep_3 -3 + 162, 1, 1.35, 1.35 );\r\nsetScaleKey( spep_3 -3 + 166, 1, 1.35, 1.35 );\r\nsetScaleKey( spep_3 -3 + 168, 1, 1.48, 1.48 );\r\nsetScaleKey( spep_3 -3 + 170, 1, 1.58, 1.58 );\r\nsetScaleKey( spep_3 -3 + 172, 1, 1.67, 1.67 );\r\nsetScaleKey( spep_3 -3 + 174, 1, 1.74, 1.74 );\r\nsetScaleKey( spep_3 -3 + 176, 1, 1.78, 1.78 );\r\nsetScaleKey( spep_3 -3 + 178, 1, 1.81, 1.81 );\r\nsetScaleKey( spep_3 -3 + 180, 1, 1.81, 1.81 );\r\n\r\nsetRotateKey( spep_3 -3 + 124, 1, 17.7 );\r\nsetRotateKey( spep_3 -3 + 145, 1, 17.7 );--\r\nsetRotateKey( spep_3 -3 + 146, 1, 0 );\r\nsetRotateKey( spep_3 -3 + 180, 1, 0 );\r\n\r\n-- ** 音 ** --\r\n--18号パンチ\r\nSE010 = playSeVer2( spep_3 + 36, 1003, \"\", 0, 0, 0, -1);\r\nSE011 = playSeVer2( spep_3 + 44, 1110, \"\", 0, 0, 0, -1);\r\nSE012 = playSeVer2( spep_3 + 44, 1009, \"\", 0, 0, 0, -1);\r\nSE013 = playSeVer2( spep_3 + 44, 1187, \"\",spep_3 + 76, 0, 20, -1);\r\nsetSeVolumeByWorkId( spep_3 + 44, SE013, 60 );\r\n\r\n--18号パンチ2\r\nSE014 = playSeVer2( spep_3 + 78, 1010, \"\", 0, 0, 0, -1);\r\nSE015 = playSeVer2( spep_3 + 78, 1110, \"\", 0, 0, 0, -1);\r\nSE016 = playSeVer2( spep_3 + 78, 1190, \"\",spep_3 + 114, 0, 14, -1);\r\nsetSeVolumeByWorkId( spep_3 + 78, SE016, 68 );\r\n\r\n--画面遷移\r\nSE017 = playSeVer2( spep_3 + 84, 1072, \"\", 0, 0, 0, -1);\r\n\r\n--18号キック\r\nSE018 = playSeVer2( spep_3 + 134, 1123, \"\", 0, 0, 0, -1);\r\n\r\n--16号ダッシュ\r\nSE019 = playSeVer2( spep_3 + 180, 9, \"\", 0, 0, 0, -1);\r\nSE020 = playSeVer2( spep_3 + 180, 1278, \"\",spep_3 + 354, 0, 70, -1);\r\nsetSeVolumeByWorkId( spep_3 + 180, SE020, 82 );\r\n\r\n--土煙\r\nSE021 = playSeVer2( spep_3 + 216, 1168, \"\",spep_3 + 354, 0, 74, -1);\r\nsetSeVolumeByWorkId( spep_3 + 216, SE021, 89 );\r\n\r\n--16号向かってくる\r\nSE022 = playSeVer2( spep_3 + 258, 1167, \"\", 0, 0, 0, 0.6);\r\nsetSeVolumeByWorkId( spep_3 + 258, SE022, 55 );\r\nsetPitch( spep_3 + 258, SE022, -400 );\r\nsetTimeStretch( SE022, 1.05, 30, 4 );\r\n\r\n--18号ジャンプ\r\nSE023 = playSeVer2( spep_3 + 282, 1207, \"\",spep_3 + 354, 0, 36, -1);\r\nsetSeVolumeByWorkId( spep_3 + 282, SE023, 67 );\r\n\r\n-- ** 黒背景 ** --\r\nentryFadeBg( spep_3 + 0, 0, 312 + 2, 0, 0, 0, 0, 255);       -- ベース暗め　背景\r\n\r\n-- ** 次の準備 ** --\r\nspep_4 = spep_3 + 312;\r\n\r\n\r\n------------------------------------------------------\r\n-- 殴る16号〜カードカットイン(100F)\r\n------------------------------------------------------\r\n--spep_4 = 0;\r\n\r\n-- ** エフェクト等 ** --\r\ntame_f = entryEffectLife( spep_4 + 0, SP_05, 100, 0x100, -1, 0, 0, 0 );  --殴る16号〜カードカットインまで\tef_004\r\nsetEffMoveKey( spep_4 + 0, tame_f, 0, 0 , 0 );\r\nsetEffMoveKey( spep_4 + 100, tame_f, 0, 0 , 0 );\r\nsetEffScaleKey( spep_4 + 0, tame_f, 1.0, 1.0 );\r\nsetEffScaleKey( spep_4 + 100, tame_f, 1.0, 1.0 );\r\nsetEffRotateKey( spep_4 + 0, tame_f, 0 );\r\nsetEffRotateKey( spep_4 + 100, tame_f, 0 );\r\nsetEffAlphaKey( spep_4 + 0, tame_f, 255 );\r\nsetEffAlphaKey( spep_4 + 100 -1, tame_f, 255 );\r\nsetEffAlphaKey( spep_4 + 100, tame_f, 0 );\r\n\r\ntame_b = entryEffectLife( spep_4 + 0, SP_06, 100, 0x80, -1, 0, 0, 0 );  --殴る16号〜カードカットインまで\tef_005\r\nsetEffMoveKey( spep_4 + 0, tame_b, 0, 0 , 0 );\r\nsetEffMoveKey( spep_4 + 100, tame_b, 0, 0 , 0 );\r\nsetEffScaleKey( spep_4 + 0, tame_b, 1.0, 1.0 );\r\nsetEffScaleKey( spep_4 + 100, tame_b, 1.0, 1.0 );\r\nsetEffRotateKey( spep_4 + 0, tame_b, 0 );\r\nsetEffRotateKey( spep_4 + 100, tame_b, 0 );\r\nsetEffAlphaKey( spep_4 + 0, tame_b, 255 );\r\nsetEffAlphaKey( spep_4 + 100 -1, tame_b, 255 );\r\nsetEffAlphaKey( spep_4 + 100, tame_b, 0 );\r\n\r\n-- ** 敵キャラクター ** --\r\nsetDisp( spep_4 -3 + 52, 1, 1 );\r\nchangeAnime( spep_4 -3 + 52, 1, 5 );\r\n\r\nsetMoveKey( spep_4 -3 + 52, 1, 43.1, -123.3 , 0 );\r\nsetMoveKey( spep_4 -3 + 53, 1, 43.1, -123.3 , 0 );\r\nsetMoveKey( spep_4 -3 + 54, 1, 44.4, -124.7 , 0 );\r\nsetMoveKey( spep_4 -3 + 55, 1, 44.4, -124.7 , 0 );\r\nsetMoveKey( spep_4 -3 + 56, 1, 48.2, -134.5 , 0 );\r\nsetMoveKey( spep_4 -3 + 57, 1, 48.2, -134.5 , 0 );\r\nsetMoveKey( spep_4 -3 + 58, 1, 54.5, -152.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 59, 1, 54.5, -152.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 60, 1, 71.3, -203.6 , 0 );\r\nsetMoveKey( spep_4 -3 + 61, 1, 71.3, -203.6 , 0 );\r\nsetMoveKey( spep_4 -3 + 62, 1, 68.6, -255.6 , 0 );\r\nsetMoveKey( spep_4 -3 + 63, 1, 68.6, -255.6 , 0 );\r\nsetMoveKey( spep_4 -3 + 64, 1, 71.3, -189.8 , 0 );\r\nsetMoveKey( spep_4 -3 + 65, 1, 71.3, -189.8 , 0 );\r\nsetMoveKey( spep_4 -3 + 66, 1, 60.7, -146.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 67, 1, 60.7, -146.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 68, 1, 76.8, -235.7 , 0 );\r\nsetMoveKey( spep_4 -3 + 69, 1, 76.8, -235.7 , 0 );\r\nsetMoveKey( spep_4 -3 + 70, 1, 60.5, -168.9 , 0 );\r\nsetMoveKey( spep_4 -3 + 71, 1, 60.5, -168.9 , 0 );\r\nsetMoveKey( spep_4 -3 + 72, 1, 47, -122.7 , 0 );\r\nsetMoveKey( spep_4 -3 + 73, 1, 47, -122.7 , 0 );\r\nsetMoveKey( spep_4 -3 + 74, 1, 67.5, -157.4 , 0 );\r\nsetMoveKey( spep_4 -3 + 75, 1, 67.5, -157.4 , 0 );\r\nsetMoveKey( spep_4 -3 + 76, 1, 44.4, -163.8 , 0 );\r\nsetMoveKey( spep_4 -3 + 77, 1, 44.4, -163.8 , 0 );\r\nsetMoveKey( spep_4 -3 + 78, 1, 55.6, -135.6 , 0 );\r\nsetMoveKey( spep_4 -3 + 79, 1, 55.6, -135.6 , 0 );\r\nsetMoveKey( spep_4 -3 + 80, 1, 36.3, -96.5 , 0 );\r\nsetMoveKey( spep_4 -3 + 81, 1, 36.3, -96.5 , 0 );\r\nsetMoveKey( spep_4 -3 + 82, 1, 32.1, -50.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 83, 1, 32.1, -50.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 84, 1, 15.5, -1.4 , 0 );\r\nsetMoveKey( spep_4 -3 + 85, 1, 15.5, -1.4 , 0 );\r\nsetMoveKey( spep_4 -3 + 86, 1, 8.9, 20.2 , 0 );\r\nsetMoveKey( spep_4 -3 + 88, 1, 5, 19 , 0 );\r\nsetMoveKey( spep_4 -3 + 90, 1, 9.4, 23 , 0 );\r\nsetMoveKey( spep_4 -3 + 92, 1, 7, 17.9 , 0 );\r\nsetMoveKey( spep_4 -3 + 94, 1, 10.7, 20.3 , 0 );\r\nsetMoveKey( spep_4 -3 + 96, 1, 4.6, 25 , 0 );\r\nsetMoveKey( spep_4 -3 + 98, 1, 4.6, 25.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 100, 1, 4.6, 25.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 102, 1, 4.5, 25.2 , 0 );\r\n\r\nsetScaleKey( spep_4 -3 + 52, 1, 2.898, 2.898 );\r\nsetScaleKey( spep_4 -3 + 53, 1, 2.898, 2.898 );\r\nsetScaleKey( spep_4 -3 + 54, 1, 2.907, 2.907 );\r\nsetScaleKey( spep_4 -3 + 55, 1, 2.907, 2.907 );\r\nsetScaleKey( spep_4 -3 + 56, 1, 3.096, 3.096 );\r\nsetScaleKey( spep_4 -3 + 57, 1, 3.096, 3.096 );\r\nsetScaleKey( spep_4 -3 + 58, 1, 3.465, 3.465 );\r\nsetScaleKey( spep_4 -3 + 59, 1, 3.465, 3.465 );\r\nsetScaleKey( spep_4 -3 + 60, 1, 4.572, 4.572 );\r\nsetScaleKey( spep_4 -3 + 61, 1, 4.572, 4.572 );\r\nsetScaleKey( spep_4 -3 + 62, 1, 5.823, 5.823 );\r\nsetScaleKey( spep_4 -3 + 63, 1, 5.823, 5.823 );\r\nsetScaleKey( spep_4 -3 + 64, 1, 4.572, 4.572 );\r\nsetScaleKey( spep_4 -3 + 65, 1, 4.572, 4.572 );\r\nsetScaleKey( spep_4 -3 + 66, 1, 3.33, 3.33 );\r\nsetScaleKey( spep_4 -3 + 67, 1, 3.33, 3.33 );\r\nsetScaleKey( spep_4 -3 + 68, 1, 4.995, 4.995 );\r\nsetScaleKey( spep_4 -3 + 69, 1, 4.995, 4.995 );\r\nsetScaleKey( spep_4 -3 + 70, 1, 3.33, 3.33 );\r\nsetScaleKey( spep_4 -3 + 71, 1, 3.33, 3.33 );\r\nsetScaleKey( spep_4 -3 + 72, 1, 3.285, 3.285 );\r\nsetScaleKey( spep_4 -3 + 73, 1, 3.285, 3.285 );\r\nsetScaleKey( spep_4 -3 + 74, 1, 3.249, 3.249 );\r\nsetScaleKey( spep_4 -3 + 75, 1, 3.249, 3.249 );\r\nsetScaleKey( spep_4 -3 + 76, 1, 3.213, 3.213 );\r\nsetScaleKey( spep_4 -3 + 77, 1, 3.213, 3.213 );\r\nsetScaleKey( spep_4 -3 + 78, 1, 3.186, 3.186 );\r\nsetScaleKey( spep_4 -3 + 79, 1, 3.186, 3.186 );\r\nsetScaleKey( spep_4 -3 + 80, 1, 2.484, 2.484 );\r\nsetScaleKey( spep_4 -3 + 81, 1, 2.484, 2.484 );\r\nsetScaleKey( spep_4 -3 + 82, 1, 1.8, 1.8 );\r\nsetScaleKey( spep_4 -3 + 83, 1, 1.8, 1.8 );\r\nsetScaleKey( spep_4 -3 + 84, 1, 1.125, 1.125 );\r\nsetScaleKey( spep_4 -3 + 85, 1, 1.125, 1.125 );\r\nsetScaleKey( spep_4 -3 + 86, 1, 0.54, 0.54 );\r\nsetScaleKey( spep_4 -3 + 88, 1, 0.513, 0.513 );\r\nsetScaleKey( spep_4 -3 + 90, 1, 0.486, 0.486 );\r\nsetScaleKey( spep_4 -3 + 92, 1, 0.459, 0.459 );\r\nsetScaleKey( spep_4 -3 + 94, 1, 0.441, 0.441 );\r\nsetScaleKey( spep_4 -3 + 96, 1, 0.432, 0.432 );\r\nsetScaleKey( spep_4 -3 + 98, 1, 0.423, 0.423 );\r\nsetScaleKey( spep_4 -3 + 100, 1, 0.414, 0.414 );\r\nsetScaleKey( spep_4 -3 + 102, 1, 0.414, 0.414 );\r\n\r\nsetRotateKey( spep_4 -3 + 52, 1, -6.3 );\r\nsetRotateKey( spep_4 -3 + 102, 1, -6.3 );\r\n\r\n-- ** 音 ** --\r\n--振りかぶる\r\nSE024 = playSeVer2( spep_4 + 18, 1116, \"\",spep_4 + 62, 0, 20, -1);\r\nsetSeVolumeByWorkId( spep_4 + 18, SE024, 146 );\r\nSE025 = playSeVer2( spep_4 + 24, 1004, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( spep_4 + 24, SE025, 132 );\r\n\r\n--16号パンチ\r\nSE026 = playSeVer2( spep_4 + 60, 1187, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( spep_4 + 60, SE026, 78 );\r\nSE027 = playSeVer2( spep_4 + 60, 1120, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( spep_4 + 60, SE027, 80 );\r\n\r\n-- ** 黒背景 ** --\r\nentryFadeBg( spep_4 + 0, 0, 100 + 2, 0, 0, 0, 0, 255);       -- ベース暗め　背景\r\n\r\n-- ** 次の準備 ** --\r\nspep_5 = spep_4 + 100;\r\n\r\n\r\n------------------------------------------------------\r\n-- 敵が画面衝突(100F)\r\n------------------------------------------------------\r\n-- ** エフェクト等 ** --\r\nfinish_f = entryEffect( spep_5 + 0, 155520, 0x100, -1, 0, 0, 0 );  --敵が画面衝突(ef_005)(画面割れ)\r\nsetEffMoveKey( spep_5 + 0, finish_f, 0, 0 , 0 );\r\nsetEffMoveKey( spep_5 + 100, finish_f, 0, 0 , 0 );\r\nsetEffScaleKey( spep_5 + 0, finish_f, 1.0, 1.0 );\r\nsetEffScaleKey( spep_5 + 100, finish_f, 1.0, 1.0 );\r\nsetEffRotateKey( spep_5 + 0, finish_f, 0 );\r\nsetEffRotateKey( spep_5 + 100, finish_f, 0 );\r\nsetEffAlphaKey( spep_5 + 0, finish_f, 255 );\r\nsetEffAlphaKey( spep_5 + 100, finish_f, 255 );\r\n\r\nfinish_b = entryEffect( spep_5 + 0, SP_07, 0x80, -1, 0, 0, 0 );  --敵が画面衝突(ef_005)(画面割れ)\r\nsetEffMoveKey( spep_5 + 0, finish_b, 0, 0 , 0 );\r\nsetEffMoveKey( spep_5 + 100, finish_b, 0, 0 , 0 );\r\nsetEffScaleKey( spep_5 + 0, finish_b, 1.0, 1.0 );\r\nsetEffScaleKey( spep_5 + 100, finish_b, 1.0, 1.0 );\r\nsetEffRotateKey( spep_5 + 0, finish_b, 0 );\r\nsetEffRotateKey( spep_5 + 100, finish_b, 0 );\r\nsetEffAlphaKey( spep_5 + 0, finish_b, 255 );\r\nsetEffAlphaKey( spep_5 + 100, finish_b, 255 );\r\n\r\n-- ** 敵キャラクター ** --\r\nsetDisp( spep_5 + 100, 1, 0 );\r\nchangeAnime( spep_5 + 0, 1, 107 );\r\n\r\nsetMoveKey( spep_5    + 0, 1, 36.2, 265.9 , 0 );\r\nsetMoveKey( spep_5    + 1, 1, 32.5, 228 , 0 );\r\nsetMoveKey( spep_5    + 2, 1, 27.7, 179.3 , 0 );\r\nsetMoveKey( spep_5 -3 + 6, 1, 21.9, 119.7 , 0 );\r\nsetMoveKey( spep_5 -3 + 8, 1, 15, 49.3 , 0 );\r\nsetMoveKey( spep_5 -3 + 10, 1, 7.1, -32 , 0 );\r\nsetMoveKey( spep_5 -3 + 12, 1, -1.9, -124.1 , 0 );\r\nsetMoveKey( spep_5 -3 + 103, 1, -1.9, -124.1 , 0 );\r\n\r\nsetScaleKey( spep_5    + 0, 1, 0.22, 0.22 );\r\nsetScaleKey( spep_5    + 1, 1, 0.35, 0.35 );\r\nsetScaleKey( spep_5    + 2, 1, 0.51, 0.51 );\r\nsetScaleKey( spep_5 -3 + 6, 1, 0.7, 0.7 );\r\nsetScaleKey( spep_5 -3 + 8, 1, 0.93, 0.93 );\r\nsetScaleKey( spep_5 -3 + 10, 1, 1.2, 1.2 );\r\nsetScaleKey( spep_5 -3 + 12, 1, 1.5, 1.5 );\r\nsetScaleKey( spep_5 -3 + 14, 1, 1.6, 1.6 );\r\nsetScaleKey( spep_5 -3 + 16, 1, 1.5, 1.5 );\r\nsetScaleKey( spep_5 -3 + 18, 1, 1.6, 1.6 );\r\nsetScaleKey( spep_5 -3 + 20, 1, 1.5, 1.5 );\r\nsetScaleKey( spep_5 -3 + 22, 1, 1.6, 1.6 );\r\nsetScaleKey( spep_5 -3 + 24, 1, 1.5, 1.5 );\r\nsetScaleKey( spep_5 -3 + 26, 1, 1.6, 1.6 );\r\nsetScaleKey( spep_5 -3 + 103, 1, 1.6, 1.6 );\r\n\r\nsetRotateKey( spep_5    + 0, 1, 0 );\r\nsetRotateKey( spep_5    + 1, 1, 105 );\r\nsetRotateKey( spep_5    + 2, 1, 240 );\r\nsetRotateKey( spep_5 -3 + 6, 1, 405 );\r\nsetRotateKey( spep_5 -3 + 8, 1, 600 );\r\nsetRotateKey( spep_5 -3 + 10, 1, 825 );\r\nsetRotateKey( spep_5 -3 + 12, 1, 1080 );\r\nsetRotateKey( spep_5 -3 + 103, 1, 1080 );\r\n\r\n-- ** 集中線 ** --\r\nshuchusen_wh = entryEffectLife( spep_5 + 14,  906, 32, 0x100, -1, 0, 0, 0 );\r\nsetEffShake( spep_5 + 14, shuchusen_wh, 32, 25 );\r\n\r\nsetEffMoveKey( spep_5 + 14, shuchusen_wh, 0, 0 , 0 );\r\nsetEffMoveKey( spep_5 + 46, shuchusen_wh, 0, 0 , 0 );\r\n\r\nsetEffScaleKey( spep_5 + 14, shuchusen_wh, 1, 1 );\r\nsetEffScaleKey( spep_5 + 46, shuchusen_wh, 1, 1 );\r\n\r\nsetEffRotateKey( spep_5 + 14, shuchusen_wh, 0 );\r\nsetEffRotateKey( spep_5 + 46, shuchusen_wh, 0 );\r\n\r\nsetEffAlphaKey( spep_5 + 14, shuchusen_wh, 255 );\r\nsetEffAlphaKey( spep_5 + 28, shuchusen_wh, 255 );\r\nsetEffAlphaKey( spep_5 + 30, shuchusen_wh, 252 );\r\nsetEffAlphaKey( spep_5 + 32, shuchusen_wh, 242 );\r\nsetEffAlphaKey( spep_5 + 34, shuchusen_wh, 227 );\r\nsetEffAlphaKey( spep_5 + 36, shuchusen_wh, 205 );\r\nsetEffAlphaKey( spep_5 + 38, shuchusen_wh, 176 );\r\nsetEffAlphaKey( spep_5 + 40, shuchusen_wh, 142 );\r\nsetEffAlphaKey( spep_5 + 42, shuchusen_wh, 101 );\r\nsetEffAlphaKey( spep_5 + 44, shuchusen_wh, 54 );\r\nsetEffAlphaKey( spep_5 + 46, shuchusen_wh, 0 );\r\n\r\nshuchusen_bl = entryEffectLife( spep_5 + 14,  1657, 86, 0x80, -1, 0, 0, 0 );  --黒い細い集中線\r\nsetEffMoveKey( spep_5 + 14, shuchusen_bl, 0, 0 , 0 );\r\nsetEffMoveKey( spep_5 + 100, shuchusen_bl, 0, 0 , 0 );\r\n\r\nsetEffScaleKey( spep_5 + 14, shuchusen_bl, 1, 1 );\r\nsetEffScaleKey( spep_5 + 100, shuchusen_bl, 1, 1 );\r\n\r\nsetEffRotateKey( spep_5 + 14, shuchusen_bl, 0 );\r\nsetEffRotateKey( spep_5 + 100, shuchusen_bl, 0 );\r\n\r\nsetEffAlphaKey( spep_5 + 14, shuchusen_bl, 255 );\r\nsetEffAlphaKey( spep_5 + 100, shuchusen_bl, 255 );\r\n\r\n-- ** 書き文字エントリー ** --\r\nctga = entryEffectLife( spep_5 + 14,  10005, 86, 0x100, -1, 0, 3.9, 316.1 );  --ガッ\r\nsetEffShake( spep_5 + 14, ctga, 14, 20 );\r\n\r\nsetEffMoveKey( spep_5 + 14, ctga, 3.9, 316.1 , 0 );\r\nsetEffMoveKey( spep_5 + 28, ctga, 3.9, 316.1 , 0 );\r\nsetEffMoveKey( spep_5 + 100, ctga, 3.9, 316.1 , 0 );\r\n\r\nsetEffScaleKey( spep_5 + 14, ctga, 3.2, 3.2 );\r\nsetEffScaleKey( spep_5 + 100, ctga, 3.2, 3.2 );\r\n\r\nsetEffRotateKey( spep_5 + 14, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 15, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 16, ctga, -14.9 );\r\nsetEffRotateKey( spep_5 + 17, ctga, -14.9 );\r\nsetEffRotateKey( spep_5 + 18, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 19, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 20, ctga, -14.9 );\r\nsetEffRotateKey( spep_5 + 21, ctga, -14.9 );\r\nsetEffRotateKey( spep_5 + 22, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 23, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 24, ctga, -14.9 );\r\nsetEffRotateKey( spep_5 + 25, ctga, -14.9 );\r\nsetEffRotateKey( spep_5 + 26, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 27, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 28, ctga, -14.9 );\r\nsetEffRotateKey( spep_5 + 100, ctga, -14.9 );\r\n\r\nsetEffAlphaKey( spep_5 + 14, ctga, 255 );\r\nsetEffAlphaKey( spep_5 + 100, ctga, 255 );\r\n\r\n-- ** 音 ** --\r\n--画面割れる\r\nSE029 = playSeVer2( spep_5 + 8, 1054, \"\", 0, 0, 0, -1);\r\nSE030 = playSeVer2( spep_5 + 8, 1025, \"\", 0, 0, 0, -1);\r\n\r\n-- ** ダメージ表示 ** --\r\ndealDamage( spep_5 + 10 );\r\nendPhase( spep_5 + 98 );\r\n\r\n\r\nelse\r\n\r\n------------------------------------------------------\r\n-- 敵側\r\n------------------------------------------------------\r\n------------------------------------------------------\r\n-- 開幕〜セリフカットイン(91F)\r\n------------------------------------------------------\r\nspep_0 = 0;\r\n\r\n-- ** エフェクト等 ** --\r\nfirst_f = entryEffectLife( spep_0 + 0, SP_01, 98, 0x100, -1, 0, 0, 0 );  --開幕〜セリフカットインまで    ef_001\r\nsetEffMoveKey( spep_0 + 0, first_f, 0, 0 , 0 );\r\nsetEffMoveKey( spep_0 + 98, first_f, 0, 0 , 0 );\r\nsetEffScaleKey( spep_0 + 0, first_f, -1.0, 1.0 );\r\nsetEffScaleKey( spep_0 + 98, first_f, -1.0, 1.0 );\r\nsetEffRotateKey( spep_0 + 0, first_f, 0 );\r\nsetEffRotateKey( spep_0 + 98, first_f, 0 );\r\nsetEffAlphaKey( spep_0 + 0, first_f, 255 );\r\nsetEffAlphaKey( spep_0 + 98 -1, first_f, 255 );\r\nsetEffAlphaKey( spep_0 + 98, first_f, 0 );\r\n\r\nspep_x = spep_0 + 6;\r\n---- ** 顔カットイン ** --\r\n--speff = entryEffect( spep_x + 0, 1504, 0x100, -1, 0, 0, 0 );  --カットイン(顔)\r\n--setEffReplaceTexture( speff, 3, 2 );  --カットイン差し替え\r\n--speff1 = entryEffect( spep_x + 0, 1505, 0x100, -1, 0, 0, 0, 1000 );  --カットイン(セリフ)\r\n--setEffReplaceTexture( speff1, 4, 5 );  --セリフカットイン差し替え\r\n\r\n-- ** 書き文字エントリー ** --\r\nctgogo = entryEffectLife( spep_x + 16,  190006, 68, 0x100, -1, 0, 5, 515.5, 3000 ); --ゴゴゴ\r\nsetEffShake( spep_x + 16, ctgogo, 68, 10 );\r\nsetEffMoveKey( spep_x + 16, ctgogo, 5, 515.5 , 0 );\r\nsetEffMoveKey( spep_x + 84, ctgogo, 5, 515.5 , 0 );\r\nsetEffScaleKey( spep_x + 16, ctgogo, -0.7, 0.7 );\r\nsetEffScaleKey( spep_x + 76, ctgogo, -0.7, 0.7 );\r\nsetEffScaleKey( spep_x + 78, ctgogo, -1.0, 1.0 );\r\nsetEffScaleKey( spep_x + 80, ctgogo, -1.09, 1.09 );\r\nsetEffScaleKey( spep_x + 82, ctgogo, -1.39, 1.39 );\r\nsetEffScaleKey( spep_x + 84, ctgogo, -1.69, 1.69 );\r\nsetEffRotateKey( spep_x + 16, ctgogo, 0 );\r\nsetEffRotateKey( spep_x + 84, ctgogo, 0 );\r\nsetEffAlphaKey( spep_x + 16, ctgogo, 255 );\r\nsetEffAlphaKey( spep_x + 84, ctgogo, 255 );\r\n\r\n-- ** 音 ** --\r\n--入り\r\nSE001 = playSeVer2( spep_0 + 0, 8, \"\", 0, 0, 0, -1);\r\n\r\n--顔カットイン\r\nSE002 = playSeVer2( spep_x + 12, 1018, \"\", 0, 0, 0, -1);\r\n\r\n--構える\r\nSE003 = playSeVer2( spep_0 + 18, 1006, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( spep_0 + 18, SE003, 60 );\r\n\r\n-- ** 黒背景 ** --\r\nentryFadeBg( spep_0 + 0, 0, 98 + 2, 0, 0, 0, 0, 255);       -- ベース暗め　背景\r\n\r\n-- ** 次の準備 ** --\r\nspep_1 = spep_0 + 98;\r\n\r\n\r\n--------------------------------------\r\n--カードカットイン(94F)\r\n--------------------------------------\r\n--spep_1 = 0;\r\n-- ** カードカットイン ** --\r\nspeff2 = entryEffectLife( spep_1 + 0, 1507, 90, 0x100, -1, 0, 0, 0 );   -- カード\r\nsetEffReplaceTexture( speff2, 1, 1 );\r\nsetEffReplaceTexture( speff2, 2, 0 );-- カード差し替え\r\nsetEffReplaceTexture( speff2, 5, 4 );-- 技名テクスチャ差し替え\r\n-- ** 集中線 ** --\r\nshuchusen = entryEffectLife( spep_1 + 0, 906, 90, 0x100, -1, 0, 0, 0 );  --集中線\r\nsetEffShake( spep_1 + 0, shuchusen, 90, 20 );\r\nsetEffMoveKey( spep_1 + 0, shuchusen, 0, 0 , 0 );\r\nsetEffMoveKey( spep_1 + 90, shuchusen, 0, 0 , 0 );\r\nsetEffScaleKey( spep_1 + 0, shuchusen, 1.6, 1.6 );\r\nsetEffScaleKey( spep_1 + 90, shuchusen, 1.6, 1.6 );\r\nsetEffRotateKey( spep_1 + 0, shuchusen, 0 );\r\nsetEffRotateKey( spep_1 + 90, shuchusen, 0 );\r\nsetEffAlphaKey( spep_1 + 0, shuchusen, 255 );\r\nsetEffAlphaKey( spep_1 + 90, shuchusen, 255 );\r\n-- ** 音 ** --\r\nplaySe( spep_1 + 0, SE_05 );\r\n-- ** 白背景 ** --\r\nentryFadeBg( spep_1 + 0, 0, 96, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  --白　背景\r\n-- ** 白フェード ** --\r\nentryFade( spep_1 + 0, 0, 2, 4, fcolor_r, fcolor_g, fcolor_b, 255 );  --white fade\r\nentryFade( spep_1 + 80, 6, 8, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  --white fade\r\n\r\n-- ** 次の準備 ** --\r\nspep_2 = spep_1 + 94;\r\n\r\n\r\n------------------------------------------------------\r\n-- 飛び出す16号と18号(76F)\r\n------------------------------------------------------\r\n--spep_2 = 0;\r\n\r\n-- ** エフェクト等 ** --\r\ndash = entryEffectLife( spep_2 + 0, SP_02, 76, 0x100, -1, 0, 0, 0 );  --飛び出す16号と18号 ef_002\r\nsetEffMoveKey( spep_2 + 0, dash, 0, 0 , 0 );\r\nsetEffMoveKey( spep_2 + 76, dash, 0, 0 , 0 );\r\nsetEffScaleKey( spep_2 + 0, dash, -1.0, 1.0 );\r\nsetEffScaleKey( spep_2 + 76, dash, -1.0, 1.0 );\r\nsetEffRotateKey( spep_2 + 0, dash, 0 );\r\nsetEffRotateKey( spep_2 + 76, dash, 0 );\r\nsetEffAlphaKey( spep_2 + 0, dash, 255 );\r\nsetEffAlphaKey( spep_2 + 76 -1, dash, 255 );\r\nsetEffAlphaKey( spep_2 + 76, dash, 0 );\r\n\r\n--------------------------------------\r\n--回避\r\n--------------------------------------\r\n\r\nif(_IS_DODGE_ == 1) then\r\n\r\n    SP_dodge = spep_2 + 22 ; --エンドフェイズのフレーム数を置き換える\r\n    \r\n    playSe( SP_dodge - 12, 1042);\r\n    --stopSe( SP_dodge - 12, SE001, 0);\r\n    --stopSe( SP_dodge - 12, SE002, 0);\r\n    --stopSe( SP_dodge - 12, SE003, 0);\r\n    --stopSe( SP_dodge - 12, SE004, 0);\r\n    --stopSe( SP_dodge - 12, SE005, 0);\r\n    --stopSe( SP_dodge - 12, SE006, 0);\r\n    --stopSe( SP_dodge - 12, SE007, 0);\r\n   \r\n    pauseAll( SP_dodge, 67);\r\n\r\n    -- ** 敵キャラクター ** --\r\n    --setMoveKey( SP_dodge + 0, 1, 224.5, 55.8 , 0 );\r\n    --setMoveKey( SP_dodge + 2, 1, 195, 63.7 , 0 );\r\n    --setMoveKey( SP_dodge + 4, 1, 165.4, 71.5 , 0 );\r\n    --setMoveKey( SP_dodge + 6, 1, 165.4, 71.5 , 0 );\r\n    --setMoveKey( SP_dodge + 8, 1, 209.7, 23.3 , 0 );\r\n    --setMoveKey( SP_dodge + 10, 1, 186.2, 53.9 , 0 );\r\n\r\n    --setScaleKey( SP_dodge + 0, 1, 1.59 +a2, 1.59 +a2 );\r\n    --setScaleKey( SP_dodge + 2, 1, 1.55 +a2, 1.55 +a2 );\r\n    --setScaleKey( SP_dodge + 4, 1, 1.5 +a2, 1.5 +a2 );\r\n    --setScaleKey( SP_dodge + 6, 1, 1.5 +a2, 1.5 +a2 );\r\n    --setScaleKey( SP_dodge + 8, 1, 2.4 +a2, 2.4 +a2 );\r\n    --setScaleKey( SP_dodge + 10, 1, 2.1 +a2, 2.1 +a2 );\r\n\r\n    --setRotateKey( SP_dodge + 0, 1, 0 );\r\n    --setRotateKey( SP_dodge + 10, 1, 0 );    \r\n    \r\n    speff = entryEffectUnpausable( SP_dodge-12, 1504, 0x100, -1, 0, 0, -350); -- eff_005 (カットイン)\r\n    setEffReplaceTexture( speff, 3, 6); -- カットイン差し替え\r\n    \r\n    kaihi = entryEffectUnpausable( SP_dodge, 1575, 0x100, -1, 0, 0, 350); -- 回避の文字表示\r\n    --entryFadeBg( SP_dodge, 0, 90, 0,0, 0, 0, 180);          -- ベース暗め　背景\r\n    \r\n    entryFade(SP_dodge+5, 4, 7, 4, fcolor_r, fcolor_g, fcolor_b, 255); -- white fade\r\n    endPhase(SP_dodge+10);\r\n    \r\n    do return end\r\n    else end\r\n--------------------------------------\r\n--回避しなかった場合\r\n--------------------------------------\r\n\r\n-- ** 音 ** --\r\n--18号飛び込む\r\nSE005 = playSeVer2( spep_2 + 6, 1108, \"\", 0, 0, 0, -1);\r\nSE006 = playSeVer2( spep_2 + 8, 1182, \"\", 0, 0, 0, -1);\r\nSE007 = playSeVer2( spep_2 + 8, 1117, \"\", 0, 0, 0, -1);\r\nSE008 = playSeVer2( spep_2 + 34, 1182, \"\", 0, 0, 0, -1);\r\nSE009 = playSeVer2( spep_2 + 34, 1314, \"\",spep_2 + 124, 0, 18, -1);\r\n\r\n--18号向かっていく\r\nSE010 = playSeVer2( spep_2 + 74, 1167, \"\", 0, 0, 0, 0.6);\r\nsetSeVolumeByWorkId( spep_2 + 74, SE010, 39 );\r\nsetPitch( spep_2 + 74, SE010, 200 );\r\nsetTimeStretch( SE010, 1.13, 30, 4 );\r\n\r\n-- ** 黒背景 ** --\r\nentryFadeBg( spep_2 + 0, 0, 76 + 2, 0, 0, 0, 0, 255);       -- ベース暗め　背景\r\n\r\n-- ** 次の準備 ** --\r\nspep_3 = spep_2 + 76;\r\n\r\n\r\n------------------------------------------------------\r\n-- 18号敵に迫る〜16号カメラに近づく(312F)\r\n------------------------------------------------------\r\n--spep_3 = 0;\r\n\r\n-- ** エフェクト等 ** --\r\nmove_f = entryEffectLife( spep_3 + 0, SP_03r, 312, 0x100, -1, 0, 0, 0 );  --敵に迫る18号〜16号カメラに近づく   ef_003\r\nsetEffMoveKey( spep_3 + 0, move_f, 0, 0 , 0 );\r\nsetEffMoveKey( spep_3 + 312, move_f, 0, 0 , 0 );\r\nsetEffScaleKey( spep_3 + 0, move_f, 1.0, 1.0 );\r\nsetEffScaleKey( spep_3 + 312, move_f, 1.0, 1.0 );\r\nsetEffRotateKey( spep_3 + 0, move_f, 0 );\r\nsetEffRotateKey( spep_3 + 312, move_f, 0 );\r\nsetEffAlphaKey( spep_3 + 0, move_f, 255 );\r\nsetEffAlphaKey( spep_3 + 312 -1, move_f, 255 );\r\nsetEffAlphaKey( spep_3 + 312, move_f, 0 );\r\n\r\nmove_b = entryEffectLife( spep_3 + 0, SP_04r, 312, 0x80, -1, 0, 0, 0 );  --敵に迫る18号〜16号カメラに近づく    ef_004\r\nsetEffMoveKey( spep_3 + 0, move_b, 0, 0 , 0 );\r\nsetEffMoveKey( spep_3 + 312, move_b, 0, 0 , 0 );\r\nsetEffScaleKey( spep_3 + 0, move_b, 1.0, 1.0 );\r\nsetEffScaleKey( spep_3 + 312, move_b, 1.0, 1.0 );\r\nsetEffRotateKey( spep_3 + 0, move_b, 0 );\r\nsetEffRotateKey( spep_3 + 312, move_b, 0 );\r\nsetEffAlphaKey( spep_3 + 0, move_b, 255 );\r\nsetEffAlphaKey( spep_3 + 312 -1, move_b, 255 );\r\nsetEffAlphaKey( spep_3 + 312, move_b, 0 );\r\n\r\n-- ** 書き文字エントリー ** --\r\n\r\n-- ** 敵キャラクター ** --\r\nsetDisp( spep_3 + 0, 1, 1 );\r\nsetDisp( spep_3 -3 + 112, 1, 0 );\r\nchangeAnime( spep_3 + 0, 1, 117 );\r\nchangeAnime( spep_3 -3 + 48, 1, 106 );\r\nchangeAnime( spep_3 -3 + 78, 1, 108 );\r\n\r\nsetMoveKey( spep_3+ 0, 1, 8.9, -40.4 , 0 );\r\nsetMoveKey( spep_3+ 21, 1, 8.9, -40.3 , 0 );\r\nsetMoveKey( spep_3 -3 + 22, 1, 8.9, -40.3 , 0 );\r\nsetMoveKey( spep_3 -3 + 24, 1, 8.9, -40.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 26, 1, 8.8, -40.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 28, 1, 8.4, -41.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 30, 1, 7.8, -42.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 32, 1, 7, -43.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 34, 1, 5.9, -45.5 , 0 );\r\nsetMoveKey( spep_3 -3 + 36, 1, 4.5, -47.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 38, 1, 2.9, -50.3 , 0 );\r\nsetMoveKey( spep_3 -3 + 40, 1, 1, -53.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 42, 1, -1.1, -56.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 44, 1, -3.5, -60.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 47, 1, -4.5, -65.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 48, 1, 55.6, 36.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 49, 1, 55.6, 36.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 50, 1, 91, 46.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 51, 1, 91, 46.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 52, 1, 83.9, 36.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 53, 1, 83.9, 36.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 54, 1, 65.2, 26.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 55, 1, 65.2, 26.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 56, 1, 94.4, 39.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 57, 1, 94.4, 39.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 58, 1, 67.5, 26.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 60, 1, 73.1, 30 , 0 );\r\nsetMoveKey( spep_3 -3 + 62, 1, 64, 21.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 64, 1, 76.2, 20.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 66, 1, 64.2, 34.1 , 0 );\r\nsetMoveKey( spep_3 -3 + 68, 1, 69.5, 29 , 0 );\r\nsetMoveKey( spep_3 -3 + 70, 1, 73.3, 25.1 , 0 );\r\nsetMoveKey( spep_3 -3 + 72, 1, 70.2, 25.5 , 0 );\r\nsetMoveKey( spep_3 -3 + 74, 1, 72.1, 26.5 , 0 );\r\nsetMoveKey( spep_3 -3 + 77, 1, 72.8, 27 , 0 );\r\nsetMoveKey( spep_3 -3 + 78, 1, 150.8, 16.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 79, 1, 150.8, 16.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 80, 1, 210.1, 100.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 81, 1, 210.1, 100.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 82, 1, 184.6, 142 , 0 );\r\nsetMoveKey( spep_3 -3 + 83, 1, 184.6, 142 , 0 );\r\nsetMoveKey( spep_3 -3 + 84, 1, 138.6, 105.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 85, 1, 138.6, 105.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 86, 1, 202.1, 159.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 87, 1, 202.1, 159.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 88, 1, 140.4, 109.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 90, 1, 128.7, 100.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 92, 1, 138.5, 98.9 , 0 );\r\nsetMoveKey( spep_3 -3 + 94, 1, 124.4, 111.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 96, 1, 134.2, 107.1 , 0 );\r\nsetMoveKey( spep_3 -3 + 98, 1, 123.1, 98.3 , 0 );\r\nsetMoveKey( spep_3 -3 + 100, 1, 133.4, 96.9 , 0 );\r\nsetMoveKey( spep_3 -3 + 102, 1, 119.9, 109.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 104, 1, 123.9, 104.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 106, 1, 126.7, 100 , 0 );\r\nsetMoveKey( spep_3 -3 + 108, 1, 122.8, 100 , 0 );\r\nsetMoveKey( spep_3 -3 + 111, 1, 124.2, 100.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 112, 1, 124.2, 100.8 , 0 );\r\n\r\nsetScaleKey( spep_3 + 0, 1, 0.768, 0.768 );\r\nsetScaleKey( spep_3 -3 + 24, 1, 0.768, 0.768 );\r\nsetScaleKey( spep_3 -3 + 26, 1, 0.78, 0.78 );\r\nsetScaleKey( spep_3 -3 + 28, 1, 0.804, 0.804 );\r\nsetScaleKey( spep_3 -3 + 30, 1, 0.852, 0.852 );\r\nsetScaleKey( spep_3 -3 + 32, 1, 0.9, 0.9 );\r\nsetScaleKey( spep_3 -3 + 34, 1, 0.972, 0.972 );\r\nsetScaleKey( spep_3 -3 + 36, 1, 1.068, 1.068 );\r\nsetScaleKey( spep_3 -3 + 38, 1, 1.176, 1.176 );\r\nsetScaleKey( spep_3 -3 + 40, 1, 1.296, 1.296 );\r\nsetScaleKey( spep_3 -3 + 42, 1, 1.44, 1.44 );\r\nsetScaleKey( spep_3 -3 + 44, 1, 1.596, 1.596 );\r\nsetScaleKey( spep_3 -3 + 47, 1, 1.764, 1.764 );\r\nsetScaleKey( spep_3 -3 + 48, 1, 2.76, 2.76 );\r\nsetScaleKey( spep_3 -3 + 49, 1, 2.76, 2.76 );\r\nsetScaleKey( spep_3 -3 + 50, 1, 3.504, 3.504 );\r\nsetScaleKey( spep_3 -3 + 51, 1, 3.504, 3.504 );\r\nsetScaleKey( spep_3 -3 + 52, 1, 2.76, 2.76 );\r\nsetScaleKey( spep_3 -3 + 53, 1, 2.76, 2.76 );\r\nsetScaleKey( spep_3 -3 + 54, 1, 2.004, 2.004 );\r\nsetScaleKey( spep_3 -3 + 55, 1, 2.004, 2.004 );\r\nsetScaleKey( spep_3 -3 + 56, 1, 3, 3 );\r\nsetScaleKey( spep_3 -3 + 57, 1, 3, 3 );\r\nsetScaleKey( spep_3 -3 + 58, 1, 2.004, 2.004 );\r\nsetScaleKey( spep_3 -3 + 77, 1, 2.004, 2.004 );\r\nsetScaleKey( spep_3 -3 + 78, 1, 3.025, 3.025 );\r\nsetScaleKey( spep_3 -3 + 79, 1, 3.025, 3.025 );\r\nsetScaleKey( spep_3 -3 + 80, 1, 3.608, 3.608 );\r\nsetScaleKey( spep_3 -3 + 81, 1, 3.608, 3.608 );\r\nsetScaleKey( spep_3 -3 + 82, 1, 2.64, 2.64 );\r\nsetScaleKey( spep_3 -3 + 83, 1, 2.64, 2.64 );\r\nsetScaleKey( spep_3 -3 + 84, 1, 2.236, 2.236 );--\r\nsetScaleKey( spep_3 -3 + 85, 1, 2.236, 2.236 );--\r\nsetScaleKey( spep_3 -3 + 86, 1, 2.794, 2.794 );\r\nsetScaleKey( spep_3 -3 + 87, 1, 2.794, 2.794 );\r\nsetScaleKey( spep_3 -3 + 88, 1, 2.171, 2.171 );\r\nsetScaleKey( spep_3 -3 + 90, 1, 2.119, 2.119 );\r\nsetScaleKey( spep_3 -3 + 92, 1, 2.054, 2.054 );\r\nsetScaleKey( spep_3 -3 + 94, 1, 2.015, 2.015 );\r\nsetScaleKey( spep_3 -3 + 96, 1, 1.963, 1.963 );\r\nsetScaleKey( spep_3 -3 + 98, 1, 1.924, 1.924 );\r\nsetScaleKey( spep_3 -3 + 100, 1, 1.898, 1.898 );\r\nsetScaleKey( spep_3 -3 + 102, 1, 1.872, 1.872 );\r\nsetScaleKey( spep_3 -3 + 104, 1, 1.846, 1.846 );\r\nsetScaleKey( spep_3 -3 + 106, 1, 1.833, 1.833 );\r\nsetScaleKey( spep_3 -3 + 108, 1, 1.82, 1.82 );\r\nsetScaleKey( spep_3 -3 + 111, 1, 1.807, 1.807 );\r\nsetScaleKey( spep_3 -3 + 112, 1, 1.807, 1.807 );\r\n\r\nsetRotateKey( spep_3 + 0, 1, -4.1 );\r\nsetRotateKey( spep_3 -3 + 42, 1, -4.1 );\r\nsetRotateKey( spep_3 -3 + 44, 1, -4 );\r\nsetRotateKey( spep_3 -3 + 47, 1, -4 );\r\nsetRotateKey( spep_3 -3 + 48, 1, -52 );\r\nsetRotateKey( spep_3 -3 + 49, 1, -52 );\r\nsetRotateKey( spep_3 -3 + 50, 1, -50.7 );\r\nsetRotateKey( spep_3 -3 + 51, 1, -50.7 );\r\nsetRotateKey( spep_3 -3 + 52, 1, -50 );\r\nsetRotateKey( spep_3 -3 + 53, 1, -50 );\r\nsetRotateKey( spep_3 -3 + 54, 1, -49.7 );\r\nsetRotateKey( spep_3 -3 + 55, 1, -49.7 );\r\nsetRotateKey( spep_3 -3 + 56, 1, -49.4 );\r\nsetRotateKey( spep_3 -3 + 57, 1, -49.4 );\r\nsetRotateKey( spep_3 -3 + 58, 1, -49.1 );\r\nsetRotateKey( spep_3 -3 + 60, 1, -48.9 );\r\nsetRotateKey( spep_3 -3 + 62, 1, -48.7 );\r\nsetRotateKey( spep_3 -3 + 64, 1, -48.5 );\r\nsetRotateKey( spep_3 -3 + 66, 1, -48.4 );\r\nsetRotateKey( spep_3 -3 + 68, 1, -48.2 );\r\nsetRotateKey( spep_3 -3 + 70, 1, -48.1 );\r\nsetRotateKey( spep_3 -3 + 72, 1, -48.1 );\r\nsetRotateKey( spep_3 -3 + 74, 1, -48 );\r\nsetRotateKey( spep_3 -3 + 77, 1, -48 );\r\nsetRotateKey( spep_3 -3 + 78, 1, -2.5 );\r\nsetRotateKey( spep_3 -3 + 79, 1, -2.5 );\r\nsetRotateKey( spep_3 -3 + 80, 1, -2.6 );\r\nsetRotateKey( spep_3 -3 + 81, 1, -2.6 );\r\nsetRotateKey( spep_3 -3 + 82, 1, -2.7 );\r\nsetRotateKey( spep_3 -3 + 90, 1, -2.7 );\r\nsetRotateKey( spep_3 -3 + 92, 1, -2.6 );\r\nsetRotateKey( spep_3 -3 + 111, 1, -2.6 );\r\nsetRotateKey( spep_3 -3 + 112, 1, -2.6 );\r\n\r\n-- ** 敵キャラクター ** --\r\nsetDisp( spep_3 -3 + 124, 1, 1 );\r\nsetDisp( spep_3 -3 + 180, 1, 0 );\r\nchangeAnime( spep_3 -3 + 124, 1, 108 );\r\nchangeAnime( spep_3 -3 + 146, 1, 107 );\r\n\r\nsetMoveKey( spep_3 -3 + 124, 1, 2035.9, -385.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 126, 1, 1943.5, -375.3 , 0 );\r\nsetMoveKey( spep_3 -3 + 128, 1, 1759.3, -362.5 , 0 );\r\nsetMoveKey( spep_3 -3 + 130, 1, 1492.2, -347 , 0 );\r\nsetMoveKey( spep_3 -3 + 132, 1, 1153.2, -328.9 , 0 );\r\nsetMoveKey( spep_3 -3 + 134, 1, 755.2, -308.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 136, 1, 313.4, -286.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 138, 1, 284.3, -269.9 , 0 );\r\nsetMoveKey( spep_3 -3 + 140, 1, 255.6, -252.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 142, 1, 244.5, -252.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 144, 1, 317, -346.9 , 0 );\r\nsetMoveKey( spep_3 -3 + 145, 1, 317, -346.9 , 0 );--\r\nsetMoveKey( spep_3 -3 + 146, 1, 344.5, -187.5 , 0 );\r\nsetMoveKey( spep_3 -3 + 148, 1, 289.3, -158.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 150, 1, 223.9, -122.2 , 0 );\r\nsetMoveKey( spep_3 -3 + 152, 1, 344.8, -192.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 154, 1, 251.5, -139.7 , 0 );\r\nsetMoveKey( spep_3 -3 + 156, 1, 177.7, -104.1 , 0 );\r\nsetMoveKey( spep_3 -3 + 158, 1, 124.4, -100 , 0 );\r\nsetMoveKey( spep_3 -3 + 160, 1, 143.8, -84.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 162, 1, 145.2, -99.4 , 0 );\r\nsetMoveKey( spep_3 -3 + 164, 1, 123.5, -84.1 , 0 );\r\nsetMoveKey( spep_3 -3 + 166, 1, 122.7, -100.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 168, 1, 436.6, -169.3 , 0 );\r\nsetMoveKey( spep_3 -3 + 170, 1, 686.7, -255.6 , 0 );\r\nsetMoveKey( spep_3 -3 + 172, 1, 878.6, -308.1 , 0 );\r\nsetMoveKey( spep_3 -3 + 174, 1, 1038.1, -354.5 , 0 );\r\nsetMoveKey( spep_3 -3 + 176, 1, 1140.1, -380.5 , 0 );\r\nsetMoveKey( spep_3 -3 + 178, 1, 1203, -403.8 , 0 );\r\nsetMoveKey( spep_3 -3 + 180, 1, 1227, -402.2 , 0 );\r\n\r\nsetScaleKey( spep_3 -3 + 124, 1, 7.28, 7.28 );\r\nsetScaleKey( spep_3 -3 + 126, 1, 7.05, 7.05 );\r\nsetScaleKey( spep_3 -3 + 128, 1, 6.66, 6.66 );\r\nsetScaleKey( spep_3 -3 + 130, 1, 6.14, 6.14 );\r\nsetScaleKey( spep_3 -3 + 132, 1, 5.5, 5.5 );\r\nsetScaleKey( spep_3 -3 + 134, 1, 4.75, 4.75 );\r\nsetScaleKey( spep_3 -3 + 136, 1, 3.93, 3.93 );\r\nsetScaleKey( spep_3 -3 + 138, 1, 3.69, 3.69 );\r\nsetScaleKey( spep_3 -3 + 140, 1, 3.44, 3.44 );\r\nsetScaleKey( spep_3 -3 + 142, 1, 3.42, 3.42 );\r\nsetScaleKey( spep_3 -3 + 144, 1, 4.68, 4.68 );\r\nsetScaleKey( spep_3 -3 + 145, 1, 4.68, 4.68 );--\r\nsetScaleKey( spep_3 -3 + 146, 1, 2.29, 2.29 );\r\nsetScaleKey( spep_3 -3 + 148, 1, 1.84, 1.84 );\r\nsetScaleKey( spep_3 -3 + 150, 1, 1.36, 1.36 );\r\nsetScaleKey( spep_3 -3 + 152, 1, 2.08, 2.08 );\r\nsetScaleKey( spep_3 -3 + 154, 1, 1.41, 1.41 );\r\nsetScaleKey( spep_3 -3 + 156, 1, 1.37, 1.37 );\r\nsetScaleKey( spep_3 -3 + 158, 1, 1.34, 1.34 );\r\nsetScaleKey( spep_3 -3 + 160, 1, 1.34, 1.34 );\r\nsetScaleKey( spep_3 -3 + 162, 1, 1.35, 1.35 );\r\nsetScaleKey( spep_3 -3 + 166, 1, 1.35, 1.35 );\r\nsetScaleKey( spep_3 -3 + 168, 1, 1.48, 1.48 );\r\nsetScaleKey( spep_3 -3 + 170, 1, 1.58, 1.58 );\r\nsetScaleKey( spep_3 -3 + 172, 1, 1.67, 1.67 );\r\nsetScaleKey( spep_3 -3 + 174, 1, 1.74, 1.74 );\r\nsetScaleKey( spep_3 -3 + 176, 1, 1.78, 1.78 );\r\nsetScaleKey( spep_3 -3 + 178, 1, 1.81, 1.81 );\r\nsetScaleKey( spep_3 -3 + 180, 1, 1.81, 1.81 );\r\n\r\nsetRotateKey( spep_3 -3 + 124, 1, 17.7 );\r\nsetRotateKey( spep_3 -3 + 145, 1, 17.7 );--\r\nsetRotateKey( spep_3 -3 + 146, 1, 0 );\r\nsetRotateKey( spep_3 -3 + 180, 1, 0 );\r\n\r\n-- ** 音 ** --\r\n--18号パンチ\r\nSE010 = playSeVer2( spep_3 + 36, 1003, \"\", 0, 0, 0, -1);\r\nSE011 = playSeVer2( spep_3 + 44, 1110, \"\", 0, 0, 0, -1);\r\nSE012 = playSeVer2( spep_3 + 44, 1009, \"\", 0, 0, 0, -1);\r\nSE013 = playSeVer2( spep_3 + 44, 1187, \"\",spep_3 + 76, 0, 20, -1);\r\nsetSeVolumeByWorkId( spep_3 + 44, SE013, 60 );\r\n\r\n--18号パンチ2\r\nSE014 = playSeVer2( spep_3 + 78, 1010, \"\", 0, 0, 0, -1);\r\nSE015 = playSeVer2( spep_3 + 78, 1110, \"\", 0, 0, 0, -1);\r\nSE016 = playSeVer2( spep_3 + 78, 1190, \"\",spep_3 + 114, 0, 14, -1);\r\nsetSeVolumeByWorkId( spep_3 + 78, SE016, 68 );\r\n\r\n--画面遷移\r\nSE017 = playSeVer2( spep_3 + 84, 1072, \"\", 0, 0, 0, -1);\r\n\r\n--18号キック\r\nSE018 = playSeVer2( spep_3 + 134, 1123, \"\", 0, 0, 0, -1);\r\n\r\n--16号ダッシュ\r\nSE019 = playSeVer2( spep_3 + 180, 9, \"\", 0, 0, 0, -1);\r\nSE020 = playSeVer2( spep_3 + 180, 1278, \"\",spep_3 + 354, 0, 70, -1);\r\nsetSeVolumeByWorkId( spep_3 + 180, SE020, 82 );\r\n\r\n--土煙\r\nSE021 = playSeVer2( spep_3 + 216, 1168, \"\",spep_3 + 354, 0, 74, -1);\r\nsetSeVolumeByWorkId( spep_3 + 216, SE021, 89 );\r\n\r\n--16号向かってくる\r\nSE022 = playSeVer2( spep_3 + 258, 1167, \"\", 0, 0, 0, 0.6);\r\nsetSeVolumeByWorkId( spep_3 + 258, SE022, 55 );\r\nsetPitch( spep_3 + 258, SE022, -400 );\r\nsetTimeStretch( SE022, 1.05, 30, 4 );\r\n\r\n--18号ジャンプ\r\nSE023 = playSeVer2( spep_3 + 282, 1207, \"\",spep_3 + 354, 0, 36, -1);\r\nsetSeVolumeByWorkId( spep_3 + 282, SE023, 67 );\r\n\r\n-- ** 黒背景 ** --\r\nentryFadeBg( spep_3 + 0, 0, 312 + 2, 0, 0, 0, 0, 255);       -- ベース暗め　背景\r\n\r\n-- ** 次の準備 ** --\r\nspep_4 = spep_3 + 312;\r\n\r\n\r\n------------------------------------------------------\r\n-- 殴る16号〜カードカットイン(100F)\r\n------------------------------------------------------\r\n--spep_4 = 0;\r\n\r\n-- ** エフェクト等 ** --\r\ntame_f = entryEffectLife( spep_4 + 0, SP_05r, 100, 0x100, -1, 0, 0, 0 );  --殴る16号〜カードカットインまで ef_004\r\nsetEffMoveKey( spep_4 + 0, tame_f, 0, 0 , 0 );\r\nsetEffMoveKey( spep_4 + 100, tame_f, 0, 0 , 0 );\r\nsetEffScaleKey( spep_4 + 0, tame_f, -1.0, 1.0 );\r\nsetEffScaleKey( spep_4 + 100, tame_f, -1.0, 1.0 );\r\nsetEffRotateKey( spep_4 + 0, tame_f, 0 );\r\nsetEffRotateKey( spep_4 + 100, tame_f, 0 );\r\nsetEffAlphaKey( spep_4 + 0, tame_f, 255 );\r\nsetEffAlphaKey( spep_4 + 100 -1, tame_f, 255 );\r\nsetEffAlphaKey( spep_4 + 100, tame_f, 0 );\r\n\r\ntame_b = entryEffectLife( spep_4 + 0, SP_06, 100, 0x80, -1, 0, 0, 0 );  --殴る16号〜カードカットインまで  ef_005\r\nsetEffMoveKey( spep_4 + 0, tame_b, 0, 0 , 0 );\r\nsetEffMoveKey( spep_4 + 100, tame_b, 0, 0 , 0 );\r\nsetEffScaleKey( spep_4 + 0, tame_b, -1.0, 1.0 );\r\nsetEffScaleKey( spep_4 + 100, tame_b, -1.0, 1.0 );\r\nsetEffRotateKey( spep_4 + 0, tame_b, 0 );\r\nsetEffRotateKey( spep_4 + 100, tame_b, 0 );\r\nsetEffAlphaKey( spep_4 + 0, tame_b, 255 );\r\nsetEffAlphaKey( spep_4 + 100 -1, tame_b, 255 );\r\nsetEffAlphaKey( spep_4 + 100, tame_b, 0 );\r\n\r\n-- ** 敵キャラクター ** --\r\nsetDisp( spep_4 -3 + 52, 1, 1 );\r\nchangeAnime( spep_4 -3 + 52, 1, 105 );\r\n\r\nsetMoveKey( spep_4 -3 + 52, 1, -43.1, -123.3 , 0 );\r\nsetMoveKey( spep_4 -3 + 53, 1, -43.1, -123.3 , 0 );\r\nsetMoveKey( spep_4 -3 + 54, 1, -44.4, -124.7 , 0 );\r\nsetMoveKey( spep_4 -3 + 55, 1, -44.4, -124.7 , 0 );\r\nsetMoveKey( spep_4 -3 + 56, 1, -48.2, -134.5 , 0 );\r\nsetMoveKey( spep_4 -3 + 57, 1, -48.2, -134.5 , 0 );\r\nsetMoveKey( spep_4 -3 + 58, 1, -54.5, -152.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 59, 1, -54.5, -152.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 60, 1, -71.3, -203.6 , 0 );\r\nsetMoveKey( spep_4 -3 + 61, 1, -71.3, -203.6 , 0 );\r\nsetMoveKey( spep_4 -3 + 62, 1, -68.6, -255.6 , 0 );\r\nsetMoveKey( spep_4 -3 + 63, 1, -68.6, -255.6 , 0 );\r\nsetMoveKey( spep_4 -3 + 64, 1, -71.3, -189.8 , 0 );\r\nsetMoveKey( spep_4 -3 + 65, 1, -71.3, -189.8 , 0 );\r\nsetMoveKey( spep_4 -3 + 66, 1, -60.7, -146.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 67, 1, -60.7, -146.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 68, 1, -76.8, -235.7 , 0 );\r\nsetMoveKey( spep_4 -3 + 69, 1, -76.8, -235.7 , 0 );\r\nsetMoveKey( spep_4 -3 + 70, 1, -60.5, -168.9 , 0 );\r\nsetMoveKey( spep_4 -3 + 71, 1, -60.5, -168.9 , 0 );\r\nsetMoveKey( spep_4 -3 + 72, 1, -47, -122.7 , 0 );\r\nsetMoveKey( spep_4 -3 + 73, 1, -47, -122.7 , 0 );\r\nsetMoveKey( spep_4 -3 + 74, 1, -67.5, -157.4 , 0 );\r\nsetMoveKey( spep_4 -3 + 75, 1, -67.5, -157.4 , 0 );\r\nsetMoveKey( spep_4 -3 + 76, 1, -44.4, -163.8 , 0 );\r\nsetMoveKey( spep_4 -3 + 77, 1, -44.4, -163.8 , 0 );\r\nsetMoveKey( spep_4 -3 + 78, 1, -55.6, -135.6 , 0 );\r\nsetMoveKey( spep_4 -3 + 79, 1, -55.6, -135.6 , 0 );\r\nsetMoveKey( spep_4 -3 + 80, 1, -36.3, -96.5 , 0 );\r\nsetMoveKey( spep_4 -3 + 81, 1, -36.3, -96.5 , 0 );\r\nsetMoveKey( spep_4 -3 + 82, 1, -32.1, -50.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 83, 1, -32.1, -50.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 84, 1, -15.5, -1.4 , 0 );\r\nsetMoveKey( spep_4 -3 + 85, 1, -15.5, -1.4 , 0 );\r\nsetMoveKey( spep_4 -3 + 86, 1, -8.9, 20.2 , 0 );\r\nsetMoveKey( spep_4 -3 + 88, 1, -5, 19 , 0 );\r\nsetMoveKey( spep_4 -3 + 90, 1, -9.4, 23 , 0 );\r\nsetMoveKey( spep_4 -3 + 92, 1, -7, 17.9 , 0 );\r\nsetMoveKey( spep_4 -3 + 94, 1, -10.7, 20.3 , 0 );\r\nsetMoveKey( spep_4 -3 + 96, 1, -4.6, 25 , 0 );\r\nsetMoveKey( spep_4 -3 + 98, 1, -4.6, 25.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 100, 1, -4.6, 25.1 , 0 );\r\nsetMoveKey( spep_4 -3 + 102, 1, -4.5, 25.2 , 0 );\r\n\r\nsetScaleKey( spep_4 -3 + 52, 1, 2.898, 2.898 );\r\nsetScaleKey( spep_4 -3 + 53, 1, 2.898, 2.898 );\r\nsetScaleKey( spep_4 -3 + 54, 1, 2.907, 2.907 );\r\nsetScaleKey( spep_4 -3 + 55, 1, 2.907, 2.907 );\r\nsetScaleKey( spep_4 -3 + 56, 1, 3.096, 3.096 );\r\nsetScaleKey( spep_4 -3 + 57, 1, 3.096, 3.096 );\r\nsetScaleKey( spep_4 -3 + 58, 1, 3.465, 3.465 );\r\nsetScaleKey( spep_4 -3 + 59, 1, 3.465, 3.465 );\r\nsetScaleKey( spep_4 -3 + 60, 1, 4.572, 4.572 );\r\nsetScaleKey( spep_4 -3 + 61, 1, 4.572, 4.572 );\r\nsetScaleKey( spep_4 -3 + 62, 1, 5.823, 5.823 );\r\nsetScaleKey( spep_4 -3 + 63, 1, 5.823, 5.823 );\r\nsetScaleKey( spep_4 -3 + 64, 1, 4.572, 4.572 );\r\nsetScaleKey( spep_4 -3 + 65, 1, 4.572, 4.572 );\r\nsetScaleKey( spep_4 -3 + 66, 1, 3.33, 3.33 );\r\nsetScaleKey( spep_4 -3 + 67, 1, 3.33, 3.33 );\r\nsetScaleKey( spep_4 -3 + 68, 1, 4.995, 4.995 );\r\nsetScaleKey( spep_4 -3 + 69, 1, 4.995, 4.995 );\r\nsetScaleKey( spep_4 -3 + 70, 1, 3.33, 3.33 );\r\nsetScaleKey( spep_4 -3 + 71, 1, 3.33, 3.33 );\r\nsetScaleKey( spep_4 -3 + 72, 1, 3.285, 3.285 );\r\nsetScaleKey( spep_4 -3 + 73, 1, 3.285, 3.285 );\r\nsetScaleKey( spep_4 -3 + 74, 1, 3.249, 3.249 );\r\nsetScaleKey( spep_4 -3 + 75, 1, 3.249, 3.249 );\r\nsetScaleKey( spep_4 -3 + 76, 1, 3.213, 3.213 );\r\nsetScaleKey( spep_4 -3 + 77, 1, 3.213, 3.213 );\r\nsetScaleKey( spep_4 -3 + 78, 1, 3.186, 3.186 );\r\nsetScaleKey( spep_4 -3 + 79, 1, 3.186, 3.186 );\r\nsetScaleKey( spep_4 -3 + 80, 1, 2.484, 2.484 );\r\nsetScaleKey( spep_4 -3 + 81, 1, 2.484, 2.484 );\r\nsetScaleKey( spep_4 -3 + 82, 1, 1.8, 1.8 );\r\nsetScaleKey( spep_4 -3 + 83, 1, 1.8, 1.8 );\r\nsetScaleKey( spep_4 -3 + 84, 1, 1.125, 1.125 );\r\nsetScaleKey( spep_4 -3 + 85, 1, 1.125, 1.125 );\r\nsetScaleKey( spep_4 -3 + 86, 1, 0.54, 0.54 );\r\nsetScaleKey( spep_4 -3 + 88, 1, 0.513, 0.513 );\r\nsetScaleKey( spep_4 -3 + 90, 1, 0.486, 0.486 );\r\nsetScaleKey( spep_4 -3 + 92, 1, 0.459, 0.459 );\r\nsetScaleKey( spep_4 -3 + 94, 1, 0.441, 0.441 );\r\nsetScaleKey( spep_4 -3 + 96, 1, 0.432, 0.432 );\r\nsetScaleKey( spep_4 -3 + 98, 1, 0.423, 0.423 );\r\nsetScaleKey( spep_4 -3 + 100, 1, 0.414, 0.414 );\r\nsetScaleKey( spep_4 -3 + 102, 1, 0.414, 0.414 );\r\n\r\nsetRotateKey( spep_4 -3 + 52, 1, 6.3 );\r\nsetRotateKey( spep_4 -3 + 102, 1, 6.3 );\r\n\r\n-- ** 音 ** --\r\n--振りかぶる\r\nSE024 = playSeVer2( spep_4 + 18, 1116, \"\",spep_4 + 62, 0, 20, -1);\r\nsetSeVolumeByWorkId( spep_4 + 18, SE024, 146 );\r\nSE025 = playSeVer2( spep_4 + 24, 1004, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( spep_4 + 24, SE025, 132 );\r\n\r\n--16号パンチ\r\nSE026 = playSeVer2( spep_4 + 60, 1187, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( spep_4 + 60, SE026, 78 );\r\nSE027 = playSeVer2( spep_4 + 60, 1120, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( spep_4 + 60, SE027, 80 );\r\n\r\n-- ** 黒背景 ** --\r\nentryFadeBg( spep_4 + 0, 0, 100 + 2, 0, 0, 0, 0, 255);       -- ベース暗め　背景\r\n\r\n-- ** 次の準備 ** --\r\nspep_5 = spep_4 + 100;\r\n\r\n\r\n------------------------------------------------------\r\n-- 敵が画面衝突(100F)\r\n------------------------------------------------------\r\n-- ** エフェクト等 ** --\r\nfinish_f = entryEffect( spep_5 + 0, 155520, 0x100, -1, 0, 0, 0 );  --敵が画面衝突(ef_005)(画面割れ)\r\nsetEffMoveKey( spep_5 + 0, finish_f, 0, 0 , 0 );\r\nsetEffMoveKey( spep_5 + 100, finish_f, 0, 0 , 0 );\r\nsetEffScaleKey( spep_5 + 0, finish_f, 1.0, 1.0 );\r\nsetEffScaleKey( spep_5 + 100, finish_f, 1.0, 1.0 );\r\nsetEffRotateKey( spep_5 + 0, finish_f, 0 );\r\nsetEffRotateKey( spep_5 + 100, finish_f, 0 );\r\nsetEffAlphaKey( spep_5 + 0, finish_f, 255 );\r\nsetEffAlphaKey( spep_5 + 100, finish_f, 255 );\r\n\r\nfinish_b = entryEffect( spep_5 + 0, SP_07, 0x80, -1, 0, 0, 0 );  --敵が画面衝突(ef_005)(画面割れ)\r\nsetEffMoveKey( spep_5 + 0, finish_b, 0, 0 , 0 );\r\nsetEffMoveKey( spep_5 + 100, finish_b, 0, 0 , 0 );\r\nsetEffScaleKey( spep_5 + 0, finish_b, -1.0, 1.0 );\r\nsetEffScaleKey( spep_5 + 100, finish_b, -1.0, 1.0 );\r\nsetEffRotateKey( spep_5 + 0, finish_b, 0 );\r\nsetEffRotateKey( spep_5 + 100, finish_b, 0 );\r\nsetEffAlphaKey( spep_5 + 0, finish_b, 255 );\r\nsetEffAlphaKey( spep_5 + 100, finish_b, 255 );\r\n\r\n-- ** 敵キャラクター ** --\r\nsetDisp( spep_5 + 100, 1, 0 );\r\nchangeAnime( spep_5 + 0, 1, 107 );\r\n\r\nsetMoveKey( spep_5    + 0, 1, 36.2, 265.9 , 0 );\r\nsetMoveKey( spep_5    + 1, 1, 32.5, 228 , 0 );\r\nsetMoveKey( spep_5    + 2, 1, 27.7, 179.3 , 0 );\r\nsetMoveKey( spep_5 -3 + 6, 1, 21.9, 119.7 , 0 );\r\nsetMoveKey( spep_5 -3 + 8, 1, 15, 49.3 , 0 );\r\nsetMoveKey( spep_5 -3 + 10, 1, 7.1, -32 , 0 );\r\nsetMoveKey( spep_5 -3 + 12, 1, -1.9, -124.1 , 0 );\r\nsetMoveKey( spep_5 -3 + 103, 1, -1.9, -124.1 , 0 );\r\n\r\nsetScaleKey( spep_5    + 0, 1, 0.22, 0.22 );\r\nsetScaleKey( spep_5    + 1, 1, 0.35, 0.35 );\r\nsetScaleKey( spep_5    + 2, 1, 0.51, 0.51 );\r\nsetScaleKey( spep_5 -3 + 6, 1, 0.7, 0.7 );\r\nsetScaleKey( spep_5 -3 + 8, 1, 0.93, 0.93 );\r\nsetScaleKey( spep_5 -3 + 10, 1, 1.2, 1.2 );\r\nsetScaleKey( spep_5 -3 + 12, 1, 1.5, 1.5 );\r\nsetScaleKey( spep_5 -3 + 14, 1, 1.6, 1.6 );\r\nsetScaleKey( spep_5 -3 + 16, 1, 1.5, 1.5 );\r\nsetScaleKey( spep_5 -3 + 18, 1, 1.6, 1.6 );\r\nsetScaleKey( spep_5 -3 + 20, 1, 1.5, 1.5 );\r\nsetScaleKey( spep_5 -3 + 22, 1, 1.6, 1.6 );\r\nsetScaleKey( spep_5 -3 + 24, 1, 1.5, 1.5 );\r\nsetScaleKey( spep_5 -3 + 26, 1, 1.6, 1.6 );\r\nsetScaleKey( spep_5 -3 + 103, 1, 1.6, 1.6 );\r\n\r\nsetRotateKey( spep_5    + 0, 1, 0 );\r\nsetRotateKey( spep_5    + 1, 1, 105 );\r\nsetRotateKey( spep_5    + 2, 1, 240 );\r\nsetRotateKey( spep_5 -3 + 6, 1, 405 );\r\nsetRotateKey( spep_5 -3 + 8, 1, 600 );\r\nsetRotateKey( spep_5 -3 + 10, 1, 825 );\r\nsetRotateKey( spep_5 -3 + 12, 1, 1080 );\r\nsetRotateKey( spep_5 -3 + 103, 1, 1080 );\r\n\r\n-- ** 集中線 ** --\r\nshuchusen_wh = entryEffectLife( spep_5 + 14,  906, 32, 0x100, -1, 0, 0, 0 );\r\nsetEffShake( spep_5 + 14, shuchusen_wh, 32, 25 );\r\n\r\nsetEffMoveKey( spep_5 + 14, shuchusen_wh, 0, 0 , 0 );\r\nsetEffMoveKey( spep_5 + 46, shuchusen_wh, 0, 0 , 0 );\r\n\r\nsetEffScaleKey( spep_5 + 14, shuchusen_wh, 1, 1 );\r\nsetEffScaleKey( spep_5 + 46, shuchusen_wh, 1, 1 );\r\n\r\nsetEffRotateKey( spep_5 + 14, shuchusen_wh, 0 );\r\nsetEffRotateKey( spep_5 + 46, shuchusen_wh, 0 );\r\n\r\nsetEffAlphaKey( spep_5 + 14, shuchusen_wh, 255 );\r\nsetEffAlphaKey( spep_5 + 28, shuchusen_wh, 255 );\r\nsetEffAlphaKey( spep_5 + 30, shuchusen_wh, 252 );\r\nsetEffAlphaKey( spep_5 + 32, shuchusen_wh, 242 );\r\nsetEffAlphaKey( spep_5 + 34, shuchusen_wh, 227 );\r\nsetEffAlphaKey( spep_5 + 36, shuchusen_wh, 205 );\r\nsetEffAlphaKey( spep_5 + 38, shuchusen_wh, 176 );\r\nsetEffAlphaKey( spep_5 + 40, shuchusen_wh, 142 );\r\nsetEffAlphaKey( spep_5 + 42, shuchusen_wh, 101 );\r\nsetEffAlphaKey( spep_5 + 44, shuchusen_wh, 54 );\r\nsetEffAlphaKey( spep_5 + 46, shuchusen_wh, 0 );\r\n\r\nshuchusen_bl = entryEffectLife( spep_5 + 14,  1657, 86, 0x80, -1, 0, 0, 0 );  --黒い細い集中線\r\nsetEffMoveKey( spep_5 + 14, shuchusen_bl, 0, 0 , 0 );\r\nsetEffMoveKey( spep_5 + 100, shuchusen_bl, 0, 0 , 0 );\r\n\r\nsetEffScaleKey( spep_5 + 14, shuchusen_bl, 1, 1 );\r\nsetEffScaleKey( spep_5 + 100, shuchusen_bl, 1, 1 );\r\n\r\nsetEffRotateKey( spep_5 + 14, shuchusen_bl, 0 );\r\nsetEffRotateKey( spep_5 + 100, shuchusen_bl, 0 );\r\n\r\nsetEffAlphaKey( spep_5 + 14, shuchusen_bl, 255 );\r\nsetEffAlphaKey( spep_5 + 100, shuchusen_bl, 255 );\r\n\r\n-- ** 書き文字エントリー ** --\r\nctga = entryEffectLife( spep_5 + 14,  10005, 86, 0x100, -1, 0, 3.9, 316.1 );  --ガッ\r\nsetEffShake( spep_5 + 14, ctga, 14, 20 );\r\n\r\nsetEffMoveKey( spep_5 + 14, ctga, 3.9, 316.1 , 0 );\r\nsetEffMoveKey( spep_5 + 28, ctga, 3.9, 316.1 , 0 );\r\nsetEffMoveKey( spep_5 + 100, ctga, 3.9, 316.1 , 0 );\r\n\r\nsetEffScaleKey( spep_5 + 14, ctga, 3.2, 3.2 );\r\nsetEffScaleKey( spep_5 + 100, ctga, 3.2, 3.2 );\r\n\r\nsetEffRotateKey( spep_5 + 14, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 15, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 16, ctga, -14.9 );\r\nsetEffRotateKey( spep_5 + 17, ctga, -14.9 );\r\nsetEffRotateKey( spep_5 + 18, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 19, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 20, ctga, -14.9 );\r\nsetEffRotateKey( spep_5 + 21, ctga, -14.9 );\r\nsetEffRotateKey( spep_5 + 22, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 23, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 24, ctga, -14.9 );\r\nsetEffRotateKey( spep_5 + 25, ctga, -14.9 );\r\nsetEffRotateKey( spep_5 + 26, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 27, ctga, -10.9 );\r\nsetEffRotateKey( spep_5 + 28, ctga, -14.9 );\r\nsetEffRotateKey( spep_5 + 100, ctga, -14.9 );\r\n\r\nsetEffAlphaKey( spep_5 + 14, ctga, 255 );\r\nsetEffAlphaKey( spep_5 + 100, ctga, 255 );\r\n\r\n-- ** 音 ** --\r\n--画面割れる\r\nSE029 = playSeVer2( spep_5 + 8, 1054, \"\", 0, 0, 0, -1);\r\nSE030 = playSeVer2( spep_5 + 8, 1025, \"\", 0, 0, 0, -1);\r\n\r\n-- ** ダメージ表示 ** --\r\ndealDamage( spep_5 + 10 );\r\nendPhase( spep_5 + 98 );\r\n\r\n\r\nend",
+  "common_source": "-- common.lua\r\n\r\nfunction showCardCutin(startFrame, isDynamicBg)\r\n    -- ** カードカットイン ** --\r\n    local cutinEffectId = 1507;\r\n\r\n    if (_SPECIAL_SKILL_LEVEL_ == 1) then\r\n        cutinEffectId = 1120;\r\n    elseif (_SPECIAL_SKILL_LEVEL_ == 2) then\r\n        cutinEffectId = 1121;\r\n    end\r\n\r\n    local speff = entryEffectLife( startFrame, cutinEffectId, 90, 0x100, -1, 0, 0, 0 );  -- カード\r\n    setEffReplaceTexture( speff, 1, 1 );\r\n    setEffReplaceTexture( speff, 2, 0 );  -- カード差し替え\r\n    setEffReplaceTexture( speff, 5, 4 );  -- 技名テクスチャ差し替え\r\n\r\n    -- ** 集中線 ** --\r\n    local shuchusen = entryEffectLife( startFrame + 0, 906, 90, 0x100, -1, 0, 0, 0 );  -- 集中線\r\n    setEffShake( startFrame + 0, shuchusen, 90, 20 );\r\n    setEffMoveKey( startFrame + 0, shuchusen, 0, 0 , 0 );\r\n    setEffMoveKey( startFrame + 90, shuchusen, 0, 0 , 0 );\r\n    setEffScaleKey( startFrame + 0, shuchusen, 1.6, 1.6 );\r\n    setEffScaleKey( startFrame + 90, shuchusen, 1.6, 1.6 );\r\n    setEffRotateKey( startFrame + 0, shuchusen, 0 );\r\n    setEffRotateKey( startFrame + 90, shuchusen, 0 );\r\n    setEffAlphaKey( startFrame + 0, shuchusen, 255 );\r\n    setEffAlphaKey( startFrame + 90, shuchusen, 255 );\r\n\r\n    -- ** 音 ** --\r\n    SE_CUTIN = playSe( startFrame + 0, 1035 );\r\n\r\n    -- ** 白背景 ** --\r\n    local fadeBgFrame = 96;\r\n    if (isDynamicBg == 1) then\r\n        fadeBgFrame = 94;\r\n    else end\r\n    entryFadeBg( startFrame + 0, 0, fadeBgFrame, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- 白　背景\r\n\r\n    -- ** 白フェード ** --\r\n    entryFade( startFrame + 0, 0, 2, 4, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n    entryFade( startFrame + 80, 6, 8, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n\r\n    -- ** 次の準備 ** --\r\n    return startFrame + 94;\r\nend\r\n\r\nfunction showCardCutinEx(startFrame, isDynamicBg)\r\n    -- ** カードカットイン ** --\r\n    local cutinEffectId = 1514;\r\n\r\n    if (_SPECIAL_SKILL_LEVEL_ == 1) then\r\n        cutinEffectId = 1127;\r\n    elseif (_SPECIAL_SKILL_LEVEL_ == 2) then\r\n        cutinEffectId = 1128;\r\n    end\r\n\r\n    local speff = entryEffectLife( startFrame, cutinEffectId, 90, 0x100, -1, 0, 0, 0 );  -- カード\r\n    setEffReplaceTexture( speff, 1, 1 );\r\n    setEffReplaceTexture( speff, 2, 0 );  -- カード差し替え\r\n    setEffReplaceTexture( speff, 5, 4 );  -- 技名テクスチャ差し替え\r\n\r\n    -- ** 集中線 ** --\r\n    local shuchusen = entryEffectLife( startFrame + 0, 906, 90, 0x100, -1, 0, 0, 0 );  -- 集中線\r\n    setEffShake( startFrame + 0, shuchusen, 90, 20 );\r\n    setEffMoveKey( startFrame + 0, shuchusen, 0, 0 , 0 );\r\n    setEffMoveKey( startFrame + 90, shuchusen, 0, 0 , 0 );\r\n    setEffScaleKey( startFrame + 0, shuchusen, 1.6, 1.6 );\r\n    setEffScaleKey( startFrame + 90, shuchusen, 1.6, 1.6 );\r\n    setEffRotateKey( startFrame + 0, shuchusen, 0 );\r\n    setEffRotateKey( startFrame + 90, shuchusen, 0 );\r\n    setEffAlphaKey( startFrame + 0, shuchusen, 255 );\r\n    setEffAlphaKey( startFrame + 90, shuchusen, 255 );\r\n\r\n    -- ** 音 ** --\r\n    SE_CUTIN = playSe( startFrame + 0, 1035 );\r\n\r\n    -- ** 白背景 ** --\r\n    local fadeBgFrame = 96;\r\n    if (isDynamicBg == 1) then\r\n        fadeBgFrame = 94;\r\n    else end\r\n    entryFadeBg( startFrame + 0, 0, fadeBgFrame, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- 白　背景\r\n\r\n    -- ** 白フェード ** --\r\n    entryFade( startFrame + 0, 0, 2, 4, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n    entryFade( startFrame + 80, 6, 8, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n\r\n    -- ** 次の準備 ** --\r\n    return startFrame + 94;\r\nend\r\n\r\nfunction showCardCutinOffset(startFrame, isDynamicBg,offset_Y)\r\n    -- ** カードカットイン ** --\r\n    local cutinEffectId = 1513;\r\n    local offsetId = 1512;\r\n\r\n    if (_SPECIAL_SKILL_LEVEL_ == 1) then\r\n        cutinEffectId = 3248;\r\n        offsetId = 3246;\r\n    elseif (_SPECIAL_SKILL_LEVEL_ == 2) then\r\n        cutinEffectId = 3252;\r\n        offsetId = 3250;\r\n    end\r\n\r\n    speff2 = entryEffectLife( startFrame + 0, cutinEffectId, 90, 0x100, -1, 0, 0, 0 );   -- カード\r\n\r\n    if (_IS_PLAYER_SIDE_ == 0) then\r\n\r\n        setEffScaleKey( startFrame + 0, speff2, -1.0, 1.0); -- 敵側のみ  \r\n        setEffScaleKey( startFrame + 90, speff2, -1.0, 1.0); -- 敵側のみ \r\n        \r\n    end\r\n    setEffReplaceTexture( speff2, 1, 1 );\r\n    setEffReplaceTexture( speff2, 2, 0 );-- カード差し替え\r\n    setEffReplaceTexture( speff2, 5, 4 );-- 技名テクスチャ差し替え\r\n\r\n    -- ** 放射線(黄) ** --\r\n    housha = entryEffectLife( startFrame + 0, 1511, 90, 0x100, -1, 0, 0, 0 );  --黄色放射\r\n    setEffMoveKey( startFrame + 0, housha, 0, 0 , 0 );\r\n    setEffMoveKey( startFrame + 90, housha, 0, 0 , 0 );\r\n    setEffScaleKey( startFrame + 0, housha, 1.0, 1.0 );\r\n    setEffScaleKey( startFrame + 90, housha, 1.0, 1.0 );\r\n    setEffRotateKey( startFrame + 0, housha, 0 );\r\n    setEffRotateKey( startFrame + 90, housha, 0 );\r\n    setEffAlphaKey( startFrame + 0, housha, 255 );\r\n    setEffAlphaKey( startFrame + 90, housha, 255 );\r\n\r\n    -- ** 集中線 ** --\r\n    shuchusen = entryEffectLife( startFrame + 0, 906, 90, 0x100, -1, 0, 0, 0 );  --集中線\r\n    setEffShake( startFrame + 0, shuchusen, 90, 20 );\r\n    setEffMoveKey( startFrame + 0, shuchusen, 0, 0 , 0 );\r\n    setEffMoveKey( startFrame + 90, shuchusen, 0, 0 , 0 );\r\n    setEffScaleKey( startFrame + 0, shuchusen, 1.6, 1.6 );\r\n    setEffScaleKey( startFrame + 90, shuchusen, 1.6, 1.6 );\r\n    setEffRotateKey( startFrame + 0, shuchusen, 0 );\r\n    setEffRotateKey( startFrame + 90, shuchusen, 0 );\r\n    setEffAlphaKey( startFrame + 0, shuchusen, 255 );\r\n    setEffAlphaKey( startFrame + 90, shuchusen, 255 );\r\n\r\n    if (_SPECIAL_SKILL_LEVEL_ > 0) then-- 極限時判定\r\n\r\n    local kaminariEff = 3247;-- 雷エフェクト\r\n    local haikeiEff = 3249;-- 極限背景\r\n    if (_SPECIAL_SKILL_LEVEL_ == 2) then\r\n        kaminariEff = 3251;\r\n        haikeiEff = 3253;\r\n    end\r\n        -- ** 雷エフェクト ** --\r\n        kaminari = entryEffectLife( startFrame + 0, kaminariEff, 90, 0x100, -1, 0, 0, 0 );  -- 雷エフェクト\r\n        setEffMoveKey( startFrame + 0, kaminari, 0, 0 , 0 );\r\n        setEffMoveKey( startFrame + 90, kaminari, 0, 0 , 0 );\r\n        setEffScaleKey( startFrame + 0, kaminari, 1.0, 1.0 );\r\n        setEffScaleKey( startFrame + 90, kaminari, 1.0, 1.0 );\r\n        setEffRotateKey( startFrame + 0, kaminari, 0 );\r\n        setEffRotateKey( startFrame + 90, kaminari, 0 );\r\n        setEffAlphaKey( startFrame + 0, kaminari, 255 );\r\n        setEffAlphaKey( startFrame + 90, kaminari, 255 );\r\n\r\n            -- ** 極限背景 ** --\r\n        haikei = entryEffectLife( startFrame + 0, haikeiEff, 90, 0x80, -1, 0, 0, 0 );  -- 極限背景\r\n        setEffMoveKey( startFrame + 0, haikei, 0, 0 , 0 );\r\n        setEffMoveKey( startFrame + 90, haikei, 0, 0 , 0 );\r\n        setEffScaleKey( startFrame + 0, haikei, 1.0, 1.0 );\r\n        setEffScaleKey( startFrame + 90, haikei, 1.0, 1.0 );\r\n        setEffRotateKey( startFrame + 0, haikei, 0 );\r\n        setEffRotateKey( startFrame + 90, haikei, 0 );\r\n        setEffAlphaKey( startFrame + 0, haikei, 255 );\r\n        setEffAlphaKey( startFrame + 90, haikei, 255 );\r\n    end\r\n    spname = entryEffectLife( startFrame + 0, offsetId, 90, 0x100, -1, 0, 0, offset_Y );-- 技名呼び出し・位置変更offset_Y\r\n    if (_IS_PLAYER_SIDE_ == 0) then\r\n\r\n        setEffScaleKey( startFrame + 0, spname, -1.0, 1.0); -- 敵側のみ\r\n        setEffScaleKey( startFrame + 90, spname, -1.0, 1.0); -- 敵側のみ\r\n\r\n    end\r\n    setEffReplaceTexture( spname, 5, 4 );-- 技名テクスチャ差し替え\r\n    \r\n    SE_CUTIN = playSe( startFrame + 0, 1035 );\r\n\r\n    -- ** 白背景 ** --\r\n    local fadeBgFrame = 96;\r\n    if (isDynamicBg == 1) then\r\n        fadeBgFrame = 94;\r\n    else end\r\n    entryFadeBg( startFrame + 0, 0, fadeBgFrame, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- 白　背景\r\n\r\n    -- ** 白フェード ** --\r\n    entryFade( startFrame + 0, 0, 2, 4, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n    entryFade( startFrame + 80, 6, 8, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n\r\n    -- ** 次の準備 ** --\r\n    return startFrame + 94;\r\nend\r\n\r\nfunction changeAnimeBySide(timing, battleChara, animeNo)\r\n    local fixedAnimeNo = animeNo\r\n\r\n    -- 敵側の場合のみアニメ番号を反転\r\n    if _IS_PLAYER_SIDE_ == 0 then\r\n        if animeNo >= 100 then\r\n            fixedAnimeNo = animeNo - 100;\r\n        else\r\n            fixedAnimeNo = animeNo + 100;\r\n        end\r\n    end\r\n\r\n    changeAnime(timing, battleChara, fixedAnimeNo)\r\nend",
+  "effects": [
+    {
+      "id": 159765,
+      "category": 5,
+      "name": "SSR人造人間16号&18号_デュアルデストロイド",
+      "pack_name": "sp_effect_b4_00231",
+      "scene_name": "ef_001",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_01"
+      ],
+      "ko_screen": false,
+      "primary": true,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00231.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231.lwf"
+        },
+        {
+          "name": "Images_kaki_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_baki.png"
+        },
+        {
+          "name": "Images_kaki_dogon.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_dogon.png"
+        },
+        {
+          "name": "Images_kaki_don.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_don.png"
+        },
+        {
+          "name": "Images_kaki_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_ga.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_3.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_c_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_c_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_e_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_e_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_f_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_f_0.png"
+        }
+      ]
+    },
+    {
+      "id": 159766,
+      "category": 5,
+      "name": "SSR人造人間16号&18号_デュアルデストロイド",
+      "pack_name": "sp_effect_b4_00231",
+      "scene_name": "ef_002",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_02"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00231.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231.lwf"
+        },
+        {
+          "name": "Images_kaki_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_baki.png"
+        },
+        {
+          "name": "Images_kaki_dogon.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_dogon.png"
+        },
+        {
+          "name": "Images_kaki_don.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_don.png"
+        },
+        {
+          "name": "Images_kaki_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_ga.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_3.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_c_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_c_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_e_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_e_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_f_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_f_0.png"
+        }
+      ]
+    },
+    {
+      "id": 159773,
+      "category": 5,
+      "name": "SSR人造人間16号&18号_デュアルデストロイド",
+      "pack_name": "sp_effect_b4_00231",
+      "scene_name": "ef_006",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_06"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00231.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231.lwf"
+        },
+        {
+          "name": "Images_kaki_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_baki.png"
+        },
+        {
+          "name": "Images_kaki_dogon.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_dogon.png"
+        },
+        {
+          "name": "Images_kaki_don.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_don.png"
+        },
+        {
+          "name": "Images_kaki_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_ga.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_3.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_c_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_c_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_e_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_e_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_f_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_f_0.png"
+        }
+      ]
+    },
+    {
+      "id": 159774,
+      "category": 5,
+      "name": "SSR人造人間16号&18号_デュアルデストロイド",
+      "pack_name": "sp_effect_b4_00231",
+      "scene_name": "ef_007",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_07"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00231.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231.lwf"
+        },
+        {
+          "name": "Images_kaki_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_baki.png"
+        },
+        {
+          "name": "Images_kaki_dogon.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_dogon.png"
+        },
+        {
+          "name": "Images_kaki_don.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_don.png"
+        },
+        {
+          "name": "Images_kaki_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_ga.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_3.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_c_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_c_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_e_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_e_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_f_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_f_0.png"
+        }
+      ]
+    },
+    {
+      "id": 159767,
+      "category": 5,
+      "name": "SSR人造人間16号&18号_デュアルデストロイド",
+      "pack_name": "sp_effect_b4_00231",
+      "scene_name": "ef_003",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_03"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00231.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231.lwf"
+        },
+        {
+          "name": "Images_kaki_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_baki.png"
+        },
+        {
+          "name": "Images_kaki_dogon.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_dogon.png"
+        },
+        {
+          "name": "Images_kaki_don.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_don.png"
+        },
+        {
+          "name": "Images_kaki_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_ga.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_3.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_c_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_c_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_e_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_e_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_f_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_f_0.png"
+        }
+      ]
+    },
+    {
+      "id": 159769,
+      "category": 5,
+      "name": "SSR人造人間16号&18号_デュアルデストロイド",
+      "pack_name": "sp_effect_b4_00231",
+      "scene_name": "ef_004",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_04"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00231.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231.lwf"
+        },
+        {
+          "name": "Images_kaki_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_baki.png"
+        },
+        {
+          "name": "Images_kaki_dogon.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_dogon.png"
+        },
+        {
+          "name": "Images_kaki_don.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_don.png"
+        },
+        {
+          "name": "Images_kaki_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_ga.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_3.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_c_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_c_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_e_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_e_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_f_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_f_0.png"
+        }
+      ]
+    },
+    {
+      "id": 159771,
+      "category": 5,
+      "name": "SSR人造人間16号&18号_デュアルデストロイド",
+      "pack_name": "sp_effect_b4_00231",
+      "scene_name": "ef_005",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_05"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00231.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231.lwf"
+        },
+        {
+          "name": "Images_kaki_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_baki.png"
+        },
+        {
+          "name": "Images_kaki_dogon.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_dogon.png"
+        },
+        {
+          "name": "Images_kaki_don.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_don.png"
+        },
+        {
+          "name": "Images_kaki_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_ga.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_3.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_c_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_c_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_e_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_e_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_f_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_f_0.png"
+        }
+      ]
+    },
+    {
+      "id": 159768,
+      "category": 5,
+      "name": "SSR人造人間16号&18号_デュアルデストロイド",
+      "pack_name": "sp_effect_b4_00231",
+      "scene_name": "ef_003r",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_03r"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00231.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231.lwf"
+        },
+        {
+          "name": "Images_kaki_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_baki.png"
+        },
+        {
+          "name": "Images_kaki_dogon.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_dogon.png"
+        },
+        {
+          "name": "Images_kaki_don.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_don.png"
+        },
+        {
+          "name": "Images_kaki_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_ga.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_3.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_c_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_c_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_e_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_e_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_f_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_f_0.png"
+        }
+      ]
+    },
+    {
+      "id": 159770,
+      "category": 5,
+      "name": "SSR人造人間16号&18号_デュアルデストロイド",
+      "pack_name": "sp_effect_b4_00231",
+      "scene_name": "ef_004r",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_04r"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00231.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231.lwf"
+        },
+        {
+          "name": "Images_kaki_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_baki.png"
+        },
+        {
+          "name": "Images_kaki_dogon.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_dogon.png"
+        },
+        {
+          "name": "Images_kaki_don.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_don.png"
+        },
+        {
+          "name": "Images_kaki_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_ga.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_3.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_c_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_c_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_e_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_e_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_f_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_f_0.png"
+        }
+      ]
+    },
+    {
+      "id": 159772,
+      "category": 5,
+      "name": "SSR人造人間16号&18号_デュアルデストロイド",
+      "pack_name": "sp_effect_b4_00231",
+      "scene_name": "ef_005r",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [
+        "SP_05r"
+      ],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b4_00231.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b4_00231.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231.lwf"
+        },
+        {
+          "name": "Images_kaki_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_baki.png"
+        },
+        {
+          "name": "Images_kaki_dogon.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_dogon.png"
+        },
+        {
+          "name": "Images_kaki_don.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_don.png"
+        },
+        {
+          "name": "Images_kaki_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/Images_kaki_ga.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_a_3.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_b_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_b_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_c_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_c_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_1.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_d_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_d_2.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_e_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_e_0.png"
+        },
+        {
+          "name": "sp_effect_b4_00231_f_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b4_00231/en/sp_effect_b4_00231_f_0.png"
+        }
+      ]
+    },
+    {
+      "id": 1504,
+      "category": 1,
+      "name": "必殺技共通",
+      "pack_name": "battle_150000",
+      "scene_name": "ef_005",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_150000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000.lwf"
+        },
+        {
+          "name": "battle_150000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-1.png"
+        },
+        {
+          "name": "battle_150000-2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-2.png"
+        },
+        {
+          "name": "card_1000010_character.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_character.png"
+        },
+        {
+          "name": "card_1000010_effect.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_effect.png"
+        },
+        {
+          "name": "card_1000010_sp_cutin_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_cutin_1.png"
+        },
+        {
+          "name": "card_1000010_sp_name.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_name.png"
+        },
+        {
+          "name": "card_1000010_sp_phrase.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_phrase.png"
+        },
+        {
+          "name": "Images_ef_sp_phrase_bar.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/Images_ef_sp_phrase_bar.png"
+        }
+      ]
+    },
+    {
+      "id": 906,
+      "category": 1,
+      "name": "集中線",
+      "pack_name": "battle_90000",
+      "scene_name": "ef_007",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_90000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_90000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_90000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/battle_90000.lwf"
+        },
+        {
+          "name": "battle_90000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/battle_90000-1.png"
+        },
+        {
+          "name": "Images_ef_ryusen_angle_wh_01.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_angle_wh_01.png"
+        },
+        {
+          "name": "Images_ef_ryusen_angle_wh_02.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_angle_wh_02.png"
+        },
+        {
+          "name": "Images_ef_ryusen_wh.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_wh.png"
+        },
+        {
+          "name": "Images_ef_shuchu_wh.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_shuchu_wh.png"
+        }
+      ]
+    },
+    {
+      "id": 190006,
+      "category": 5,
+      "name": "汎用文字_ゴゴゴゴゴ",
+      "pack_name": "sp_effect_a0_00003",
+      "scene_name": "ef_001",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_a0_00003.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_a0_00003.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_a0_00003.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-a/main/assets/ingame/battle/sp_effect/sp_effect_a0_00003/en/sp_effect_a0_00003.lwf"
+        },
+        {
+          "name": "Images_drawtext_go.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-a/main/assets/ingame/battle/sp_effect/sp_effect_a0_00003/en/Images_drawtext_go.png"
+        },
+        {
+          "name": "Images_drawtext_go2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-a/main/assets/ingame/battle/sp_effect/sp_effect_a0_00003/en/Images_drawtext_go2.png"
+        }
+      ]
+    },
+    {
+      "id": 155520,
+      "category": 5,
+      "name": "ケフラ_ギガンティッククラッシュ",
+      "pack_name": "sp_effect_b1_00110",
+      "scene_name": "ef_003_front",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/sp_effect_b1_00110.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/sp_effect_b1_00110.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "sp_effect_b1_00110.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b1_00110/sp_effect_b1_00110.lwf"
+        },
+        {
+          "name": "sp_effect_b1_00110_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b1_00110/sp_effect_b1_00110_0.png"
+        },
+        {
+          "name": "sp_effect_b1_00110_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b1_00110/sp_effect_b1_00110_1.png"
+        },
+        {
+          "name": "sp_effect_b1_00110_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b1_00110/sp_effect_b1_00110_2.png"
+        },
+        {
+          "name": "sp_effect_b1_00110_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b1_00110/sp_effect_b1_00110_3.png"
+        },
+        {
+          "name": "sp_effect_b1_00110_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b1_00110/sp_effect_b1_00110_4.png"
+        },
+        {
+          "name": "sp_effect_b1_00110_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b1_00110/sp_effect_b1_00110_5.png"
+        },
+        {
+          "name": "sp_effect_b1_00110_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b1_00110/sp_effect_b1_00110_6.png"
+        },
+        {
+          "name": "sp_effect_b1_00110_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b1_00110/sp_effect_b1_00110_7.png"
+        },
+        {
+          "name": "sp_effect_b1_00110_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b1_00110/sp_effect_b1_00110_8.png"
+        },
+        {
+          "name": "sp_effect_b1_00110_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-spfx-b/main/assets/ingame/battle/sp_effect/sp_effect_b1_00110/sp_effect_b1_00110_9.png"
+        }
+      ]
+    },
+    {
+      "id": 1505,
+      "category": 1,
+      "name": "必殺技共通",
+      "pack_name": "battle_150000",
+      "scene_name": "ef_006",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_150000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000.lwf"
+        },
+        {
+          "name": "battle_150000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-1.png"
+        },
+        {
+          "name": "battle_150000-2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-2.png"
+        },
+        {
+          "name": "card_1000010_character.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_character.png"
+        },
+        {
+          "name": "card_1000010_effect.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_effect.png"
+        },
+        {
+          "name": "card_1000010_sp_cutin_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_cutin_1.png"
+        },
+        {
+          "name": "card_1000010_sp_name.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_name.png"
+        },
+        {
+          "name": "card_1000010_sp_phrase.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_phrase.png"
+        },
+        {
+          "name": "Images_ef_sp_phrase_bar.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/Images_ef_sp_phrase_bar.png"
+        }
+      ]
+    },
+    {
+      "id": 1507,
+      "category": 1,
+      "name": "必殺技共通",
+      "pack_name": "battle_150000",
+      "scene_name": "ef_008",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_150000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000.lwf"
+        },
+        {
+          "name": "battle_150000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-1.png"
+        },
+        {
+          "name": "battle_150000-2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-2.png"
+        },
+        {
+          "name": "card_1000010_character.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_character.png"
+        },
+        {
+          "name": "card_1000010_effect.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_effect.png"
+        },
+        {
+          "name": "card_1000010_sp_cutin_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_cutin_1.png"
+        },
+        {
+          "name": "card_1000010_sp_name.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_name.png"
+        },
+        {
+          "name": "card_1000010_sp_phrase.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_phrase.png"
+        },
+        {
+          "name": "Images_ef_sp_phrase_bar.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/Images_ef_sp_phrase_bar.png"
+        }
+      ]
+    },
+    {
+      "id": 1575,
+      "category": 1,
+      "name": "必殺技用（回避）_回避テロップ",
+      "pack_name": "battle_152000",
+      "scene_name": "ef_001",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_152000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_152000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_152000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_152000/battle_152000.lwf"
+        },
+        {
+          "name": "battle_152000_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_152000/battle_152000_0.png"
+        }
+      ]
+    },
+    {
+      "id": 1657,
+      "category": 1,
+      "name": "細い黒集中線",
+      "pack_name": "battle_90003",
+      "scene_name": "ef_001",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_90003.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_90003.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_90003.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90003/battle_90003.lwf"
+        },
+        {
+          "name": "Images_ef_shuchu_bk.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90003/Images_ef_shuchu_bk.png"
+        }
+      ]
+    },
+    {
+      "id": 10005,
+      "category": 0,
+      "name": "ガッ",
+      "pack_name": "comic_text_10000",
+      "scene_name": "ef_006",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/comic_text_10000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/comic_text_10000.usm",
+      "has_movie": false,
+      "available": false,
+      "files": []
+    }
+  ],
+  "audio_urls": {
+    "se:1035": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1035.wav",
+    "se:1036": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1036.wav",
+    "se:1018": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1018.wav",
+    "se:1021": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1021.wav",
+    "se:1022": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1022.wav",
+    "se:1042": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1042.wav",
+    "se:1023": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1023.wav",
+    "se:1024": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1024.wav",
+    "se:1054": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_1054.wav",
+    "se:9": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_9.wav"
+  }
+}

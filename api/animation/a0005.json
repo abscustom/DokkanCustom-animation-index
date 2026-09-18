@@ -1,0 +1,2359 @@
+{
+  "script_name": "a0005",
+  "script_type": "attack low",
+  "relative_script_path": "attack_low/a0005.lua",
+  "script_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/lua/ab_script/attack_low/a0005.lua",
+  "max_frame_hint": 72,
+  "lua_source": "print (\"[lua]exec a0005\");\r\n\r\nATK_01 = 26\r\nATK_02 = ATK_01+30\r\nATK_03 = ATK_02+35\r\nATK_END = ATK_03+45\r\n\r\nENABLE_AUTO_TIME_STRETCH(0.9);\r\n\r\n--リッチ化ヒットエフェクト\r\nfunction shockEffect(flame,pra,tag1,tag2,x,y)\r\n\tshock01 = entryEffectLife( flame,  55, 8,  pra,  tag1,  tag2,  x,  y);\r\n\tsetEffScaleKey(flame + 0,shock01,0.7, 0.7);\r\n\tsetEffAlphaKey(flame + 0,shock01,255);\r\n\tsetEffAlphaKey(flame + 4,shock01,255);\r\n\tsetEffAlphaKey(flame + 8,shock01,0);\r\n\tshock02 = entryEffectLife( flame+4,  56, 6, pra,  tag1,  tag2,  x,  y);\r\n\tsetEffScaleKey(flame + 4,shock02,0.7, 0.7);\r\n\tsetEffAlphaKey(flame + 4,shock02,255);\r\n\tsetEffAlphaKey(flame + 8,shock02,255);\r\n\tsetEffAlphaKey(flame + 10,shock02,0);\r\n \r\n end\r\n\r\n-- 回避カウンター時、カットイン前のフレームで味方キャラが表示されるように (ISHINKI-28854)\r\nsetDisp(0, 1, 1);\r\n\r\nif ((_IS_CRITICAL_ == 1) ) then --会心の場合\r\n\r\nentryFadeBg( 0, 30, 101, 10, 10, 10, 10, 180);          -- ベース暗め　背景\r\nshuchusen = entryEffectLife( ATK_01, 906, 65, 0x00,  -1, 0,  0,  0);   -- 集中線\r\nsetEffScaleKey( ATK_01, shuchusen, 1.0, 1.0);\r\nkaisinn = entryEffect( ATK_03+34, 1110, 0x80,      -1,  0,  0,  0);   -- 会心の最後のエフェクト\r\n\r\nelse\r\n\r\nend\r\n\r\n\r\n-- ズーム許可\r\nsetEnvZoomEnable(0, 1);\r\n\r\n-- 味方登場\r\n--                f  eid,life, attr, tgt, tag,  x, y\r\nchangeAnime( 0,  0,  3);               -- モーション（ダッシュ）\r\nsetMoveKey( 0,   0, -700,  0,   0);   -- 画面外\r\nsetMoveKey( 7,   0, -200, 30,   0);   -- 中央に近づく\r\nstopBgScroll(15, 45);\r\n-- 敵登場\r\nsetLastPosKey( 0, 1);\r\nsetLastPosKey( 10, 1);\r\n-- setMoveKey( 0,   1,  800,  50,   0);      -- 画面外\r\n-- setMoveKey( 10,  1,  800,  100,   0);      --\r\nchangeAnime( 0,  1,    101);               -- モーション(立ち)\r\nsetMoveKey( 20,  1,  180,  100,   0);      -- 画面中央\r\n\r\n-- ** 音 ** --\r\n--向かっていく\r\nSE001 = playSeVer2( 0, 1117, \"\", 36, 0, 10, -1);\r\nsetSeVolumeByWorkId( 0, SE001, 63 );\r\n\r\n\r\n------------------------------------------------------\r\n-- 回避\r\n------------------------------------------------------\r\n\r\nif(_IS_DODGE_ == 1) then\r\n\r\nSP_dodge = 20; --エンドフェイズのフレーム数を置き換える\r\n\r\nplaySe( SP_dodge-12, 1042);\r\n\r\nspeff = entryEffectUnpausable(  SP_dodge-12,   1504,   0x100,     -1,  0,  0,  -350);   -- eff_005 (カットイン)\r\nsetEffReplaceTexture( speff, 3, 6);                           -- カットイン差し替え\r\n\r\n\r\nkaihi = entryEffectUnpausable(  SP_dodge,   1575,  0x100,     -1,  0,  0,  350);   -- 回避の文字表示\r\n\r\n\tif (_IS_PLAYER_SIDE_ == 1) then\r\n\r\n\t\tsetEffScaleKey( SP_dodge, kaihi, 1.0, 1.0);\r\n\r\n\telse\r\n\r\n\t\tsetEffScaleKey( SP_dodge, kaihi, -1.0, 1.0);\r\n\r\n\tend\r\n\r\nsetEffAlphaKey( SP_dodge, kaihi, 255);\r\n\r\npauseAll( SP_dodge, 67);\r\n\r\nentryFade( SP_dodge+5, 4,  7, 4, fcolor_r, fcolor_g, fcolor_b, 255);     -- white fade\r\nsetMoveKey(  SP_dodge+5, 0, 75,  100,  0);-- 中央位置から\r\nsetMoveKey(  SP_dodge+9, 0, -1000,  0,   0);-- 中央位置から\r\n--setDisp( SP_dodge+5, 0, 0);\r\n\r\nendPhase(SP_dodge+10);\r\ndo return end\r\nelse end\r\n\r\nsetMoveKey( 25,  0, 75,  100,   0);      -- 画面中央 ＆ 元サイズ\r\n\r\n-------------------------------------------------------\r\n-----------------------------------------------------\r\nkame_flag = 0x00;\r\nif ((_IS_GUARD_ == 1) or (_IS_FINISH_SPECIAL_ONLY_ == 1)) then\r\n\t\t-----------------------\r\n\r\nsetEnvZoomEnable(25, 0);\r\nryusen = entryEffectLife( ATK_01, 71,  60,  0x80,  -1,  0,  0,  0);\r\nsetEffScaleKey(ATK_01, ryusen, 1.0, 1.4)\r\nsetEffBlendColor(ATK_01, ryusen, 1, 1,1,1,1);\r\n\r\n-- 攻撃\r\nentryFadeBg( ATK_01, 5, 10, 5, 0,  0,  0, 80);\r\n\r\nchangeAnime( ATK_01,   0, 9);\r\nsetShake( ATK_01, 10, 20);\r\nSE1=playSe( ATK_01,1006);--SE\r\nsetSeVolume( ATK_01,1006, 70 );\r\nentryEffect( ATK_01,   23,   0x40,   1,  0,-100,  0);\r\npauseAll(ATK_01+1,5);\r\n--Eダメージ\r\nchangeAnime( ATK_01,  1,   104);-- モーション\r\nsetDamage( ATK_01+1, 1, 0);  -- ダメージ振動等\r\n\r\nsetMoveKey( ATK_01+6,  1,  180,  100,   0);      -- 画面中央\r\nsetMoveKey( ATK_01+6,  0, 75,  100,   0);      -- 画面中央 ＆ 元サイズ\r\n--移動\r\nsetMoveKey( ATK_01+10, 0, -200,  50,  0);-- 中央位置から\r\nsetMoveKey( ATK_01+8, 1, 700,  100,  0);-- 中央位置から\r\n\r\n\r\n--突っ込む\r\nchangeAnime( ATK_01+9,   0, 0);\r\nsetMoveKey( ATK_01+25, 0, -230,  0,   0);-- 中央位置から\r\n\r\n------------------------------------------\r\n--移動\r\nchangeAnime( ATK_02,   0, 3);\r\nsetMoveKey( ATK_02+10, 0, 70,  -80,  0);-- 中央位置から\r\n\r\nchangeAnime( ATK_02,   1, 100);\r\nsetMoveKey( ATK_02+4, 1, 700,  100,  0);-- 中央位置から\r\nsetMoveKey( ATK_02+5, 1, 700,  0,  0);-- 中央位置から\r\nsetMoveKey( ATK_02+9, 1, 180,  -80,  0);-- 中央位置から\r\n\r\n-- 攻撃\r\nchangeAnime( ATK_02+8,   0, 12);\r\nSE2=playSe( ATK_02+8,1007);--SE\r\nsetSeVolume( ATK_02+8,1007, 70 );\r\nentryEffect( ATK_02+8, 23,  0x40,    1,  0,-100,  0);\r\n--ダメージ\r\nchangeAnime( ATK_02+8, 1,  104);-- モーション\r\nsetDamage( ATK_02+9, 1, 0);  -- ダメージ振動等\r\npauseAll(ATK_02+9,5);\r\n\r\n--移動\r\nsetMoveKey( ATK_02+14, 1, 180,  -80,  0);-- 中央位置から\r\nsetMoveKey( ATK_02+14, 0, 70,  -80,  0);-- 中央位置から\r\n\r\nsetMoveKey( ATK_02+17, 1, 700,  0,  0);-- 中央位置から\r\nsetMoveKey( ATK_02+16, 0, -200,  -30,  0);-- 中央位置から\r\n\r\n--突っ込む\r\nchangeAnime( ATK_02+17,   0, 0);\r\nsetMoveKey( ATK_02+30, 0, -230,  0,   0);-- 中央位置から\r\n\r\n------------------------------------------\r\n--移動\r\nchangeAnime( ATK_03,   0, 3);\r\n\r\nchangeAnime( ATK_03,   1, 100);\r\n\r\n--移動\r\nsetMoveKey( ATK_03, 1, 700,  0,  0);-- 中央位置から\r\nsetMoveKey( ATK_03, 0, -230,  -30,  0);-- 中央位置から\r\n\r\nsetMoveKey( ATK_03+5, 0, -80,  0,   0);-- 中央位置から\r\nsetMoveKey( ATK_03+5, 1, 80,  0,   0);-- 中央位置から\r\n\r\nsetEnvZoomEnable(ATK_03+4, 1);\r\nchangeAnime( ATK_03+3,   0, 9);\r\nSE3=playSe( ATK_03+5,1006);--SE\r\nsetSeVolume( ATK_03+5,1006, 70 );\r\nstopSe( ATK_03+5, SE1, 6 );\r\n\r\nentryEffect( ATK_03+5,   23,   0x40,     1,  0,-100,  0);\r\n\r\n--Eダメージ\r\nchangeAnime( ATK_03+6,  1,   104);-- モーション\r\n\r\n--攻撃\r\nchangeAnime( ATK_03+10,   0, 10);\r\n--entryEffect( ATK_03+10,   23,   0x40,    1,  0,-100,  0);\r\nSE4=playSe( ATK_03+10,1006);--SE\r\nsetSeVolume( ATK_03+10,1006, 70 );\r\nstopSe( ATK_03+10, SE2, 6 );\r\n\r\nchangeAnime( ATK_03+14,   0, 12);\r\nsetShake( ATK_03+14, 10, 20);\r\nSE5=playSe( ATK_03+14,1007);--SE\r\nsetSeVolume( ATK_03+14,1007, 70 );\r\nstopSe( ATK_03+14, SE3, 6 );\r\n\r\nentryEffect( ATK_03+14,   23,   0x40,     1,  0,-100,  0);\r\n\r\n--攻撃\r\nchangeAnime( ATK_03+18,   0, 13);\r\n--entryEffect( ATK_03+18,   23,   0x40,    1,  0,-100,  0);\r\nSE6=playSe( ATK_03+18,1007);--SE\r\nsetSeVolume( ATK_03+18,1007, 70 );\r\nstopSe( ATK_03+18, SE4, 6 );\r\n\r\nchangeAnime( ATK_03+21,   0, 9);\r\nsetShake( ATK_03+21, 10, 20);\r\nSE7=playSe( ATK_03+21,1006);--SE\r\nsetSeVolume( ATK_03+21,1006, 70 );\r\nstopSe( ATK_03+21, SE5, 6 );\r\n--entryEffect( ATK_03+21,   23,   0x40,    1,  0,-100,  0);\r\n\r\n--攻撃\r\nchangeAnime( ATK_03+25,   0, 12);\r\nentryEffect( ATK_03+25,   23,   0x40,    1,  0,-100,  0);\r\nSE8=playSe( ATK_03+25,1007);--SE\r\nsetSeVolume( ATK_03+25,1007, 70 );\r\nstopSe( ATK_03+21, SE6, 6 );\r\n\r\nchangeAnime( ATK_03+29, 0, 10);\r\nsetShake( ATK_03+29, 10, 20);\r\nSE9=playSe( ATK_03+29,1007);--SE\r\nsetSeVolume( ATK_03+29,1007, 70 );\r\nstopSe( ATK_03+29, SE7, 6 );\r\n\r\nentryEffect( ATK_03+29,  23,   0x40,    1,  0,-100,  0);\r\n\r\n--Eダメージ\r\nsetDamage( ATK_03+30, 1, 0);  -- ダメージ振動等\r\n\r\n--P ぱんち\r\nchangeAnime( ATK_03+34, 0,  13);  -- 蹴り\r\nplaySe( ATK_03+34, 1008);--SE\r\nsetSeVolume( ATK_03+34,1008, 70 );\r\n--entryEffect( ATK_03+34,   23,   0x40,    1,  0,-100,  0);\r\ndealDamage( ATK_03+34);\r\n----------------------------\r\nelse\r\n\r\nsetEnvZoomEnable(25, 0);\r\nryusen = entryEffectLife( ATK_01, 71,  60,  0x80,  -1,  0,  0,  0);\r\nsetEffScaleKey(ATK_01, ryusen, 1.0, 1.4)\r\nsetEffBlendColor(ATK_01, ryusen, 1, 1,1,1,1);\r\n\r\n-- 攻撃\r\nentryFadeBg( ATK_01, 5, 10, 5, 0,  0,  0, 80);\r\n\r\nchangeAnime( ATK_01,   0, 9);\r\nsetShake( ATK_01, 10, 20);\r\n-- SE1=playSe( ATK_01,1000);--SE\r\n-- setSeVolume( ATK_01,1000, 70 );\r\n\r\nhit01 = entryEffectLife(  ATK_01+1,  64,  10,  0x40,  1,   0,  0,  0);\r\nsetEffScaleKey(ATK_01+1, hit01, 1.2, 1.2);\r\nsetEffAlphaKey(ATK_01+1, hit01,255);\r\nsetEffAlphaKey(ATK_01+1 + 10, hit01, 0);\r\n\r\nshockEffect( ATK_01+1,   0,  1,   0,  0,  0);\r\n-- shuchusen01 = entryEffectLife( ATK_01+1,  70,  2,  0,  -1,  0,  0,  0);--集中線\r\n-- setEffScaleKey( ATK_01+1, shuchusen01, 1.0, 1.2);\r\n\r\n--Eダメージ\r\nchangeAnime( ATK_01+1,  1,   106);-- モーション\r\nsetDamage( ATK_01+1, 1, 0);  -- ダメージ振動等\r\n\r\n--攻撃\r\nchangeAnime( ATK_01+4,   0, 10);\r\nhit02 = entryEffectLife(  ATK_01+4,  67,  10,  0x40,  1,   0,  0,  -20);\r\nsetEffScaleKey(ATK_01+4, hit02, 1.2, 1.2);\r\nsetEffAlphaKey(ATK_01+4, hit02,255);\r\nsetEffAlphaKey(ATK_01+4 + 10, hit02, 0);\r\n\r\n-- SE2=playSe( ATK_01+4,1000);--SE\r\n-- setSeVolume( ATK_01+4,1000, 70 );\r\n\r\nchangeAnime( ATK_01+6,   0, 9);\r\nsetShake( ATK_01+6, 10, 20);\r\n-- SE3=playSe( ATK_01+6,1000);--SE\r\n-- setSeVolume( ATK_01+6,1000, 70 );\r\n-- stopSe( ATK_01+6, SE1, 6 );\r\n\r\nhit03 = entryEffectLife(  ATK_01+6,  61,  10,  0x40,  1,   0,  0,  0);\r\nsetEffScaleKey(ATK_01+6, hit03, 0.8, 0.8);\r\nsetEffAlphaKey(ATK_01+6, hit03,255);\r\nsetEffAlphaKey(ATK_01+6 + 10, hit03, 0);\r\n\r\nshockEffect( ATK_01+7,   0,  1,   0,  0,  0);\r\n-- shuchusen02 = entryEffectLife( ATK_01+7,  70,  2,  0,  -1,  0,  0,  0);--集中線\r\n-- setEffScaleKey( ATK_01+7, shuchusen02, 1.0, 1.2);\r\n\r\n--Eダメージ\r\nsetDamage( ATK_01+7, 1, 0);  -- ダメージ振動等\r\n\r\n--攻撃\r\nchangeAnime( ATK_01+10,   0, 10);\r\n\r\nhit04 = entryEffectLife(  ATK_01+10,  65,  10,  0x40,  1,   0,  0,  -10);\r\nsetEffScaleKey(ATK_01+10, hit04, 1.4, 1.4);\r\nsetEffAlphaKey(ATK_01+10, hit04,255);\r\nsetEffAlphaKey(ATK_01+10 + 10, hit04, 0);\r\n\r\n-- SE4=playSe( ATK_01+10,1000);--SE\r\n-- setSeVolume( ATK_01+10,1000, 70 );\r\n-- stopSe( ATK_01+10, SE2, 6 );\r\n\r\nsetMoveKey( ATK_01+15,  1,  180,  100,   0);      -- 画面中央\r\nsetMoveKey( ATK_01+15,  0, 70,  100,   0);      -- 画面中央 ＆ 元サイズ\r\n--移動\r\nsetMoveKey( ATK_01+20, 0, -200,  50,  0);-- 中央位置から\r\nsetMoveKey( ATK_01+18, 1, 700,  100,  0);-- 中央位置から\r\n\r\n--突っ込む\r\nchangeAnime( ATK_01+20,   0, 0);\r\nsetMoveKey( ATK_01+25, 0, -230,  0,   0);-- 中央位置から\r\n\r\n------------------------------------------\r\n--移動\r\nchangeAnime( ATK_02,   0, 3);\r\nsetMoveKey( ATK_02+10, 0, 70,  -80,  0);-- 中央位置から\r\n\r\nchangeAnime( ATK_02,   1, 100);\r\nsetMoveKey( ATK_02+4, 1, 700,  100,  0);-- 中央位置から\r\nsetMoveKey( ATK_02+5, 1, 700,  0,  0);-- 中央位置から\r\nsetMoveKey( ATK_02+9, 1, 180,  -80,  0);-- 中央位置から\r\n\r\n-- 攻撃\r\nchangeAnime( ATK_02+8,   0, 12);\r\n-- SE5=playSe( ATK_02+8,1001);--SE\r\n-- setSeVolume( ATK_02+8,1001, 70 );\r\n-- stopSe( ATK_02+8, SE3, 6 );\r\n\r\nhit05 = entryEffectLife(  ATK_02+8,  65,  10,  0x40,  1,   0,  0,  0);\r\nsetEffScaleKey(ATK_02+8, hit05, 1.4, 1.4);\r\nsetEffAlphaKey(ATK_02+8, hit05,255);\r\nsetEffAlphaKey(ATK_02+8 + 10, hit05, 0);\r\n\r\nshockEffect( ATK_02+8,   0,  1,   0,  0,  0);\r\n\r\n-- shuchusen03 = entryEffectLife( ATK_02+8,  70,  2,  0,  -1,  0,  0,  0);--集中線\r\n-- setEffScaleKey( ATK_02+8, shuchusen03, 1.0, 1.2);\r\n\r\n\r\n--ダメージ\r\nchangeAnime( ATK_02+8, 1,  106);-- モーション\r\nsetDamage( ATK_02+9, 1, 0);  -- ダメージ振動等\r\n\r\n\r\n-- 攻撃\r\nchangeAnime( ATK_02+11, 0, 13);\r\n-- SE6=playSe( ATK_02+11, 1001);--SE\r\n-- setSeVolume( ATK_02+11,1001, 70 );\r\n-- stopSe( ATK_02+11, SE4, 6 );\r\n\r\nhit06 = entryEffectLife(  ATK_02+11,  66,  10,  0x40,  1,   0,  0,  -15);\r\nsetEffScaleKey(ATK_02+11, hit06, 1.0, 1.0);\r\nsetEffAlphaKey(ATK_02+11, hit06,255);\r\nsetEffAlphaKey(ATK_02+11 + 10, hit06, 0);\r\n\r\nshockEffect( ATK_02+11,   0,  1,   0,  0,  0);\r\n-- shuchusen04 = entryEffectLife( ATK_02+11,  70,  2,  0,  -1,  0,  0,  0);--集中線\r\n-- setEffScaleKey( ATK_02+11, shuchusen04, 1.0, 1.2);\r\n\r\n--ダメージ\r\nsetDamage( ATK_02+12, 1, 0);  -- ダメージ振動等\r\n--entryFlashBg( ATK_02+12, 1, 255,  255,  255);\r\n\r\n\r\n-- 攻撃\r\nchangeAnime( ATK_02+16,   0, 12);\r\n-- SE7=playSe( ATK_02+16,1001);--SE\r\n-- setSeVolume( ATK_02+16,1001, 70 );\r\n-- stopSe( ATK_02+16, SE5, 6 );\r\n\r\nhit07 = entryEffectLife(  ATK_02+16,  67,  10,  0x40,  1,   0,  0,  0);\r\nsetEffScaleKey(ATK_02+16, hit07, 1.2, 1.2);\r\nsetEffAlphaKey(ATK_02+16, hit07,255);\r\nsetEffAlphaKey(ATK_02+16 + 10, hit07, 0);\r\n\r\n--ダメージ\r\nsetDamage( ATK_02+17, 1, 0);  -- ダメージ振動等\r\n\r\n-- 攻撃\r\nchangeAnime( ATK_02+20,   0, 13);\r\n-- SE8=playSe( ATK_02+20,1010);--SE\r\n-- setSeVolume( ATK_02+20,1010, 70 );\r\n-- stopSe( ATK_02+20, SE6, 6 );\r\n\r\nhit08 = entryEffectLife(  ATK_02+20,  67,  10,  0x40,  1,   0,  0,  -10);\r\nsetEffScaleKey(ATK_02+20, hit08, 1.2, 1.2);\r\nsetEffAlphaKey(ATK_02+20, hit08,255);\r\nsetEffAlphaKey(ATK_02+20 + 10, hit08, 0);\r\n\r\nshockEffect( ATK_02+20,   0,  1,   0,  0,  0);\r\n\r\n-- shuchusen05 = entryEffectLife( ATK_02+20,  70,  2,  0,  -1,  0,  0,  0);--集中線\r\n-- setEffScaleKey( ATK_02+20, shuchusen05, 1.0, 1.2);\r\n\r\n--ダメージ\r\nsetDamage( ATK_02+21, 1, 0);  -- ダメージ振動等\r\n\r\n\r\n--移動\r\nsetMoveKey( ATK_02+25, 1, 180,  -80,  0);-- 中央位置から\r\nsetMoveKey( ATK_02+25, 0, 70,  -80,  0);-- 中央位置から\r\n\r\nsetMoveKey( ATK_02+27, 1, 700,  0,  0);-- 中央位置から\r\nsetMoveKey( ATK_02+27, 0, -200,  -30,  0);-- 中央位置から\r\n\r\n--突っ込む\r\nchangeAnime( ATK_02+30,   0, 0);\r\nsetMoveKey( ATK_02+30, 0, -230,  0,   0);-- 中央位置から\r\n\r\n------------------------------------------\r\n--移動\r\nchangeAnime( ATK_03,   0, 3);\r\n\r\nchangeAnime( ATK_03,   1, 100);\r\n\r\n--移動\r\nsetMoveKey( ATK_03, 1, 700,  0,  0);-- 中央位置から\r\nsetMoveKey( ATK_03, 0, -230,  -30,  0);-- 中央位置から\r\n\r\nsetMoveKey( ATK_03+5, 0, -50,  0,   0);-- 中央位置から\r\nsetMoveKey( ATK_03+5, 1, 50,  0,   0);-- 中央位置から\r\n\r\nsetEnvZoomEnable(ATK_03+4, 1);\r\nchangeAnime( ATK_03+3,   0, 9);\r\n-- SE9=playSe( ATK_03+5,1000);--SE\r\n-- setSeVolume( ATK_03+5,1000, 70 );\r\n-- stopSe( ATK_03+5, SE7, 6 );\r\n\r\nentryKakimoji( ATK_03+3, 17,1,-1,0,-50,200);--ガガガガガガ\r\n\r\nhit09 = entryEffectLife(  ATK_03+5,  64,  10,  0x40,  1,   0,  0,  0);\r\nsetEffScaleKey(ATK_03+5, hit09, 1.2, 1.2);\r\nsetEffAlphaKey(ATK_03+5, hit09,255);\r\nsetEffAlphaKey(ATK_03+5 + 10, hit09, 0);\r\n\r\nshock03 = entryEffectLife( ATK_03+5,  55, 28,  0,   -1,  0,  0,0);\r\nsetEffScaleKey(ATK_03+5 + 0,shock03,0.8, 0.8);\r\nsetEffAlphaKey(ATK_03+5 + 0,shock03,255);\r\nsetEffAlphaKey(ATK_03+5 + 24,shock03,255);\r\nsetEffAlphaKey(ATK_03+5 + 28,shock03,0);\r\nshock04 = entryEffectLife( ATK_03+5+4,  56, 26, 0,   -1,  0,  0,0);\r\nsetEffScaleKey(ATK_03+5 + 4,shock04,0.8, 0.8);\r\nsetEffAlphaKey(ATK_03+5 + 4,shock04,255);\r\nsetEffAlphaKey(ATK_03+5 + 24,shock04,255);\r\nsetEffAlphaKey(ATK_03+5 + 26,shock04,0);\r\n\r\nshuchusen06 = entryEffectLife( ATK_03+5,  70,  2,  0,  -1,  0,  0,  0);--集中線\r\nsetEffScaleKey( ATK_03+5, shuchusen06, 1.0, 1.2);\r\n\r\n--Eダメージ\r\nchangeAnime( ATK_03+6,  1,   106);-- モーション\r\nsetDamage( ATK_03+6, 1, 0);  -- ダメージ振動等\r\n\r\n\r\n--攻撃\r\nchangeAnime( ATK_03+10,   0, 10);\r\nhit10 = entryEffectLife(  ATK_03+10,  62,  10,  0x40,  1,   0,  0,  -12);\r\nsetEffScaleKey(ATK_03+10, hit10, 0.7, 0.7);\r\nsetEffAlphaKey(ATK_03+10, hit10,255);\r\nsetEffAlphaKey(ATK_03+10 + 10, hit10, 0);\r\n\r\n-- SE10=playSe( ATK_03+10,1000);--SE\r\n-- setSeVolume( ATK_03+10,1000, 70 );\r\n-- stopSe( ATK_03+10, SE8, 6 );\r\n\r\nsetMoveKey( ATK_03+14, 0, -80,  0,   0);-- 中央位置から\r\nsetMoveKey( ATK_03+14, 1, 60,  0,   0);-- 中央位置から\r\n\r\nchangeAnime( ATK_03+14,   0, 12);\r\nsetShake( ATK_03+14, 10, 20);\r\n-- SE11=playSe( ATK_03+14,1001);--SE\r\n-- setSeVolume( ATK_03+14,1001, 70 );\r\n-- stopSe( ATK_03+14, SE9, 6 );\r\n\r\nhit11 = entryEffectLife(  ATK_03+14,  66,  10,  0x40,  1,   0,  0,  10);\r\nsetEffScaleKey(ATK_03+14, hit11, 1.0, 1.0);\r\nsetEffAlphaKey(ATK_03+14, hit11,255);\r\nsetEffAlphaKey(ATK_03+14 + 10, hit11, 0);\r\n\r\nshockEffect( ATK_03+14,   0,  -1,   0,  0,  0);\r\nshuchusen07 = entryEffectLife( ATK_03+14,  70,  2,  0,  -1,  0,  0,  0);--集中線\r\nsetEffScaleKey( ATK_03+14, shuchusen07, 1.0, 1.2);\r\n\r\n\r\n--Eダメージ\r\nsetDamage( ATK_03+14, 1, 0);  -- ダメージ振動等\r\n\r\nsetMoveKey( ATK_03+18, 0, -60,  0,   0);-- 中央位置から\r\nsetMoveKey( ATK_03+18, 1, 50,  0,   0);-- 中央位置から\r\n--攻撃\r\nchangeAnime( ATK_03+18,   0, 13);\r\nhit12 = entryEffectLife(  ATK_03+18,  65,  10,  0x40,  1,   0,  0,  -10);\r\nsetEffScaleKey(ATK_03+18, hit12, 1.4, 1.4);\r\nsetEffAlphaKey(ATK_03+18, hit12,255);\r\nsetEffAlphaKey(ATK_03+18 + 10, hit12, 0);\r\n\r\n\r\n-- SE12=playSe( ATK_03+18,1001);--SE\r\n-- setSeVolume( ATK_03+18,1001, 70 );\r\n-- stopSe( ATK_03+18, SE10, 6 );\r\n\r\nchangeAnime( ATK_03+21,   0, 9);\r\nsetShake( ATK_03+21, 10, 20);\r\n-- SE13=playSe( ATK_03+21,1000);--SE\r\n-- setSeVolume( ATK_03+21,1000, 70 );\r\n-- stopSe( ATK_03+21, SE11, 6 );\r\n\r\nhit13 = entryEffectLife(  ATK_03+21,  60,  10,  0x40,  1,   0,  0,  5);\r\nsetEffScaleKey(ATK_03+21, hit13, 0.7, 0.7);\r\nsetEffAlphaKey(ATK_03+21, hit13,255);\r\nsetEffAlphaKey(ATK_03+21 + 10, hit13, 0);\r\n\r\nshockEffect( ATK_03+21,   0,  -1,   0,  0,  0);\r\nshuchusen08 = entryEffectLife( ATK_03+21,  70,  2,  0,  -1,  0,  0,  0);--集中線\r\nsetEffScaleKey( ATK_03+21, shuchusen08, 1.0, 1.2);\r\n\r\n\r\n--Eダメージ\r\nsetDamage( ATK_03+21, 1, 0);  -- ダメージ振動等\r\n\r\nsetMoveKey( ATK_03+21, 0, -50,  0,   0);-- 中央位置から\r\nsetMoveKey( ATK_03+21, 1, 50,  0,   0);-- 中央位置から\r\n--攻撃\r\nchangeAnime( ATK_03+25,   0, 12);\r\nhit14 = entryEffectLife(  ATK_03+25,  62,  10,  0x40,  1,   0,  0,  0);\r\nsetEffScaleKey(ATK_03+25, hit14, 0.8, 0.8);\r\nsetEffAlphaKey(ATK_03+25, hit14,255);\r\nsetEffAlphaKey(ATK_03+25 + 10, hit14, 0);\r\n\r\n-- SE14=playSe( ATK_03+25,1001);--SE\r\n-- setSeVolume( ATK_03+25,1001, 70 );\r\n-- stopSe( ATK_03+25, SE12, 6 );\r\n\r\nchangeAnime( ATK_03+29,   0, 10);\r\nsetShake( ATK_03+29, 10, 20);\r\n-- SE15=playSe( ATK_03+29,1000);--SE\r\n-- setSeVolume( ATK_03+29,1000, 70 );\r\n-- stopSe( ATK_03+29, SE13, 6 );\r\n\r\nhit15 = entryEffectLife(  ATK_03+29,  64,  10,  0x40,  1,   0,  0,  -5);\r\nsetEffScaleKey(ATK_03+29, hit15, 1,0, 1.0);\r\nsetEffAlphaKey(ATK_03+29, hit15,255);\r\nsetEffAlphaKey(ATK_03+29 + 10, hit15, 0);\r\n\r\nshockEffect( ATK_03+29,   0,  -1,   0,  0,  0);\r\nshuchusen09 = entryEffectLife( ATK_03+29,  70,  2,  0,  -1,  0,  0,  0);--集中線\r\nsetEffScaleKey( ATK_03+29, shuchusen09, 1.0, 1.2);\r\n\r\n\r\n--Eダメージ\r\nsetDamage( ATK_03+30, 1, 0);  -- ダメージ振動等\r\n\r\n\r\n--P ぱんち\r\n\r\nchangeAnime( ATK_03+34, 0,  13);  -- 蹴り\r\nchangeAnime( ATK_03+35, 1,  108);  -- 吹っ飛び\r\n-- playSe( ATK_03+34, 1001);--SE\r\n-- setSeVolume( ATK_03+34,1001, 70 );\r\n-- stopSe( ATK_03+34, SE14, 6 );\r\n\r\nhit16 = entryEffectLife(  ATK_03+34,  60,  10,  0x40,  1,   0,  0,  -20);\r\nsetEffScaleKey(ATK_03+34, hit16, 1.0, 1.0);\r\nsetEffAlphaKey(ATK_03+34, hit16,255);\r\nsetEffAlphaKey(ATK_03+34 + 10, hit16, 0);\r\nentryEffectLife(  ATK_03+34,  55,  10,  0x40,  1,   0,  0,  -20);\r\n\r\n-- ** 音 ** --\r\n--連打グループ１\r\nSE002 = playSeVer2( 8, 1189, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( 8, SE002, 153 );\r\nSE003 = playSeVer2( 16, 1000, \"\", 0, 0, 0, -1);\r\nSE003_2 = playSeVer2( 20, 1059, \"\", 86, 0, 38, -1);\r\nsetSeVolumeByWorkId( 20, SE003_2, 32 );\r\nsetPitch( 20, SE003_2, -800 );\r\nsetTimeStretch( SE003_2, 0.47, 30, 4 );\r\nSE004 = playSeVer2( 20, 1000, \"\", 0, 0, 0, -1);\r\nSE005 = playSeVer2( 26, 1007, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( 26, SE005, 81 );\r\n\r\n--連打グループ２\r\nSE006 = playSeVer2( 50, 1189, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( 50, SE006, 153 );\r\nSE006_2 = playSeVer2( 56, 1059, \"\",118, 0, 34, -1);\r\nsetSeVolumeByWorkId( 56, SE006_2, 32 );\r\nsetPitch( 56, SE006_2, -800 );\r\nsetTimeStretch( SE006_2, 0.47, 30, 4 );\r\nSE007 = playSeVer2( 56, 1000, \"\", 0, 0, 0, -1);\r\nSE008 = playSeVer2( 56, 1001, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( 56, SE008, 72 );\r\nSE009 = playSeVer2( 64, 1000, \"\", 0, 0, 0, -1);\r\nSE010 = playSeVer2( 70, 1007, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( 70, SE010, 81 );\r\n\r\n--連打グループ３\r\nSE011 = playSeVer2( 78, 1189, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( 78, SE011, 141 );\r\nSE011_2 = playSeVer2( 86, 1059, \"\",150, 0, 38, -1);\r\nsetSeVolumeByWorkId( 86, SE011_2, 32 );\r\nsetPitch( 86, SE011_2, -800 );\r\nsetTimeStretch( SE011_2, 0.47, 30, 4 );\r\nSE012 = playSeVer2( 86, 1000, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( 86, SE012, 82 );\r\nSE013 = playSeVer2( 90, 1001, \"\", 0, 0, 0, -1);\r\nSE014 = playSeVer2( 100, 1000, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( 100, SE014, 81 );\r\nSE015 = playSeVer2( 106, 1006, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( 106, SE015, 85 );\r\nSE016 = playSeVer2( 112, 1000, \"\", 0, 0, 0, -1);\r\nSE017 = playSeVer2( 116, 1110, \"\", 0, 0, 0, -1);\r\nsetSeVolumeByWorkId( 116, SE017, 77 );\r\n\r\nsetDamage( ATK_03+34, 1, 0);  -- ダメージ振動等\r\n\r\npauseChara( ATK_03+34, 5);\r\ndealDamage( ATK_03+34);\r\n\r\n--[[\r\nsetMoveKey( ATK_03+39, 0, -80,  0,   0);-- 中央位置から\r\nsetMoveKey( ATK_03+39, 1, 80,  0,   0);-- 中央位置から\r\n--ふっとび移動\r\nsetMoveKey( ATK_03+45, 1, 230,  0,   0);      -- 中央位置から\r\nsetMoveKey( ATK_03+45, 0, -700,  0,  0);-- 中央位置から\r\n--]]\r\n\r\nend\r\n--------------------------------\r\n--------------------------------死亡\r\nkame_flag = 0x00;\r\n\r\nif (_IS_DEAD_ == 1) then\r\n    -- 死亡フェーズ (sys0002 / sys0003)\r\n\r\nATK_dead = ATK_03+34;\t\r\n        entryFade( ATK_dead, 5, 5, 17, 119,3,16,0); -- カット接続用\r\n   endPhase( ATK_dead+6);\r\n   \r\nelse\r\n-- 受け------------------------------------------\r\n-- 味方移動（画面外へ)\r\nnaname = entryEffectLife( ATK_03+37, 72, 30, 0x80,  -1,  0,  -500,  0); -- 流線斜め\r\nsetEffScaleKey(ATK_03+37, naname, 2,2);\r\nsetEffRotateKey(ATK_03+37, naname, -45);\r\n\r\nsetMoveKey( ATK_03+39, 0, -80,  0,   0);-- 中央位置から\r\nsetMoveKey( ATK_03+39, 1, 80,  0,   0);-- 中央位置から\r\n--ふっとび移動\r\nsetMoveKey( ATK_03+45, 1, 230,  0,   0);      -- 中央位置から\r\nsetMoveKey( ATK_03+45, 0, -700,  0,  0);-- 中央位置から\r\n\r\n\r\nsetMoveKey( ATK_END, 0, -700,  0,   0);      -- 画面外へ\r\nsetDisp( ATK_END, 0, 0);--味方非表示20170607\r\n\r\nsetMoveKey( ATK_END+37, 1, 250,  0,   0);      -- 吹っ飛び中\r\nchangeAnime( ATK_END+38, 1, 100);               -- モーション(立ち)\r\nsetMoveKey( ATK_END+48, 1, 100,  0,   0);      -- 敵画面中央へゆっくり戻す\r\n\r\nstopBgScroll(  ATK_END+38, 8);\r\n\r\nendPhase(ATK_END+48+20);\r\nend\r\n\r\n\r\nprint (\"[lua]exec a0005\");\r\n",
+  "common_source": "-- common.lua\r\n\r\nfunction showCardCutin(startFrame, isDynamicBg)\r\n    -- ** カードカットイン ** --\r\n    local cutinEffectId = 1507;\r\n\r\n    if (_SPECIAL_SKILL_LEVEL_ == 1) then\r\n        cutinEffectId = 1120;\r\n    elseif (_SPECIAL_SKILL_LEVEL_ == 2) then\r\n        cutinEffectId = 1121;\r\n    end\r\n\r\n    local speff = entryEffectLife( startFrame, cutinEffectId, 90, 0x100, -1, 0, 0, 0 );  -- カード\r\n    setEffReplaceTexture( speff, 1, 1 );\r\n    setEffReplaceTexture( speff, 2, 0 );  -- カード差し替え\r\n    setEffReplaceTexture( speff, 5, 4 );  -- 技名テクスチャ差し替え\r\n\r\n    -- ** 集中線 ** --\r\n    local shuchusen = entryEffectLife( startFrame + 0, 906, 90, 0x100, -1, 0, 0, 0 );  -- 集中線\r\n    setEffShake( startFrame + 0, shuchusen, 90, 20 );\r\n    setEffMoveKey( startFrame + 0, shuchusen, 0, 0 , 0 );\r\n    setEffMoveKey( startFrame + 90, shuchusen, 0, 0 , 0 );\r\n    setEffScaleKey( startFrame + 0, shuchusen, 1.6, 1.6 );\r\n    setEffScaleKey( startFrame + 90, shuchusen, 1.6, 1.6 );\r\n    setEffRotateKey( startFrame + 0, shuchusen, 0 );\r\n    setEffRotateKey( startFrame + 90, shuchusen, 0 );\r\n    setEffAlphaKey( startFrame + 0, shuchusen, 255 );\r\n    setEffAlphaKey( startFrame + 90, shuchusen, 255 );\r\n\r\n    -- ** 音 ** --\r\n    SE_CUTIN = playSe( startFrame + 0, 1035 );\r\n\r\n    -- ** 白背景 ** --\r\n    local fadeBgFrame = 96;\r\n    if (isDynamicBg == 1) then\r\n        fadeBgFrame = 94;\r\n    else end\r\n    entryFadeBg( startFrame + 0, 0, fadeBgFrame, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- 白　背景\r\n\r\n    -- ** 白フェード ** --\r\n    entryFade( startFrame + 0, 0, 2, 4, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n    entryFade( startFrame + 80, 6, 8, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n\r\n    -- ** 次の準備 ** --\r\n    return startFrame + 94;\r\nend\r\n\r\nfunction showCardCutinEx(startFrame, isDynamicBg)\r\n    -- ** カードカットイン ** --\r\n    local cutinEffectId = 1514;\r\n\r\n    if (_SPECIAL_SKILL_LEVEL_ == 1) then\r\n        cutinEffectId = 1127;\r\n    elseif (_SPECIAL_SKILL_LEVEL_ == 2) then\r\n        cutinEffectId = 1128;\r\n    end\r\n\r\n    local speff = entryEffectLife( startFrame, cutinEffectId, 90, 0x100, -1, 0, 0, 0 );  -- カード\r\n    setEffReplaceTexture( speff, 1, 1 );\r\n    setEffReplaceTexture( speff, 2, 0 );  -- カード差し替え\r\n    setEffReplaceTexture( speff, 5, 4 );  -- 技名テクスチャ差し替え\r\n\r\n    -- ** 集中線 ** --\r\n    local shuchusen = entryEffectLife( startFrame + 0, 906, 90, 0x100, -1, 0, 0, 0 );  -- 集中線\r\n    setEffShake( startFrame + 0, shuchusen, 90, 20 );\r\n    setEffMoveKey( startFrame + 0, shuchusen, 0, 0 , 0 );\r\n    setEffMoveKey( startFrame + 90, shuchusen, 0, 0 , 0 );\r\n    setEffScaleKey( startFrame + 0, shuchusen, 1.6, 1.6 );\r\n    setEffScaleKey( startFrame + 90, shuchusen, 1.6, 1.6 );\r\n    setEffRotateKey( startFrame + 0, shuchusen, 0 );\r\n    setEffRotateKey( startFrame + 90, shuchusen, 0 );\r\n    setEffAlphaKey( startFrame + 0, shuchusen, 255 );\r\n    setEffAlphaKey( startFrame + 90, shuchusen, 255 );\r\n\r\n    -- ** 音 ** --\r\n    SE_CUTIN = playSe( startFrame + 0, 1035 );\r\n\r\n    -- ** 白背景 ** --\r\n    local fadeBgFrame = 96;\r\n    if (isDynamicBg == 1) then\r\n        fadeBgFrame = 94;\r\n    else end\r\n    entryFadeBg( startFrame + 0, 0, fadeBgFrame, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- 白　背景\r\n\r\n    -- ** 白フェード ** --\r\n    entryFade( startFrame + 0, 0, 2, 4, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n    entryFade( startFrame + 80, 6, 8, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n\r\n    -- ** 次の準備 ** --\r\n    return startFrame + 94;\r\nend\r\n\r\nfunction showCardCutinOffset(startFrame, isDynamicBg,offset_Y)\r\n    -- ** カードカットイン ** --\r\n    local cutinEffectId = 1513;\r\n    local offsetId = 1512;\r\n\r\n    if (_SPECIAL_SKILL_LEVEL_ == 1) then\r\n        cutinEffectId = 3248;\r\n        offsetId = 3246;\r\n    elseif (_SPECIAL_SKILL_LEVEL_ == 2) then\r\n        cutinEffectId = 3252;\r\n        offsetId = 3250;\r\n    end\r\n\r\n    speff2 = entryEffectLife( startFrame + 0, cutinEffectId, 90, 0x100, -1, 0, 0, 0 );   -- カード\r\n\r\n    if (_IS_PLAYER_SIDE_ == 0) then\r\n\r\n        setEffScaleKey( startFrame + 0, speff2, -1.0, 1.0); -- 敵側のみ  \r\n        setEffScaleKey( startFrame + 90, speff2, -1.0, 1.0); -- 敵側のみ \r\n        \r\n    end\r\n    setEffReplaceTexture( speff2, 1, 1 );\r\n    setEffReplaceTexture( speff2, 2, 0 );-- カード差し替え\r\n    setEffReplaceTexture( speff2, 5, 4 );-- 技名テクスチャ差し替え\r\n\r\n    -- ** 放射線(黄) ** --\r\n    housha = entryEffectLife( startFrame + 0, 1511, 90, 0x100, -1, 0, 0, 0 );  --黄色放射\r\n    setEffMoveKey( startFrame + 0, housha, 0, 0 , 0 );\r\n    setEffMoveKey( startFrame + 90, housha, 0, 0 , 0 );\r\n    setEffScaleKey( startFrame + 0, housha, 1.0, 1.0 );\r\n    setEffScaleKey( startFrame + 90, housha, 1.0, 1.0 );\r\n    setEffRotateKey( startFrame + 0, housha, 0 );\r\n    setEffRotateKey( startFrame + 90, housha, 0 );\r\n    setEffAlphaKey( startFrame + 0, housha, 255 );\r\n    setEffAlphaKey( startFrame + 90, housha, 255 );\r\n\r\n    -- ** 集中線 ** --\r\n    shuchusen = entryEffectLife( startFrame + 0, 906, 90, 0x100, -1, 0, 0, 0 );  --集中線\r\n    setEffShake( startFrame + 0, shuchusen, 90, 20 );\r\n    setEffMoveKey( startFrame + 0, shuchusen, 0, 0 , 0 );\r\n    setEffMoveKey( startFrame + 90, shuchusen, 0, 0 , 0 );\r\n    setEffScaleKey( startFrame + 0, shuchusen, 1.6, 1.6 );\r\n    setEffScaleKey( startFrame + 90, shuchusen, 1.6, 1.6 );\r\n    setEffRotateKey( startFrame + 0, shuchusen, 0 );\r\n    setEffRotateKey( startFrame + 90, shuchusen, 0 );\r\n    setEffAlphaKey( startFrame + 0, shuchusen, 255 );\r\n    setEffAlphaKey( startFrame + 90, shuchusen, 255 );\r\n\r\n    if (_SPECIAL_SKILL_LEVEL_ > 0) then-- 極限時判定\r\n\r\n    local kaminariEff = 3247;-- 雷エフェクト\r\n    local haikeiEff = 3249;-- 極限背景\r\n    if (_SPECIAL_SKILL_LEVEL_ == 2) then\r\n        kaminariEff = 3251;\r\n        haikeiEff = 3253;\r\n    end\r\n        -- ** 雷エフェクト ** --\r\n        kaminari = entryEffectLife( startFrame + 0, kaminariEff, 90, 0x100, -1, 0, 0, 0 );  -- 雷エフェクト\r\n        setEffMoveKey( startFrame + 0, kaminari, 0, 0 , 0 );\r\n        setEffMoveKey( startFrame + 90, kaminari, 0, 0 , 0 );\r\n        setEffScaleKey( startFrame + 0, kaminari, 1.0, 1.0 );\r\n        setEffScaleKey( startFrame + 90, kaminari, 1.0, 1.0 );\r\n        setEffRotateKey( startFrame + 0, kaminari, 0 );\r\n        setEffRotateKey( startFrame + 90, kaminari, 0 );\r\n        setEffAlphaKey( startFrame + 0, kaminari, 255 );\r\n        setEffAlphaKey( startFrame + 90, kaminari, 255 );\r\n\r\n            -- ** 極限背景 ** --\r\n        haikei = entryEffectLife( startFrame + 0, haikeiEff, 90, 0x80, -1, 0, 0, 0 );  -- 極限背景\r\n        setEffMoveKey( startFrame + 0, haikei, 0, 0 , 0 );\r\n        setEffMoveKey( startFrame + 90, haikei, 0, 0 , 0 );\r\n        setEffScaleKey( startFrame + 0, haikei, 1.0, 1.0 );\r\n        setEffScaleKey( startFrame + 90, haikei, 1.0, 1.0 );\r\n        setEffRotateKey( startFrame + 0, haikei, 0 );\r\n        setEffRotateKey( startFrame + 90, haikei, 0 );\r\n        setEffAlphaKey( startFrame + 0, haikei, 255 );\r\n        setEffAlphaKey( startFrame + 90, haikei, 255 );\r\n    end\r\n    spname = entryEffectLife( startFrame + 0, offsetId, 90, 0x100, -1, 0, 0, offset_Y );-- 技名呼び出し・位置変更offset_Y\r\n    if (_IS_PLAYER_SIDE_ == 0) then\r\n\r\n        setEffScaleKey( startFrame + 0, spname, -1.0, 1.0); -- 敵側のみ\r\n        setEffScaleKey( startFrame + 90, spname, -1.0, 1.0); -- 敵側のみ\r\n\r\n    end\r\n    setEffReplaceTexture( spname, 5, 4 );-- 技名テクスチャ差し替え\r\n    \r\n    SE_CUTIN = playSe( startFrame + 0, 1035 );\r\n\r\n    -- ** 白背景 ** --\r\n    local fadeBgFrame = 96;\r\n    if (isDynamicBg == 1) then\r\n        fadeBgFrame = 94;\r\n    else end\r\n    entryFadeBg( startFrame + 0, 0, fadeBgFrame, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- 白　背景\r\n\r\n    -- ** 白フェード ** --\r\n    entryFade( startFrame + 0, 0, 2, 4, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n    entryFade( startFrame + 80, 6, 8, 0, fcolor_r, fcolor_g, fcolor_b, 255 );  -- white fade\r\n\r\n    -- ** 次の準備 ** --\r\n    return startFrame + 94;\r\nend\r\n\r\nfunction changeAnimeBySide(timing, battleChara, animeNo)\r\n    local fixedAnimeNo = animeNo\r\n\r\n    -- 敵側の場合のみアニメ番号を反転\r\n    if _IS_PLAYER_SIDE_ == 0 then\r\n        if animeNo >= 100 then\r\n            fixedAnimeNo = animeNo - 100;\r\n        else\r\n            fixedAnimeNo = animeNo + 100;\r\n        end\r\n    end\r\n\r\n    changeAnime(timing, battleChara, fixedAnimeNo)\r\nend",
+  "effects": [
+    {
+      "id": 23,
+      "category": 1,
+      "name": "ガード",
+      "pack_name": "battle_00000",
+      "scene_name": "ef_023",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": true,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00000/battle_00000.lwf"
+        },
+        {
+          "name": "battle_00000_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00000/battle_00000_0.png"
+        }
+      ]
+    },
+    {
+      "id": 70,
+      "category": 1,
+      "name": "リッチ化通常攻撃_集中線",
+      "pack_name": "battle_00003",
+      "scene_name": "ef_021",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00003.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003.lwf"
+        },
+        {
+          "name": "battle_00003_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_0.png"
+        },
+        {
+          "name": "battle_00003_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_1.png"
+        },
+        {
+          "name": "battle_00003_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_2.png"
+        },
+        {
+          "name": "battle_00003_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_3.png"
+        },
+        {
+          "name": "battle_00003_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_4.png"
+        },
+        {
+          "name": "battle_00003_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_5.png"
+        },
+        {
+          "name": "battle_00003_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_6.png"
+        },
+        {
+          "name": "battle_00003_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_7.png"
+        },
+        {
+          "name": "battle_00003_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_8.png"
+        },
+        {
+          "name": "battle_00003_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_9.png"
+        },
+        {
+          "name": "Images_s_0006_kaki_22.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0006_kaki_22.png"
+        },
+        {
+          "name": "Images_s_0009_kaki_19.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0009_kaki_19.png"
+        },
+        {
+          "name": "Images_s_0011_kaki_17.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0011_kaki_17.png"
+        },
+        {
+          "name": "Images_s_0025_kaki_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0025_kaki_3.png"
+        },
+        {
+          "name": "Images_text_ba.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ba.png"
+        },
+        {
+          "name": "Images_text_bachi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bachi.png"
+        },
+        {
+          "name": "Images_text_baki_2_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_.png"
+        },
+        {
+          "name": "Images_text_baki_2_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_1.png"
+        },
+        {
+          "name": "Images_text_baki_2_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_2.png"
+        },
+        {
+          "name": "Images_text_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki.png"
+        },
+        {
+          "name": "Images_text_bi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bi.png"
+        },
+        {
+          "name": "Images_text_bun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bun.png"
+        },
+        {
+          "name": "Images_text_dogaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogaga.png"
+        },
+        {
+          "name": "Images_text_dogo.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogo.png"
+        },
+        {
+          "name": "Images_text_doka.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doka.png"
+        },
+        {
+          "name": "Images_text_don_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_don_2.png"
+        },
+        {
+          "name": "Images_text_dou.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dou.png"
+        },
+        {
+          "name": "Images_text_doxun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doxun.png"
+        },
+        {
+          "name": "Images_text_dozu.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dozu.png"
+        },
+        {
+          "name": "Images_text_ga_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga_.png"
+        },
+        {
+          "name": "Images_text_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga.png"
+        },
+        {
+          "name": "Images_text_gaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gaga.png"
+        },
+        {
+          "name": "Images_text_gagaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gagaga.png"
+        },
+        {
+          "name": "Images_text_sha_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_1.png"
+        },
+        {
+          "name": "Images_text_sha_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_2.png"
+        },
+        {
+          "name": "Images_text_zun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_zun.png"
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "category": 1,
+      "name": "リッチ化通常攻撃_ヒットエフェクト衝撃波2",
+      "pack_name": "battle_00003",
+      "scene_name": "ef_006",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00003.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003.lwf"
+        },
+        {
+          "name": "battle_00003_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_0.png"
+        },
+        {
+          "name": "battle_00003_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_1.png"
+        },
+        {
+          "name": "battle_00003_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_2.png"
+        },
+        {
+          "name": "battle_00003_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_3.png"
+        },
+        {
+          "name": "battle_00003_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_4.png"
+        },
+        {
+          "name": "battle_00003_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_5.png"
+        },
+        {
+          "name": "battle_00003_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_6.png"
+        },
+        {
+          "name": "battle_00003_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_7.png"
+        },
+        {
+          "name": "battle_00003_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_8.png"
+        },
+        {
+          "name": "battle_00003_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_9.png"
+        },
+        {
+          "name": "Images_s_0006_kaki_22.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0006_kaki_22.png"
+        },
+        {
+          "name": "Images_s_0009_kaki_19.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0009_kaki_19.png"
+        },
+        {
+          "name": "Images_s_0011_kaki_17.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0011_kaki_17.png"
+        },
+        {
+          "name": "Images_s_0025_kaki_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0025_kaki_3.png"
+        },
+        {
+          "name": "Images_text_ba.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ba.png"
+        },
+        {
+          "name": "Images_text_bachi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bachi.png"
+        },
+        {
+          "name": "Images_text_baki_2_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_.png"
+        },
+        {
+          "name": "Images_text_baki_2_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_1.png"
+        },
+        {
+          "name": "Images_text_baki_2_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_2.png"
+        },
+        {
+          "name": "Images_text_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki.png"
+        },
+        {
+          "name": "Images_text_bi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bi.png"
+        },
+        {
+          "name": "Images_text_bun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bun.png"
+        },
+        {
+          "name": "Images_text_dogaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogaga.png"
+        },
+        {
+          "name": "Images_text_dogo.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogo.png"
+        },
+        {
+          "name": "Images_text_doka.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doka.png"
+        },
+        {
+          "name": "Images_text_don_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_don_2.png"
+        },
+        {
+          "name": "Images_text_dou.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dou.png"
+        },
+        {
+          "name": "Images_text_doxun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doxun.png"
+        },
+        {
+          "name": "Images_text_dozu.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dozu.png"
+        },
+        {
+          "name": "Images_text_ga_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga_.png"
+        },
+        {
+          "name": "Images_text_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga.png"
+        },
+        {
+          "name": "Images_text_gaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gaga.png"
+        },
+        {
+          "name": "Images_text_gagaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gagaga.png"
+        },
+        {
+          "name": "Images_text_sha_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_1.png"
+        },
+        {
+          "name": "Images_text_sha_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_2.png"
+        },
+        {
+          "name": "Images_text_zun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_zun.png"
+        }
+      ]
+    },
+    {
+      "id": 64,
+      "category": 1,
+      "name": "リッチ化通常攻撃_ヒットエフェクト火花5",
+      "pack_name": "battle_00003",
+      "scene_name": "ef_015",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00003.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003.lwf"
+        },
+        {
+          "name": "battle_00003_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_0.png"
+        },
+        {
+          "name": "battle_00003_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_1.png"
+        },
+        {
+          "name": "battle_00003_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_2.png"
+        },
+        {
+          "name": "battle_00003_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_3.png"
+        },
+        {
+          "name": "battle_00003_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_4.png"
+        },
+        {
+          "name": "battle_00003_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_5.png"
+        },
+        {
+          "name": "battle_00003_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_6.png"
+        },
+        {
+          "name": "battle_00003_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_7.png"
+        },
+        {
+          "name": "battle_00003_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_8.png"
+        },
+        {
+          "name": "battle_00003_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_9.png"
+        },
+        {
+          "name": "Images_s_0006_kaki_22.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0006_kaki_22.png"
+        },
+        {
+          "name": "Images_s_0009_kaki_19.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0009_kaki_19.png"
+        },
+        {
+          "name": "Images_s_0011_kaki_17.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0011_kaki_17.png"
+        },
+        {
+          "name": "Images_s_0025_kaki_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0025_kaki_3.png"
+        },
+        {
+          "name": "Images_text_ba.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ba.png"
+        },
+        {
+          "name": "Images_text_bachi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bachi.png"
+        },
+        {
+          "name": "Images_text_baki_2_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_.png"
+        },
+        {
+          "name": "Images_text_baki_2_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_1.png"
+        },
+        {
+          "name": "Images_text_baki_2_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_2.png"
+        },
+        {
+          "name": "Images_text_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki.png"
+        },
+        {
+          "name": "Images_text_bi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bi.png"
+        },
+        {
+          "name": "Images_text_bun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bun.png"
+        },
+        {
+          "name": "Images_text_dogaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogaga.png"
+        },
+        {
+          "name": "Images_text_dogo.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogo.png"
+        },
+        {
+          "name": "Images_text_doka.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doka.png"
+        },
+        {
+          "name": "Images_text_don_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_don_2.png"
+        },
+        {
+          "name": "Images_text_dou.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dou.png"
+        },
+        {
+          "name": "Images_text_doxun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doxun.png"
+        },
+        {
+          "name": "Images_text_dozu.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dozu.png"
+        },
+        {
+          "name": "Images_text_ga_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga_.png"
+        },
+        {
+          "name": "Images_text_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga.png"
+        },
+        {
+          "name": "Images_text_gaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gaga.png"
+        },
+        {
+          "name": "Images_text_gagaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gagaga.png"
+        },
+        {
+          "name": "Images_text_sha_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_1.png"
+        },
+        {
+          "name": "Images_text_sha_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_2.png"
+        },
+        {
+          "name": "Images_text_zun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_zun.png"
+        }
+      ]
+    },
+    {
+      "id": 67,
+      "category": 1,
+      "name": "リッチ化通常攻撃_ヒットエフェクト火花8",
+      "pack_name": "battle_00003",
+      "scene_name": "ef_018",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00003.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003.lwf"
+        },
+        {
+          "name": "battle_00003_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_0.png"
+        },
+        {
+          "name": "battle_00003_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_1.png"
+        },
+        {
+          "name": "battle_00003_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_2.png"
+        },
+        {
+          "name": "battle_00003_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_3.png"
+        },
+        {
+          "name": "battle_00003_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_4.png"
+        },
+        {
+          "name": "battle_00003_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_5.png"
+        },
+        {
+          "name": "battle_00003_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_6.png"
+        },
+        {
+          "name": "battle_00003_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_7.png"
+        },
+        {
+          "name": "battle_00003_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_8.png"
+        },
+        {
+          "name": "battle_00003_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_9.png"
+        },
+        {
+          "name": "Images_s_0006_kaki_22.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0006_kaki_22.png"
+        },
+        {
+          "name": "Images_s_0009_kaki_19.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0009_kaki_19.png"
+        },
+        {
+          "name": "Images_s_0011_kaki_17.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0011_kaki_17.png"
+        },
+        {
+          "name": "Images_s_0025_kaki_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0025_kaki_3.png"
+        },
+        {
+          "name": "Images_text_ba.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ba.png"
+        },
+        {
+          "name": "Images_text_bachi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bachi.png"
+        },
+        {
+          "name": "Images_text_baki_2_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_.png"
+        },
+        {
+          "name": "Images_text_baki_2_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_1.png"
+        },
+        {
+          "name": "Images_text_baki_2_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_2.png"
+        },
+        {
+          "name": "Images_text_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki.png"
+        },
+        {
+          "name": "Images_text_bi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bi.png"
+        },
+        {
+          "name": "Images_text_bun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bun.png"
+        },
+        {
+          "name": "Images_text_dogaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogaga.png"
+        },
+        {
+          "name": "Images_text_dogo.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogo.png"
+        },
+        {
+          "name": "Images_text_doka.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doka.png"
+        },
+        {
+          "name": "Images_text_don_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_don_2.png"
+        },
+        {
+          "name": "Images_text_dou.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dou.png"
+        },
+        {
+          "name": "Images_text_doxun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doxun.png"
+        },
+        {
+          "name": "Images_text_dozu.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dozu.png"
+        },
+        {
+          "name": "Images_text_ga_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga_.png"
+        },
+        {
+          "name": "Images_text_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga.png"
+        },
+        {
+          "name": "Images_text_gaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gaga.png"
+        },
+        {
+          "name": "Images_text_gagaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gagaga.png"
+        },
+        {
+          "name": "Images_text_sha_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_1.png"
+        },
+        {
+          "name": "Images_text_sha_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_2.png"
+        },
+        {
+          "name": "Images_text_zun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_zun.png"
+        }
+      ]
+    },
+    {
+      "id": 65,
+      "category": 1,
+      "name": "リッチ化通常攻撃_ヒットエフェクト火花6",
+      "pack_name": "battle_00003",
+      "scene_name": "ef_016",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00003.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003.lwf"
+        },
+        {
+          "name": "battle_00003_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_0.png"
+        },
+        {
+          "name": "battle_00003_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_1.png"
+        },
+        {
+          "name": "battle_00003_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_2.png"
+        },
+        {
+          "name": "battle_00003_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_3.png"
+        },
+        {
+          "name": "battle_00003_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_4.png"
+        },
+        {
+          "name": "battle_00003_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_5.png"
+        },
+        {
+          "name": "battle_00003_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_6.png"
+        },
+        {
+          "name": "battle_00003_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_7.png"
+        },
+        {
+          "name": "battle_00003_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_8.png"
+        },
+        {
+          "name": "battle_00003_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_9.png"
+        },
+        {
+          "name": "Images_s_0006_kaki_22.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0006_kaki_22.png"
+        },
+        {
+          "name": "Images_s_0009_kaki_19.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0009_kaki_19.png"
+        },
+        {
+          "name": "Images_s_0011_kaki_17.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0011_kaki_17.png"
+        },
+        {
+          "name": "Images_s_0025_kaki_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0025_kaki_3.png"
+        },
+        {
+          "name": "Images_text_ba.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ba.png"
+        },
+        {
+          "name": "Images_text_bachi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bachi.png"
+        },
+        {
+          "name": "Images_text_baki_2_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_.png"
+        },
+        {
+          "name": "Images_text_baki_2_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_1.png"
+        },
+        {
+          "name": "Images_text_baki_2_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_2.png"
+        },
+        {
+          "name": "Images_text_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki.png"
+        },
+        {
+          "name": "Images_text_bi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bi.png"
+        },
+        {
+          "name": "Images_text_bun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bun.png"
+        },
+        {
+          "name": "Images_text_dogaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogaga.png"
+        },
+        {
+          "name": "Images_text_dogo.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogo.png"
+        },
+        {
+          "name": "Images_text_doka.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doka.png"
+        },
+        {
+          "name": "Images_text_don_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_don_2.png"
+        },
+        {
+          "name": "Images_text_dou.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dou.png"
+        },
+        {
+          "name": "Images_text_doxun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doxun.png"
+        },
+        {
+          "name": "Images_text_dozu.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dozu.png"
+        },
+        {
+          "name": "Images_text_ga_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga_.png"
+        },
+        {
+          "name": "Images_text_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga.png"
+        },
+        {
+          "name": "Images_text_gaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gaga.png"
+        },
+        {
+          "name": "Images_text_gagaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gagaga.png"
+        },
+        {
+          "name": "Images_text_sha_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_1.png"
+        },
+        {
+          "name": "Images_text_sha_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_2.png"
+        },
+        {
+          "name": "Images_text_zun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_zun.png"
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "category": 1,
+      "name": "リッチ化通常攻撃_ヒットエフェクト衝撃波3",
+      "pack_name": "battle_00003",
+      "scene_name": "ef_007",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00003.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003.lwf"
+        },
+        {
+          "name": "battle_00003_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_0.png"
+        },
+        {
+          "name": "battle_00003_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_1.png"
+        },
+        {
+          "name": "battle_00003_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_2.png"
+        },
+        {
+          "name": "battle_00003_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_3.png"
+        },
+        {
+          "name": "battle_00003_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_4.png"
+        },
+        {
+          "name": "battle_00003_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_5.png"
+        },
+        {
+          "name": "battle_00003_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_6.png"
+        },
+        {
+          "name": "battle_00003_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_7.png"
+        },
+        {
+          "name": "battle_00003_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_8.png"
+        },
+        {
+          "name": "battle_00003_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_9.png"
+        },
+        {
+          "name": "Images_s_0006_kaki_22.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0006_kaki_22.png"
+        },
+        {
+          "name": "Images_s_0009_kaki_19.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0009_kaki_19.png"
+        },
+        {
+          "name": "Images_s_0011_kaki_17.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0011_kaki_17.png"
+        },
+        {
+          "name": "Images_s_0025_kaki_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0025_kaki_3.png"
+        },
+        {
+          "name": "Images_text_ba.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ba.png"
+        },
+        {
+          "name": "Images_text_bachi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bachi.png"
+        },
+        {
+          "name": "Images_text_baki_2_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_.png"
+        },
+        {
+          "name": "Images_text_baki_2_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_1.png"
+        },
+        {
+          "name": "Images_text_baki_2_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_2.png"
+        },
+        {
+          "name": "Images_text_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki.png"
+        },
+        {
+          "name": "Images_text_bi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bi.png"
+        },
+        {
+          "name": "Images_text_bun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bun.png"
+        },
+        {
+          "name": "Images_text_dogaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogaga.png"
+        },
+        {
+          "name": "Images_text_dogo.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogo.png"
+        },
+        {
+          "name": "Images_text_doka.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doka.png"
+        },
+        {
+          "name": "Images_text_don_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_don_2.png"
+        },
+        {
+          "name": "Images_text_dou.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dou.png"
+        },
+        {
+          "name": "Images_text_doxun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doxun.png"
+        },
+        {
+          "name": "Images_text_dozu.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dozu.png"
+        },
+        {
+          "name": "Images_text_ga_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga_.png"
+        },
+        {
+          "name": "Images_text_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga.png"
+        },
+        {
+          "name": "Images_text_gaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gaga.png"
+        },
+        {
+          "name": "Images_text_gagaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gagaga.png"
+        },
+        {
+          "name": "Images_text_sha_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_1.png"
+        },
+        {
+          "name": "Images_text_sha_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_2.png"
+        },
+        {
+          "name": "Images_text_zun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_zun.png"
+        }
+      ]
+    },
+    {
+      "id": 71,
+      "category": 1,
+      "name": "リッチ化通常攻撃_流線",
+      "pack_name": "battle_00003",
+      "scene_name": "ef_022",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00003.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003.lwf"
+        },
+        {
+          "name": "battle_00003_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_0.png"
+        },
+        {
+          "name": "battle_00003_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_1.png"
+        },
+        {
+          "name": "battle_00003_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_2.png"
+        },
+        {
+          "name": "battle_00003_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_3.png"
+        },
+        {
+          "name": "battle_00003_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_4.png"
+        },
+        {
+          "name": "battle_00003_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_5.png"
+        },
+        {
+          "name": "battle_00003_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_6.png"
+        },
+        {
+          "name": "battle_00003_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_7.png"
+        },
+        {
+          "name": "battle_00003_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_8.png"
+        },
+        {
+          "name": "battle_00003_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_9.png"
+        },
+        {
+          "name": "Images_s_0006_kaki_22.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0006_kaki_22.png"
+        },
+        {
+          "name": "Images_s_0009_kaki_19.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0009_kaki_19.png"
+        },
+        {
+          "name": "Images_s_0011_kaki_17.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0011_kaki_17.png"
+        },
+        {
+          "name": "Images_s_0025_kaki_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0025_kaki_3.png"
+        },
+        {
+          "name": "Images_text_ba.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ba.png"
+        },
+        {
+          "name": "Images_text_bachi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bachi.png"
+        },
+        {
+          "name": "Images_text_baki_2_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_.png"
+        },
+        {
+          "name": "Images_text_baki_2_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_1.png"
+        },
+        {
+          "name": "Images_text_baki_2_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_2.png"
+        },
+        {
+          "name": "Images_text_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki.png"
+        },
+        {
+          "name": "Images_text_bi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bi.png"
+        },
+        {
+          "name": "Images_text_bun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bun.png"
+        },
+        {
+          "name": "Images_text_dogaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogaga.png"
+        },
+        {
+          "name": "Images_text_dogo.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogo.png"
+        },
+        {
+          "name": "Images_text_doka.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doka.png"
+        },
+        {
+          "name": "Images_text_don_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_don_2.png"
+        },
+        {
+          "name": "Images_text_dou.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dou.png"
+        },
+        {
+          "name": "Images_text_doxun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doxun.png"
+        },
+        {
+          "name": "Images_text_dozu.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dozu.png"
+        },
+        {
+          "name": "Images_text_ga_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga_.png"
+        },
+        {
+          "name": "Images_text_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga.png"
+        },
+        {
+          "name": "Images_text_gaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gaga.png"
+        },
+        {
+          "name": "Images_text_gagaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gagaga.png"
+        },
+        {
+          "name": "Images_text_sha_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_1.png"
+        },
+        {
+          "name": "Images_text_sha_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_2.png"
+        },
+        {
+          "name": "Images_text_zun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_zun.png"
+        }
+      ]
+    },
+    {
+      "id": 66,
+      "category": 1,
+      "name": "リッチ化通常攻撃_ヒットエフェクト火花7",
+      "pack_name": "battle_00003",
+      "scene_name": "ef_017",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00003.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003.lwf"
+        },
+        {
+          "name": "battle_00003_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_0.png"
+        },
+        {
+          "name": "battle_00003_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_1.png"
+        },
+        {
+          "name": "battle_00003_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_2.png"
+        },
+        {
+          "name": "battle_00003_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_3.png"
+        },
+        {
+          "name": "battle_00003_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_4.png"
+        },
+        {
+          "name": "battle_00003_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_5.png"
+        },
+        {
+          "name": "battle_00003_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_6.png"
+        },
+        {
+          "name": "battle_00003_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_7.png"
+        },
+        {
+          "name": "battle_00003_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_8.png"
+        },
+        {
+          "name": "battle_00003_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_9.png"
+        },
+        {
+          "name": "Images_s_0006_kaki_22.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0006_kaki_22.png"
+        },
+        {
+          "name": "Images_s_0009_kaki_19.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0009_kaki_19.png"
+        },
+        {
+          "name": "Images_s_0011_kaki_17.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0011_kaki_17.png"
+        },
+        {
+          "name": "Images_s_0025_kaki_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0025_kaki_3.png"
+        },
+        {
+          "name": "Images_text_ba.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ba.png"
+        },
+        {
+          "name": "Images_text_bachi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bachi.png"
+        },
+        {
+          "name": "Images_text_baki_2_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_.png"
+        },
+        {
+          "name": "Images_text_baki_2_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_1.png"
+        },
+        {
+          "name": "Images_text_baki_2_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_2.png"
+        },
+        {
+          "name": "Images_text_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki.png"
+        },
+        {
+          "name": "Images_text_bi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bi.png"
+        },
+        {
+          "name": "Images_text_bun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bun.png"
+        },
+        {
+          "name": "Images_text_dogaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogaga.png"
+        },
+        {
+          "name": "Images_text_dogo.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogo.png"
+        },
+        {
+          "name": "Images_text_doka.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doka.png"
+        },
+        {
+          "name": "Images_text_don_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_don_2.png"
+        },
+        {
+          "name": "Images_text_dou.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dou.png"
+        },
+        {
+          "name": "Images_text_doxun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doxun.png"
+        },
+        {
+          "name": "Images_text_dozu.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dozu.png"
+        },
+        {
+          "name": "Images_text_ga_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga_.png"
+        },
+        {
+          "name": "Images_text_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga.png"
+        },
+        {
+          "name": "Images_text_gaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gaga.png"
+        },
+        {
+          "name": "Images_text_gagaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gagaga.png"
+        },
+        {
+          "name": "Images_text_sha_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_1.png"
+        },
+        {
+          "name": "Images_text_sha_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_2.png"
+        },
+        {
+          "name": "Images_text_zun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_zun.png"
+        }
+      ]
+    },
+    {
+      "id": 62,
+      "category": 1,
+      "name": "リッチ化通常攻撃_ヒットエフェクト火花3",
+      "pack_name": "battle_00003",
+      "scene_name": "ef_013",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00003.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003.lwf"
+        },
+        {
+          "name": "battle_00003_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_0.png"
+        },
+        {
+          "name": "battle_00003_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_1.png"
+        },
+        {
+          "name": "battle_00003_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_2.png"
+        },
+        {
+          "name": "battle_00003_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_3.png"
+        },
+        {
+          "name": "battle_00003_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_4.png"
+        },
+        {
+          "name": "battle_00003_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_5.png"
+        },
+        {
+          "name": "battle_00003_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_6.png"
+        },
+        {
+          "name": "battle_00003_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_7.png"
+        },
+        {
+          "name": "battle_00003_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_8.png"
+        },
+        {
+          "name": "battle_00003_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_9.png"
+        },
+        {
+          "name": "Images_s_0006_kaki_22.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0006_kaki_22.png"
+        },
+        {
+          "name": "Images_s_0009_kaki_19.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0009_kaki_19.png"
+        },
+        {
+          "name": "Images_s_0011_kaki_17.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0011_kaki_17.png"
+        },
+        {
+          "name": "Images_s_0025_kaki_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0025_kaki_3.png"
+        },
+        {
+          "name": "Images_text_ba.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ba.png"
+        },
+        {
+          "name": "Images_text_bachi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bachi.png"
+        },
+        {
+          "name": "Images_text_baki_2_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_.png"
+        },
+        {
+          "name": "Images_text_baki_2_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_1.png"
+        },
+        {
+          "name": "Images_text_baki_2_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_2.png"
+        },
+        {
+          "name": "Images_text_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki.png"
+        },
+        {
+          "name": "Images_text_bi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bi.png"
+        },
+        {
+          "name": "Images_text_bun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bun.png"
+        },
+        {
+          "name": "Images_text_dogaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogaga.png"
+        },
+        {
+          "name": "Images_text_dogo.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogo.png"
+        },
+        {
+          "name": "Images_text_doka.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doka.png"
+        },
+        {
+          "name": "Images_text_don_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_don_2.png"
+        },
+        {
+          "name": "Images_text_dou.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dou.png"
+        },
+        {
+          "name": "Images_text_doxun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doxun.png"
+        },
+        {
+          "name": "Images_text_dozu.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dozu.png"
+        },
+        {
+          "name": "Images_text_ga_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga_.png"
+        },
+        {
+          "name": "Images_text_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga.png"
+        },
+        {
+          "name": "Images_text_gaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gaga.png"
+        },
+        {
+          "name": "Images_text_gagaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gagaga.png"
+        },
+        {
+          "name": "Images_text_sha_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_1.png"
+        },
+        {
+          "name": "Images_text_sha_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_2.png"
+        },
+        {
+          "name": "Images_text_zun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_zun.png"
+        }
+      ]
+    },
+    {
+      "id": 60,
+      "category": 1,
+      "name": "リッチ化通常攻撃_ヒットエフェクト火花1",
+      "pack_name": "battle_00003",
+      "scene_name": "ef_011",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00003.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003.lwf"
+        },
+        {
+          "name": "battle_00003_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_0.png"
+        },
+        {
+          "name": "battle_00003_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_1.png"
+        },
+        {
+          "name": "battle_00003_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_2.png"
+        },
+        {
+          "name": "battle_00003_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_3.png"
+        },
+        {
+          "name": "battle_00003_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_4.png"
+        },
+        {
+          "name": "battle_00003_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_5.png"
+        },
+        {
+          "name": "battle_00003_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_6.png"
+        },
+        {
+          "name": "battle_00003_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_7.png"
+        },
+        {
+          "name": "battle_00003_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_8.png"
+        },
+        {
+          "name": "battle_00003_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_9.png"
+        },
+        {
+          "name": "Images_s_0006_kaki_22.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0006_kaki_22.png"
+        },
+        {
+          "name": "Images_s_0009_kaki_19.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0009_kaki_19.png"
+        },
+        {
+          "name": "Images_s_0011_kaki_17.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0011_kaki_17.png"
+        },
+        {
+          "name": "Images_s_0025_kaki_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0025_kaki_3.png"
+        },
+        {
+          "name": "Images_text_ba.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ba.png"
+        },
+        {
+          "name": "Images_text_bachi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bachi.png"
+        },
+        {
+          "name": "Images_text_baki_2_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_.png"
+        },
+        {
+          "name": "Images_text_baki_2_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_1.png"
+        },
+        {
+          "name": "Images_text_baki_2_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_2.png"
+        },
+        {
+          "name": "Images_text_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki.png"
+        },
+        {
+          "name": "Images_text_bi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bi.png"
+        },
+        {
+          "name": "Images_text_bun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bun.png"
+        },
+        {
+          "name": "Images_text_dogaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogaga.png"
+        },
+        {
+          "name": "Images_text_dogo.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogo.png"
+        },
+        {
+          "name": "Images_text_doka.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doka.png"
+        },
+        {
+          "name": "Images_text_don_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_don_2.png"
+        },
+        {
+          "name": "Images_text_dou.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dou.png"
+        },
+        {
+          "name": "Images_text_doxun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doxun.png"
+        },
+        {
+          "name": "Images_text_dozu.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dozu.png"
+        },
+        {
+          "name": "Images_text_ga_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga_.png"
+        },
+        {
+          "name": "Images_text_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga.png"
+        },
+        {
+          "name": "Images_text_gaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gaga.png"
+        },
+        {
+          "name": "Images_text_gagaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gagaga.png"
+        },
+        {
+          "name": "Images_text_sha_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_1.png"
+        },
+        {
+          "name": "Images_text_sha_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_2.png"
+        },
+        {
+          "name": "Images_text_zun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_zun.png"
+        }
+      ]
+    },
+    {
+      "id": 906,
+      "category": 1,
+      "name": "集中線",
+      "pack_name": "battle_90000",
+      "scene_name": "ef_007",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_90000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_90000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_90000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/battle_90000.lwf"
+        },
+        {
+          "name": "battle_90000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/battle_90000-1.png"
+        },
+        {
+          "name": "Images_ef_ryusen_angle_wh_01.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_angle_wh_01.png"
+        },
+        {
+          "name": "Images_ef_ryusen_angle_wh_02.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_angle_wh_02.png"
+        },
+        {
+          "name": "Images_ef_ryusen_wh.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_ryusen_wh.png"
+        },
+        {
+          "name": "Images_ef_shuchu_wh.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_90000/Images_ef_shuchu_wh.png"
+        }
+      ]
+    },
+    {
+      "id": 1110,
+      "category": 1,
+      "name": "ダメージ数値（会心演出用）",
+      "pack_name": "battle_115000",
+      "scene_name": "ef_003",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_115000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_115000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_115000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/battle_115000.lwf"
+        },
+        {
+          "name": "battle_115000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/battle_115000-1.png"
+        },
+        {
+          "name": "Images_num_critical_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_0.png"
+        },
+        {
+          "name": "Images_num_critical_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_1.png"
+        },
+        {
+          "name": "Images_num_critical_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_2.png"
+        },
+        {
+          "name": "Images_num_critical_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_3.png"
+        },
+        {
+          "name": "Images_num_critical_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_4.png"
+        },
+        {
+          "name": "Images_num_critical_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_5.png"
+        },
+        {
+          "name": "Images_num_critical_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_6.png"
+        },
+        {
+          "name": "Images_num_critical_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_7.png"
+        },
+        {
+          "name": "Images_num_critical_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_8.png"
+        },
+        {
+          "name": "Images_num_critical_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_9.png"
+        },
+        {
+          "name": "Images_num_critical_a_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_a_0.png"
+        },
+        {
+          "name": "Images_num_critical_a_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_a_1.png"
+        },
+        {
+          "name": "Images_num_critical_a_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_a_2.png"
+        },
+        {
+          "name": "Images_num_critical_a_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_a_3.png"
+        },
+        {
+          "name": "Images_num_critical_a_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_a_4.png"
+        },
+        {
+          "name": "Images_num_critical_a_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_a_5.png"
+        },
+        {
+          "name": "Images_num_critical_a_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_a_6.png"
+        },
+        {
+          "name": "Images_num_critical_a_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_a_7.png"
+        },
+        {
+          "name": "Images_num_critical_a_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_a_8.png"
+        },
+        {
+          "name": "Images_num_critical_a_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_115000/en/Images_num_critical_a_9.png"
+        }
+      ]
+    },
+    {
+      "id": 1504,
+      "category": 1,
+      "name": "必殺技共通",
+      "pack_name": "battle_150000",
+      "scene_name": "ef_005",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_150000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_150000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000.lwf"
+        },
+        {
+          "name": "battle_150000-1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-1.png"
+        },
+        {
+          "name": "battle_150000-2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/battle_150000-2.png"
+        },
+        {
+          "name": "card_1000010_character.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_character.png"
+        },
+        {
+          "name": "card_1000010_effect.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_effect.png"
+        },
+        {
+          "name": "card_1000010_sp_cutin_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_cutin_1.png"
+        },
+        {
+          "name": "card_1000010_sp_name.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_name.png"
+        },
+        {
+          "name": "card_1000010_sp_phrase.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/card_1000010_sp_phrase.png"
+        },
+        {
+          "name": "Images_ef_sp_phrase_bar.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_150000/Images_ef_sp_phrase_bar.png"
+        }
+      ]
+    },
+    {
+      "id": 1575,
+      "category": 1,
+      "name": "必殺技用（回避）_回避テロップ",
+      "pack_name": "battle_152000",
+      "scene_name": "ef_001",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_152000.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_152000.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_152000.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_152000/battle_152000.lwf"
+        },
+        {
+          "name": "battle_152000_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_152000/battle_152000_0.png"
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "category": 1,
+      "name": "リッチ化通常攻撃_ヒットエフェクト火花2",
+      "pack_name": "battle_00003",
+      "scene_name": "ef_012",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00003.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003.lwf"
+        },
+        {
+          "name": "battle_00003_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_0.png"
+        },
+        {
+          "name": "battle_00003_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_1.png"
+        },
+        {
+          "name": "battle_00003_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_2.png"
+        },
+        {
+          "name": "battle_00003_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_3.png"
+        },
+        {
+          "name": "battle_00003_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_4.png"
+        },
+        {
+          "name": "battle_00003_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_5.png"
+        },
+        {
+          "name": "battle_00003_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_6.png"
+        },
+        {
+          "name": "battle_00003_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_7.png"
+        },
+        {
+          "name": "battle_00003_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_8.png"
+        },
+        {
+          "name": "battle_00003_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_9.png"
+        },
+        {
+          "name": "Images_s_0006_kaki_22.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0006_kaki_22.png"
+        },
+        {
+          "name": "Images_s_0009_kaki_19.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0009_kaki_19.png"
+        },
+        {
+          "name": "Images_s_0011_kaki_17.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0011_kaki_17.png"
+        },
+        {
+          "name": "Images_s_0025_kaki_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0025_kaki_3.png"
+        },
+        {
+          "name": "Images_text_ba.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ba.png"
+        },
+        {
+          "name": "Images_text_bachi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bachi.png"
+        },
+        {
+          "name": "Images_text_baki_2_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_.png"
+        },
+        {
+          "name": "Images_text_baki_2_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_1.png"
+        },
+        {
+          "name": "Images_text_baki_2_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_2.png"
+        },
+        {
+          "name": "Images_text_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki.png"
+        },
+        {
+          "name": "Images_text_bi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bi.png"
+        },
+        {
+          "name": "Images_text_bun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bun.png"
+        },
+        {
+          "name": "Images_text_dogaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogaga.png"
+        },
+        {
+          "name": "Images_text_dogo.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogo.png"
+        },
+        {
+          "name": "Images_text_doka.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doka.png"
+        },
+        {
+          "name": "Images_text_don_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_don_2.png"
+        },
+        {
+          "name": "Images_text_dou.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dou.png"
+        },
+        {
+          "name": "Images_text_doxun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doxun.png"
+        },
+        {
+          "name": "Images_text_dozu.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dozu.png"
+        },
+        {
+          "name": "Images_text_ga_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga_.png"
+        },
+        {
+          "name": "Images_text_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga.png"
+        },
+        {
+          "name": "Images_text_gaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gaga.png"
+        },
+        {
+          "name": "Images_text_gagaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gagaga.png"
+        },
+        {
+          "name": "Images_text_sha_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_1.png"
+        },
+        {
+          "name": "Images_text_sha_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_2.png"
+        },
+        {
+          "name": "Images_text_zun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_zun.png"
+        }
+      ]
+    },
+    {
+      "id": 72,
+      "category": 1,
+      "name": "リッチ化通常攻撃_集中線隅",
+      "pack_name": "battle_00003",
+      "scene_name": "ef_023",
+      "color": {
+        "red": 255,
+        "green": 255,
+        "blue": 255,
+        "alpha": 255
+      },
+      "source_names": [],
+      "ko_screen": false,
+      "primary": false,
+      "movie_url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "movie_fallback_url": null,
+      "movie_rel": "movie/en/ingame/battle/sp_effect/battle_00003.usm",
+      "has_movie": false,
+      "available": true,
+      "files": [
+        {
+          "name": "battle_00003.lwf",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003.lwf"
+        },
+        {
+          "name": "battle_00003_0.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_0.png"
+        },
+        {
+          "name": "battle_00003_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_1.png"
+        },
+        {
+          "name": "battle_00003_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_2.png"
+        },
+        {
+          "name": "battle_00003_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_3.png"
+        },
+        {
+          "name": "battle_00003_4.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_4.png"
+        },
+        {
+          "name": "battle_00003_5.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_5.png"
+        },
+        {
+          "name": "battle_00003_6.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_6.png"
+        },
+        {
+          "name": "battle_00003_7.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_7.png"
+        },
+        {
+          "name": "battle_00003_8.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_8.png"
+        },
+        {
+          "name": "battle_00003_9.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/battle_00003_9.png"
+        },
+        {
+          "name": "Images_s_0006_kaki_22.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0006_kaki_22.png"
+        },
+        {
+          "name": "Images_s_0009_kaki_19.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0009_kaki_19.png"
+        },
+        {
+          "name": "Images_s_0011_kaki_17.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0011_kaki_17.png"
+        },
+        {
+          "name": "Images_s_0025_kaki_3.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_s_0025_kaki_3.png"
+        },
+        {
+          "name": "Images_text_ba.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ba.png"
+        },
+        {
+          "name": "Images_text_bachi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bachi.png"
+        },
+        {
+          "name": "Images_text_baki_2_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_.png"
+        },
+        {
+          "name": "Images_text_baki_2_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_1.png"
+        },
+        {
+          "name": "Images_text_baki_2_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki_2_2.png"
+        },
+        {
+          "name": "Images_text_baki.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_baki.png"
+        },
+        {
+          "name": "Images_text_bi.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bi.png"
+        },
+        {
+          "name": "Images_text_bun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_bun.png"
+        },
+        {
+          "name": "Images_text_dogaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogaga.png"
+        },
+        {
+          "name": "Images_text_dogo.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dogo.png"
+        },
+        {
+          "name": "Images_text_doka.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doka.png"
+        },
+        {
+          "name": "Images_text_don_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_don_2.png"
+        },
+        {
+          "name": "Images_text_dou.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dou.png"
+        },
+        {
+          "name": "Images_text_doxun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_doxun.png"
+        },
+        {
+          "name": "Images_text_dozu.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_dozu.png"
+        },
+        {
+          "name": "Images_text_ga_.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga_.png"
+        },
+        {
+          "name": "Images_text_ga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_ga.png"
+        },
+        {
+          "name": "Images_text_gaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gaga.png"
+        },
+        {
+          "name": "Images_text_gagaga.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_gagaga.png"
+        },
+        {
+          "name": "Images_text_sha_1.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_1.png"
+        },
+        {
+          "name": "Images_text_sha_2.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_sha_2.png"
+        },
+        {
+          "name": "Images_text_zun.png",
+          "url": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/ingame/battle/effect/battle_00003/en/Images_text_zun.png"
+        }
+      ]
+    }
+  ],
+  "audio_urls": {
+    "se:8": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_8.wav",
+    "se:16": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_16.wav",
+    "se:20": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_20.wav",
+    "se:26": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_26.wav",
+    "se:50": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_50.wav",
+    "se:56": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_56.wav",
+    "se:64": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_64.wav",
+    "se:70": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_70.wav",
+    "se:78": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_78.wav",
+    "se:86": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_86.wav",
+    "se:90": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_90.wav",
+    "se:100": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_100.wav",
+    "se:106": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_106.wav",
+    "se:112": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_112.wav",
+    "se:116": "https://raw.githubusercontent.com/abscustom/DokkanCustom-animation-core/main/assets/audio/se/se_116.wav"
+  }
+}
